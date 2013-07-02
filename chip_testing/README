@@ -17,7 +17,7 @@ platform but need some porting work for the Parallella platform
 2.) For each test you want to compile:
     To clean a test: 'make TEST=hello_epiphany clean'
     To compile a test: 'make TEST=hello_epiphany'
-    To compile for linux: 'make TEST=hello_epiphany'
+    To compile for linux: 'make TEST=hello_epiphany LINUX=1'
 
 3.) To run a test through debugger
     e_gdb hello_epiphany.elf

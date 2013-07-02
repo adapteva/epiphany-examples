@@ -1,7 +1,7 @@
 ###################
 This directory contains a number of simple tests that are meant to be
 run throught the debugger. The examples run correctly on the EMEK3 
-platform but will need to be ported to work for the Parallella platform
+platform but need some porting work for the Parallella platform
 
 
 ###################
@@ -15,8 +15,8 @@ platform but will need to be ported to work for the Parallella platform
     e-server -xml $EPIPHANY_HOME/bsps/$EPIPHANY_PLATFORM/$EPIPHANY_PLATFORM.xml -show-memory-map
 
 2.) For each test you want to compile:
-    To clean a test: 'make TEST=hello_epiphany E=1 clean'
-    To compile a test: 'make TEST=hello_epiphany E=1'
+    To clean a test: 'make TEST=hello_epiphany clean'
+    To compile a test: 'make TEST=hello_epiphany'
     To compile for linux: 'make TEST=hello_epiphany'
 
 3.) To run a test through debugger
@@ -30,7 +30,7 @@ platform but will need to be ported to work for the Parallella platform
     run_test.pl -elf hello_epiphany.elf -row 0 -col 0 -rows 1 -cols 1
 
 5.) To run a regression suite:
-    run_suite.pl -l TEST.LIST -d 0
+    run_suite.pl -l TEST.LIST -d chip0
 
     
 

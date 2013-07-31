@@ -2,10 +2,15 @@
 #Compiled elf files
 *.elf
 *.o
+*.e
+*.d
+*.srec
 
 ######################
-#Emacs Save Files
+#Emacs/vim/gedit backup files
 *~
+.*.swp
+.*.swo
 
 #######################
 #Log files

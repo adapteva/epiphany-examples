@@ -1,7 +1,11 @@
 ######################
-#Compiled elf files
+#Compiled files
 *.elf
 *.o
+
+######################
+#Loader files
+*.srec
 
 ######################
 #Emacs Save Files

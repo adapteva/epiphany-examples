@@ -22,7 +22,7 @@ along with this program, see the file COPYING. If not, see
 // This is the DEVICE side of the DMA slave mode example.
 // The host may load this program to any eCore. In this program
 // the transmitter will send data to the receiver core under dma 
-// slave mode. 
+// slave mode. This is the program for the recevier core.
 
 #include <stdio.h>
 #include <stdlib.h>

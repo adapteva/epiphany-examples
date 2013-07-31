@@ -1,5 +1,5 @@
 ######################
-# Compiled elf files
+# Compiled binaries
 *.elf
 *.o
 *.e

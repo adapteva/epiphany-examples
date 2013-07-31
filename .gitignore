@@ -1,13 +1,21 @@
 ######################
-#Compiled elf files
+# Compiled elf files
 *.elf
 *.o
+*.e
+*.d
 
 ######################
-#Emacs Save Files
+# Loader files
+*.srec
+
+######################
+# Emacs/vim/gedit backup files
 *~
+.*.swp
+.*.swo
 
 #######################
-#Log files
+# Log files
 *.log
 

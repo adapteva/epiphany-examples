@@ -65,8 +65,7 @@ int main(int argc, char *argv[])
 			row=i;
 			col=j;
 			coreid = (row + platform.row) * 64 + col + platform.col;
-			fprintf(stderr,"%3d: Message from eCore 0x%03x (%2d,%2d) : \n",
-			(row*platform.cols+col),coreid,row,col);
+			fprintf(stderr,"%3d: Message from eCore 0x%03x (%2d,%2d) : \n",(row*platform.cols+col),coreid,row,col);
 			
 			// Start device
 			e_start(&dev, i, j);
@@ -84,8 +83,7 @@ int main(int argc, char *argv[])
 				fprintf(stderr, "PASS!\n");
 			}else
 			{
-				fprintf(stderr,"Fail!\nThe interrupt output is 0x%08x!\nThe 
-				return output is 0x%08x!\n",flag,flag1);
+				fprintf(stderr,"Fail!\nThe interrupt output is 0x%08x!\nThe return output is 0x%08x!\n",flag,flag1);
 			}
 		}
 	}

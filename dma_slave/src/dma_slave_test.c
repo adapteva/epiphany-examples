@@ -22,9 +22,8 @@ along with this program, see the file COPYING. If not, see
 // This is the HOST side of the DMA slave mode example.
 // The program initializes the Epiphany system,
 // selects an eCore to be transmitter and another to be 
-//the receiver and then loads and launches the device 
-//program on that eCore. It then reads the mailbox in 
-//transmitter core for the core's output message.
+// the receiver. Transmitter will send data to receiver 
+// by dma in slave mode.
 
 #include <stdlib.h>
 #include <stdio.h>

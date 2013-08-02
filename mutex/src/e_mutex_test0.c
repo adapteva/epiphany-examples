@@ -31,8 +31,6 @@ along with this program, see the file COPYING. If not, see
 
 #include "e_lib.h"
 
-char outbuf[4096] SECTION("shared_dram");
-
 int main(void)
 {
 	e_mutex_t *mutex;

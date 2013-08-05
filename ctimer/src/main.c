@@ -19,13 +19,16 @@
   <http://www.gnu.org/licenses/>.
 */
 
-// This is the HOST side of the Hello World example.
-// The program initializes the Epiphany system,
-// randomly draws an eCore and then loads and launches
-// the device program on that eCore. It then reads the
-// shared external memory buffer for the core's output
-// message.
-
+// This is the host side of the ctimer example project.
+//
+// This program runs on the linux host and invokes the emain.c program.
+// The program activits cores on the board one by one, sets the core to 
+// run a fir function and records numbers of cycles spend on different
+// events. After that, the core goes into "idle" and been awaked by 
+// ctimer_1. A success/error message is printed on the terminal according 
+// to the results.
+//
+// Aug-2013, XM.
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>

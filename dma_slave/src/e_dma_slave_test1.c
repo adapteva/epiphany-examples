@@ -58,6 +58,8 @@ int main(void)
 	
 	// Address of the dma auto register
 	p = (unsigned *)0xf0514;
+	//p = (unsigned *)0xf0518;
+	
 	
 	auto0 = (unsigned *) e_get_global_address(*r_row, *r_col, p);
 	
@@ -77,7 +79,7 @@ int main(void)
 	mst[0] = 0xdeadbeef;
 	
 	// Start writing to the auto register of slave core
-	for(j=0; j<3; j++)
+	for(j=0; j<8; j++)
 	{
 		for(i=0; i<tran; i++)
 		{

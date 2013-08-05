@@ -60,7 +60,7 @@ int main(void)
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_WORD), 0x0000,
 	0x0000, 0x0004,
 	0x0400, 0x0001,
-	0x0000, 0x0004,
+	0x0000, 0x0000,
 	0x0000,(void *)dst, &dma_desc);
 	
 	// Wait for the signal to start dma transfering

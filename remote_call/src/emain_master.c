@@ -1,3 +1,32 @@
+/*
+  emain_master.c
+
+  Copyright (C) 2012 Adapteva, Inc.
+  Contributed by Xin Mao <maoxin99@gmail.com>
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program, see the file COPYING.  If not, see
+  <http://www.gnu.org/licenses/>.
+*/
+
+// This is the device side of the Hardware Barrier example project.
+// The host may load this program to any eCore. When launched, the 
+// core remote call all other 15 cores. A success/error message is 
+// sent to the host according to the result.
+//
+// Aug-2013, XM.
+
+
 #include <stdlib.h>
 #include <e-lib.h>
 

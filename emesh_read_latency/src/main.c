@@ -2,7 +2,7 @@
   main.c
 
   Copyright (C) 2012 Adapteva, Inc.
-  Contributed by Xin Mao <yaniv@adapteva.com>
+  Contributed by Xin Mao <maoxin99@gmail.com>
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

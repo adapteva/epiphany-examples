@@ -22,16 +22,16 @@
 // This is the host side of the Hardware Barrier example project.
 //
 // This program runs on the linux host and invokes the emain.c program.
-// The program activits the entire board. Each core reads from all the 
-// other fifteen cores and records the number of cycles spend for the
-// read. A success/error message is printed on the terminal according
-// to the comparison between the result and the expecting result.
+// The program activits cores on the board one by one to run varies
+// assembly command. A success/error message is printed on the terminal 
+// according to the results.
 //
-// Jul-2013, XM.
+// Aug-2013, XM.
 
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <e-hal.h>
 
@@ -40,11 +40,11 @@
 
 int main(int argc, char *argv[])
 {
-	unsigned rows, cols, coreid, i, j, k;
-	unsigned fault, result[32];
+	unsigned rows, cols, coreid, i, j;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t emem;
+	char emsg[_BufSize];
 
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
@@ -62,43 +62,32 @@ int main(int argc, char *argv[])
 	cols = platform.cols;
 	e_open(&dev, 0, 0, rows, cols);
 
-
+	
 	//load the device program on the board
 	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
-	
 
-	for (i=0;i<rows;i++)
-	{
-		for (j=0;j<cols;j++)
-		{
+
+
+
+	for (i=0; i<platform.rows*0+1; i++){
+		for (j=0; j<platform.cols*0+1; j++){
+
 
 			coreid = (i + platform.row) * 64 + j + platform.col;
 			fprintf(stderr, "Message from eCore 0x%03x (%2d,%2d): \n", coreid, i, j);
 			e_start(&dev, i, j);
-			usleep(100000);
-			e_read(&dev, i, j, 0x5200, &result[0], 32*sizeof(unsigned));
 
-			//chech result
-			fault = 0x0;
-			for (k=0;k<16;k++)
-			{
-				if ((result[k]<result[k]*0.9)||(result[k]>=result[k]*1.1))
-				{
-					fault++;
-					fprintf(stderr, "Read from core (%2d,%2d) spent %d cycles, expecting %d cycles!\n",(k/4),(k%4),result[k],result[k+16]);
-				}
-			}
+			//wait for core to execute the program
+			usleep(200000);
 
 
-			if (fault == 0x0)
-				fprintf(stderr, "\ntest emesh_read_latency passed!\n\n");	
-			else
-			{
-				fprintf(stderr, "\ntest emesh_read_latency failed!\n");
-			}
-
+			//print the message
+			e_read(&emem, 0, 0, 0x0, emsg, _BufSize);
+			fprintf(stderr, "%s\n", emsg);
+			
 		}	
 	}	
+
 
 	e_close(&dev);
 	e_free(&emem);

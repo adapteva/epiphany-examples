@@ -1,5 +1,5 @@
 /*
-  hello_world.c
+  main.c
 
   Copyright (C) 2012 Adapteva, Inc.
   Contributed by Xin Mao <maoxin99@gmail.com>

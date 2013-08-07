@@ -32,17 +32,12 @@ along with this program, see the file COPYING. If not, see
 
 #include <e-hal.h>
 
-#define _BufSize   (1024)
-#define _BufOffset (0x01000000)
-
 
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i, j, m, n, k;
 	e_platform_t platform;
 	e_epiphany_t dev;
-	//e_mem_t emem;
-	//char emsg[_BufSize];
 	unsigned flag = 0x00000000;
 	unsigned flag1 = 0x00000000;
 	unsigned flag2 = 0x00000000;
@@ -52,16 +47,9 @@ int main(int argc, char *argv[])
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
 	// get the actual system parameters.
-	//e_set_host_verbosity(H_D2);
-	//e_set_loader_verbosity(L_D1);
 	e_init(NULL);
 	e_reset_system();
 	e_get_platform_info(&platform);
-
-
-	// Allocate a buffer in shared external memory
-	// for message passing from eCore to host.
-	//e_alloc(&emem, _BufOffset, _BufSize);	
 	
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
@@ -128,9 +116,7 @@ int main(int argc, char *argv[])
 	// Close the workgroup
 	e_close(&dev);
 	
-	// Release the allocated buffer and finalize the
-	// e-platform connection.
-	//e_free(&emem);
+	// Finalize the e-platform connection.
 	e_finalize();
 
 	return 0;

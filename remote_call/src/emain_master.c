@@ -49,9 +49,9 @@ int main(void)
 	unsigned *signal;
 	
 	//mask interrupts
-	e_irq_global_mask(E_FALSE);
+	//e_irq_global_mask(E_FALSE);
 
-	e_reg_write(E_REG_IMASK,0x0);
+	//e_reg_write(E_REG_IMASK,0x0);
 	
 	row = e_group_config.core_row;
 	col = e_group_config.core_col;

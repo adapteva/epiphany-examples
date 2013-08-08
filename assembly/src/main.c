@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
 
 
 
-	for (i=0; i<platform.rows*0+1; i++){
-		for (j=0; j<platform.cols*0+1; j++){
+	for (i=0; i<platform.rows; i++){
+		for (j=0; j<platform.cols; j++){
 
 
 			coreid = (i + platform.row) * 64 + j + platform.col;

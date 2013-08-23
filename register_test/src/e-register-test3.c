@@ -3,7 +3,7 @@ e-register-test3.c
 
 Copyright (C) 2012 Adapteva, Inc.
 Contributed by Wenlin Song <wsong@wpi.edu>
-						   Xin Mao <maoxin99@gmail.com>
+               Xin Mao <maoxin99@gmail.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

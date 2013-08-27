@@ -47,20 +47,12 @@ public class EpiphanyMonitor2 extends JFrame{
         readEcore(ecorePathname);
         readEmesh(emeshPathname);
 
-        //JLabel title = new JLabel("eCore Monitor");
-        
-        //JWindow ecoreFrame = new JWindow();
         JFrame ecoreFrame = new JFrame("eCore Load                           eMesh Load");
         ecoreFrame.setSize(width, height);
         scale map = new scale();
-        //map.add(title);
         ecoreFrame.add(map);
         ecoreFrame.setVisible(true);
         
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        
-       // ecoreFrame.add(new JButton("max"));
         ecoreFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         map = null;
 
@@ -69,8 +61,6 @@ public class EpiphanyMonitor2 extends JFrame{
             readEmesh(emeshPathname);
             map = new scale();
             ecoreFrame.add(map);
-           // ecoreFrame.add(new JButton("max"));
-            //ecoreFrame.setVisible(true);
             ecoreFrame.repaint();
             map = null;
 

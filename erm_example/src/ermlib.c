@@ -1,24 +1,22 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <dirent.h>
 #include <sys/file.h> 
-#include <time.h>
 #include <e-hal.h>
-#include "ermlib.h"
+#include "erm.h"
 
 
 typedef enum{
 	REGULAR = 0,
 	ALIGNED = 1,
 	RANDOM  = 2,
-}mode_type;
+} mode_type;
 
+
+char *filename_work = "/home/linaro/epiphany.status";
 
 e_epiphany_t dev;
-unsigned platform_rows = 4;
+
+unsigned platform_rows = 4; // TODO: make generic
 unsigned platform_cols = 4;
 
 void get_epiphany_status(unsigned platform_rows, unsigned platform_cols, FILE *file, unsigned *p_status);
@@ -30,13 +28,12 @@ int find_group(unsigned platform_rows, unsigned platform_cols, unsigned mode, un
 int e_reserve(unsigned search_mode, unsigned rows, unsigned cols, unsigned *p_row, unsigned *p_col)
 {
 	FILE *file;
-	char *filename_work = "/home/linaro/epiphany.status";
 	unsigned status[platform_rows*platform_cols];
 	unsigned i, j, index, m, k, try_again;
 	unsigned result;
 	int brk;
 	
-	while(1)
+	while (1)
 	{
 		try_again = 1;
 		file = fopen(filename_work, "r+");
@@ -44,16 +41,16 @@ int e_reserve(unsigned search_mode, unsigned rows, unsigned cols, unsigned *p_ro
 		// Lock the epiphany.status file
 		result = flock(fileno(file), LOCK_EX);
 	
-		if(result == 0)//-----only do the following when lock successfully
+		if (result == 0) //-----only do the following when lock successfully
 		{
 			// Get access to the current epiphany.status file 
 			get_epiphany_status(platform_rows, platform_cols, file, &status[0]);
 	
-			//Method-1, try to find an available work group, then break
+			// Method-1, try to find an available work group, then break
 			brk = find_group(platform_rows, platform_cols, search_mode, rows, cols, p_row, p_col, &status[0]);
 			
-			//-----if find, brk=E_OK; if can't find, brk=E_ERR;	
-			if(brk == E_OK)
+			//-----if find, brk=E_OK; if can't find, brk=E_ERR;
+			if (brk == E_OK)
 			{
 				fprintf(stderr, "Find idle %d*%d group successfully!\n", rows, cols);
 				fprintf(stderr, "Assigning group beginning with (row:%d,col:%d)!\n", *p_row, *p_col); 
@@ -68,7 +65,7 @@ int e_reserve(unsigned search_mode, unsigned rows, unsigned cols, unsigned *p_ro
 				flock(fileno(file), LOCK_UN);
 				
 				try_again = 0;
-			}else
+			} else
 			{
 				fprintf(stderr, "Failed to find idle %d*%d group!\n", rows, cols);
 				
@@ -80,13 +77,13 @@ int e_reserve(unsigned search_mode, unsigned rows, unsigned cols, unsigned *p_ro
 		fclose(file);
 
 		
-		if(try_again == 0)
+		if (try_again == 0)
 			break;
 		
 		usleep(1000);
 	}
 		
-	return E_OK;//success;	
+	return E_OK; // success;
 }
 
 
@@ -98,9 +95,9 @@ int find_group(unsigned platform_rows, unsigned platform_cols, unsigned mode, un
 	switch (mode) 
 	{
 		case REGULAR:
-			for(i=0; i<(platform_rows - rows + 1); i++)
+			for (i=0; i<(platform_rows - rows + 1); i++)
 			{
-				for(j=0; j<(platform_cols - cols + 1); j++)
+				for (j=0; j<(platform_cols - cols + 1); j++)
 				{
 					if ((find = check_available(platform_rows, platform_cols, status, i, j, rows, cols)) == E_OK)
 					{
@@ -109,17 +106,17 @@ int find_group(unsigned platform_rows, unsigned platform_cols, unsigned mode, un
 						break;
 					}
 				}
-				if(find==E_OK)
+				if (find==E_OK)
 				{
 					break;
 				}
 			}
-			break;	
+			break;
 		
 		case ALIGNED:
-			for(i=0; i<(platform_rows - rows + 1); i+=rows)// adjusting row and col aligned
+			for (i=0; i<(platform_rows - rows + 1); i+=rows) // adjusting row and col aligned
 			{
-				for(j=0; j<(platform_cols - cols + 1); j+=cols)
+				for (j=0; j<(platform_cols - cols + 1); j+=cols)
 				{
 					if ((find = check_available(platform_rows, platform_cols, status, i, j, rows, cols)) == E_OK)
 					{
@@ -128,23 +125,23 @@ int find_group(unsigned platform_rows, unsigned platform_cols, unsigned mode, un
 						break;
 					}
 				}
-				if(find==E_OK)
+				if (find==E_OK)
 				{
 					break;
 				}
 			}
-			break;		
+			break;
 					
 		case RANDOM:
 			srand(time(NULL));
 
-			for (k=0;k<platform_rows*platform_cols;k++)
+			for (k=0; k<platform_rows*platform_cols; k++)
 			{
-				//randomly generate "row" and "col"
+				// randomly generate "row" and "col"
 				i = rand()%(platform_rows-rows+1);
 				j = rand()%(platform_cols-cols+1);
 				
-				//check if is available
+				// check if is available
 				if ((find = check_available(platform_rows, platform_cols, status, i, j, rows, cols)) == E_OK)
 				{
 					*p_row = i;
@@ -156,11 +153,7 @@ int find_group(unsigned platform_rows, unsigned platform_cols, unsigned mode, un
 			
 		default:
 			fprintf(stderr, "ERROR: Invalid search mode!\n");
-			
-			
 	}
-	
-	
 
 	return find;
 }
@@ -172,11 +165,11 @@ int check_available(unsigned platform_rows, unsigned platform_cols, unsigned *st
 	int available = E_OK;
 	unsigned i, j;
 	
-	for(i=0; i<rows; i++)
+	for (i=0; i<rows; i++)
 	{
-		for(j=0; j<cols; j++)
+		for (j=0; j<cols; j++)
 		{
-			if(status[(row+i)*platform_cols + (col + j)] == 1)
+			if (status[(row+i)*platform_cols + (col + j)] == 1)
 			{
 				available = E_ERR;
 				break;
@@ -195,48 +188,47 @@ void get_epiphany_status(unsigned platform_rows, unsigned platform_cols, FILE *f
 	unsigned i, j;
 	char line[50];
 	
-	for(i=0; i<platform_rows; i++)
+	for (i=0; i<platform_rows; i++)
 	{
-		for(j=0; j<platform_cols; j++)
+		for (j=0; j<platform_cols; j++)
 		{
 			fseek(file, 12*(i*platform_cols + j) + 10, SEEK_SET);
 			fgets(line, 50, file);
   		sscanf(line, "%d", (p_status + i*platform_cols + j));
 		}
 	}
+
 	return;
 }
 
 void modify_epiphany_status(unsigned platform_rows, unsigned platform_cols, FILE *file, unsigned rows, unsigned cols, unsigned row, unsigned col, unsigned value)
 {
 	
-	unsigned i,j;
+	unsigned i, j;
 	
-	for(i=row; i<(row+rows); i++)
+	for (i=row; i<(row+rows); i++)
 	{
-		for(j=col; j<(col+cols); j++)
+		for (j=col; j<(col+cols); j++)
 		{
 			fseek(file, 12*(i*platform_cols + j)+10, SEEK_SET);
 			fprintf(file, "%d", value);
 		}
 	}
 	
-	return;		
+	return;
 }
 
 
 int e_release(unsigned rows, unsigned cols, unsigned row, unsigned col)
 {
 	FILE *file;
-	char *filename_work = "/home/linaro/epiphany.status";
-	unsigned i,j;
+	unsigned i, j;
 	unsigned result;
 	
 	file = fopen(filename_work, "r+");
 	
 	// Lock the epiphany.status file
-	while((result = flock(fileno(file), LOCK_EX)) != 0)
-	{};
+	while ((result = flock(fileno(file), LOCK_EX)) != 0) {};
 	
 	// Modifying the epiphany.status file, set idle(0)
 	modify_epiphany_status(platform_rows, platform_cols, file, rows, cols, row, col, 0);
@@ -249,5 +241,5 @@ int e_release(unsigned rows, unsigned cols, unsigned row, unsigned col)
 	
 	fclose(file);
 	
-	return E_OK;		
+	return E_OK;
 }

@@ -1,5 +1,6 @@
 /*
 e_demo.c
+
 Copyright (C) 2012 Adapteva, Inc.
 Contributed by Wenlin Song <wsong@wpi.edu>
                Xin Mao <maoxin99@gmail.com> 
@@ -27,49 +28,47 @@ along with this program, see the file COPYING. If not, see
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "e_lib.h"
+#include "e-lib.h"
 
 int main(void)
 {
-	unsigned *a, *b, *c, *limit;
+	unsigned *a, *b, *c, *size;
 	unsigned i, j;
-	int coreid;
-	unsigned *master, *neighbour;
+	int      coreid;
+	unsigned *src, *dest;
 	unsigned row, col;
 	
-	master = (unsigned *)0x6000;
-	coreid = e_get_coreid() ^ 0x0c3;
-
-	neighbour = (void *)((coreid<<20) | 0x6000);
+	coreid = e_get_coreid() ^ 0x0c3; // Copy to the opposite core in chip
+	src    = (unsigned *) 0x6000;
+	dest   = (void *) ((coreid<<20) | 0x6000);
 	
-	limit = (unsigned *)0x1e00;
-	a = (unsigned *)0x2000;
-	b = (unsigned *)0x4000;
-	c = (unsigned *)0x6000;
+	size = (unsigned *) 0x1e00;
+	a    = (unsigned *) 0x2000;
+	b    = (unsigned *) 0x4000;
+	c    = (unsigned *) 0x6000;
 	
 	// Doing convolution to generate busy level
-	
-	for (i=0;i<(*limit);i++)
+	for (i=0; i<(*size); i++)
 	{
-		for (j=0;j<=i;j++)
+		for (j=0; j<=i; j++)
 		{
-			c[i] += a[i-j]*b[j];
+			c[i] += a[i-j] * b[j];
 		}
 	}
 	
 	for(i=0; i<100000; i++)
 	{
-		e_dma_copy(neighbour, master, *limit);
+		e_dma_copy(dest, src, *size);
 	}
 	
-	//celar the IMASK
+	// clear the IMASK
 	e_irq_mask(E_SYNC, E_FALSE);
 	
-	//enable the global interrupt
+	// enable the global interrupt
 	e_irq_global_mask(E_FALSE);
 
 	__asm__ __volatile__("idle");
 
 	return EXIT_SUCCESS;
 }
+

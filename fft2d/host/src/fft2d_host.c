@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
 
 
 
-	ILuint	ImgId;
-//	ILenum	Error;
+	ILuint  ImgId;
+//	ILenum  Error;
 	ILubyte *imdata;
 	ILuint  imsize, imBpp;
 

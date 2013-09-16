@@ -13,15 +13,15 @@ typedef struct timeval timeval_t;
 int main(int argc, char *argv[])
 {
 	fftwf_complex *in, *out;
-    fftwf_plan p;
+	fftwf_plan p;
 	int i, j;
 	float *fpi, *fpo;
 	timeval_t timer[TIMERS];
 	double time_d[TIMERS];
 
 	fprintf(stderr, "Allocating...\n");
-    in = (fftwf_complex *) fftwf_malloc(sizeof(fftwf_complex) * N * N);
-    out = (fftwf_complex *) fftwf_malloc(sizeof(fftwf_complex) * N * N);
+	in = (fftwf_complex *) fftwf_malloc(sizeof(fftwf_complex) * N * N);
+	out = (fftwf_complex *) fftwf_malloc(sizeof(fftwf_complex) * N * N);
 
 	fprintf(stderr, "Planning... ");
 	gettimeofday(&timer[0], NULL);
@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
 	fprintf(stderr, "%5.3f msec\n", time_d[1]);
 
 	fprintf(stderr, "Cleaning...\n");
-    fftwf_destroy_plan(p);
-    fftwf_free(in);
+	fftwf_destroy_plan(p);
+	fftwf_free(in);
 	fftwf_free(out);
 
 	return 0;

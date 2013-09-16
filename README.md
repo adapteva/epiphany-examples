@@ -20,6 +20,8 @@ dma_slave: DMA configured in slave mode using AUTODMA register
 
 emesh_read_latency: Measures read latency of the eMesh network on chip
 
+fft2d: Image processing demo using a multicore 2D-FFT
+
 hardware_barrier: Implements a hardware barrier using 'WAND' instruction
 
 hardware_loops: Implements zero overhead looping using LC,LS,LE registers

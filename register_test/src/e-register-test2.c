@@ -115,7 +115,7 @@ int main(void)
 				global_index[0] = global_index[0] + 1;
 			}
 			// Set to 1
-			auto0[0] = 0xffffffffffffffff;
+			auto0[0] = 0xffffffff;
 			
 			if((auto0[0] == 0xffffffff)&&(auto0[1] == 0xffffffff)) 
 			{
@@ -176,7 +176,7 @@ int main(void)
 				global_index[0] = global_index[0] + 1;
 			}
 			// Set to 1
-			auto0[0] = 0xffffffffffffffff;
+			auto0[0] = 0xffffffff;
 			
 			if((auto0[0] == 0xffffffff)&&(auto0[1] == 0xffffffff))
 			{

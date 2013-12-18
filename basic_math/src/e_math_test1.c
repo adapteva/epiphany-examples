@@ -106,13 +106,8 @@ int main(void)
 		sprintf(outbuf, "\n Addition is wrong!\n");
 	}else
 	{
-		if ( (temp >=(list[0] - 2)) && (temp <=(list[0] + 2)) )
-			{
-				index++;//sprintf(outbuf , "\nPASS for addition!\n");
-			}else
-			{
-				sprintf(outbuf , "\nThe clock cycle for addition is %d instead of %d.\n", temp, list[0]);
-			}
+	  index++;
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for addition is %d.\n", temp);
 	}
 	
 	// Subtraction
@@ -134,13 +129,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Subtraction is wrong!\n");
 	}else
 	{
-		if ((temp >= (list[1] - 2)) && (temp <= (list[1] + 2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf) , "\nPASS for substraction!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for subtraction is %d instead of %d.\n", temp, list[1]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf) , "\nPASS for substraction!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for subtraction is %d.\n", temp);
 	}
 	
 	// Mul
@@ -161,13 +151,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Multiplication is wrong!\n");
 	}else
 	{
-		if ((temp >=(unsigned) (list[2] -2)) && (temp <=(unsigned) (list[2]+2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for multiplication!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for multiplication is %d instead of %d.\n", temp, list[2]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for multiplication!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for multiplication is %d.\n", temp);
 	}
 	
 	// Div
@@ -188,13 +173,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Division is wrong!\n");
 	}else
 	{
-		if ( (temp > (unsigned) (list[3] * 0.8)) && (temp < (unsigned) (list[3] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for division!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for division is %d instead of %d.\n", temp, list[3]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for division!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for division is %d.\n", temp);
 	}
 
 	// Mod
@@ -216,13 +196,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Mod is wrong!\n");
 	}else
 	{
-		if ( (temp > (unsigned)(list[4] * 0.8)) && (temp < (unsigned)(list[4] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for mod!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for mod is %d instead of %d.\n", temp, list[4]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for mod!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for \"fmodf()\" is %d.\n", temp);
 	}
 	
 	// Sin
@@ -243,13 +218,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Sin is wrong!\n");		
 	}else
 	{
-		if ( (temp > (unsigned)(list[5] * 0.8)) && (temp < (unsigned)(list[5] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for sin!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for sin is %d instead of %d.\n", temp, list[5]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for sin!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for \"sinf()\" is %d.\n", temp);
 	}
 	
 	// Cos
@@ -270,13 +240,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Cos is wrong!\n");
 	}else
 	{
-		if ( (temp > (unsigned)(list[6] * 0.8)) && (temp < (unsigned)(list[6] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for cos!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for cos is %d instead of %d.\n", temp, list[6]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for cos!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for \"cosf()\" is %d.\n", temp);
 	}
 	
 
@@ -297,13 +262,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Sqrt is wrong!\n");		
 	}else
 	{
-		if ( (temp > (list[7] * 0.8)) && (temp < (list[7] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for square root!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for sqrt is %d instead of %d.\n", temp, list[7]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for square root!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for \"sqrtf()\" is %d.\n", temp);
 	}
 	
 	// Ceil
@@ -323,13 +283,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Ceil is wrong!\n");	
 	}else
 	{
-		if ( (temp > (list[8] * 0.8)) && (temp < (list[8] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for ceil!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for ceil is %d instead of %d.\n", temp, list[8]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for ceil!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for \"ceilf()\" is %d.\n", temp);
 	}
 
 	// Floor
@@ -349,13 +304,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Floor is wrong!\n");
 	}else
 	{
-		if ( (temp > (list[9] * 0.8)) && (temp < (list[9] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for floor!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for floor is %d instead of %d.\n", temp, list[9]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for floor!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for \"floorf()\" is %d.\n", temp);
 	}
 	
 
@@ -376,13 +326,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Log10 is wrong!\n");
 	}else
 	{
-		if ( (temp > (list[11] * 0.8)) && (temp < (list[11] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for log10!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for log10 is %d instead of %d.\n", temp, list[10]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for log10!\n");
+	  sprintf(outbuf +strlen(outbuf) , "\nThe clock cycle count for \"log10f()\" is %d.\n", temp);
 	}
 	
 
@@ -403,13 +348,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Ln is wrong!\n");
 	}else
 	{
-		if ( (temp > (list[11] * 0.8)) && (temp < (list[11] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for ln!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for ln is %d instead of %d.\n", temp, list[11]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for ln!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for \"logf()\" is %d.\n", temp);
 	}
 	
 	// Power
@@ -429,13 +369,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Power is wrong!\n");
 	}else
 	{
-		if ( (temp > (list[12] * 0.8)) && (temp < (list[12] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for power!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for power is %d instead of %d.\n", temp, list[12]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for power!\n");
+	  sprintf(outbuf +strlen(outbuf), "\nThe clock cycle count for \"powf()\" is %d.\n", temp);
 	}
 	
 	// Ldexp
@@ -455,13 +390,8 @@ int main(void)
 		sprintf(outbuf+strlen(outbuf), "\n Ldexp is wrong!\n");
 	}else
 	{
-		if ( (temp > (list[13] * 0.8)) && (temp < (list[13] * 1.2)) )
-			{
-				index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for ldexp!\n");
-			}else
-			{
-				sprintf(outbuf +strlen(outbuf), "\nThe clock cycle for ldexp is %d instead of %d.\n", temp, list[13]);
-			}
+	  index++;//sprintf(outbuf +strlen(outbuf), "\nPASS for ldexp!\n");
+	  sprintf(outbuf +strlen(outbuf)  , "\nThe clock cycle count for \"ldexpf()\" is %d.\n", temp);
 	}
 	
 	mailbox[0] = index;

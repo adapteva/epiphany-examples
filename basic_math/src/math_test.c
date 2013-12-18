@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 				row=i;
 				col=j;
 				coreid = (row + platform.row) * 64 + col + platform.col;
-				fprintf(stderr,"%3d: Message from eCore 0x%03x (%2d,%2d) : \n",(i*platform.cols+j),coreid,row,col);
+				//fprintf(stderr,"%3d: Message from eCore 0x%03x (%2d,%2d) : \n",(i*platform.cols+j),coreid,row,col);
 				e_start(&dev, i, j);
 				usleep(100000);
 			
@@ -92,12 +92,14 @@ int main(int argc, char *argv[])
 				// Print the message and close the workgroup.
 				if(flag == 14)
 				{
-					fprintf(stderr,"PASS!\n");
 				}else
 				{
-					fprintf(stderr, "%s\n", emsg);
+				  fprintf(stderr,"FAIL!\n");
 				}
-			
+				//Only print out messages on core 0
+				if(i==0 & j==0){
+				  fprintf(stderr, "%s\n", emsg);
+				}
 		} 
 	}
 

@@ -12,6 +12,7 @@
 ######################
 # Emacs/vim/gedit backup files
 *~
+.#*
 .*.swp
 .*.swo
 

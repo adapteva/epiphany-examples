@@ -48,10 +48,6 @@ int main(int argc, char *argv[]){
   unsigned clr;
   clr = (unsigned)0x00000000;
 
-  //Calculation being done
-  printf("Calculating sum of products of two integer vectors of length %d initalized to all 0x1's using %d Ccores.\n",N,CORES);
-  printf("........\n");
-
   //Initalize Epiphany device
   e_init(NULL);                      
   e_reset_system();                                      //reset Epiphany

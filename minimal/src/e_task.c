@@ -17,21 +17,7 @@ along with this program, see the file COPYING. If not, see
 <http://www.gnu.org/licenses/>.
 */
 
-
-/*
-This function calculates the sum of product of two vectors located in the Epiphany
-local memory.
-
-for (i=0; i<N; i++) {
-	 c += a[i] * b[i];
-    }
-  
-*/
-#include <stdio.h>
-#include <stdlib.h>
-#include "e-lib.h"
-#include "common.h"
-
+/*A bare minimum function */
 int main(void)
 {
   __asm__ __volatile__("idle");

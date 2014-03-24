@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
   printf("------------------------------------------------------------------\n");
   for (i=0; i<platform.rows; i++) {
     for (j=0; j<platform.cols; j++) {     
-      printf("(%02d,%02d)\t", i,j);
+      printf("%02d%02d\t", i,j);
 
       e_read(&dev, i, j, 0xf0400, &data, sizeof(unsigned));//config 
       printf("0x%08x\t",data);

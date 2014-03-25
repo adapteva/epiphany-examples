@@ -18,128 +18,89 @@
 */
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <e_test.h>
 
-#define word_size       (4)
-#define buffer_size     (0x2000)
-#define CORES           16
-#define N 16
-#define A(i,j) a_mat[j*N+i]
-#define B(i,j) b_mat[j*N+i]
-#define C(i,j) c_mat[j*N+i]
-
-float  a_mat[N*N] __attribute__ ((section (".data_bank1")));//result matrix
-float  b_mat[N*N] __attribute__ ((section (".data_bank2")));//result matrix
-float  c_mat[N*N] __attribute__ ((section (".data_bank3")));//result matrix
+#define WORD_SIZE       (4)
+#define BUF_SIZE        (0x80)
+#define ROWS            4
+#define COLS            4
+#define BANK2           (0x00004000)
+#define START           (0x80800000)
+//#define VERBOSE
 
 int main(int argc, char *argv[]){
   int      i,j,k;
-  unsigned row = 0;
-  unsigned col = 0;
-  float    sum  = 0.f;
- 
   unsigned int offset;
-  
+  unsigned coreID,row,col; 
+
   unsigned *addr;
   unsigned *dummy;
 
-  int fail = 0;
-  int verbose = 1;
-  int buffers[CORES+1];
-
-  buffers[0] =0x82400000;//core (0,0)
-  buffers[1] =0x82500000;//core (0,1)
-  buffers[2] =0x82600000;//core (0,2)
-  buffers[3] =0x82700000;//core (0,3)
-  buffers[4] =0x86400000;//core (1,0)
-  buffers[5] =0x86500000;//etc
-  buffers[6] =0x86600000;
-  buffers[7] =0x86700000;
-  buffers[8] =0x8a400000;
-  buffers[9] =0x8a500000;
-  buffers[10]=0x8a600000;
-  buffers[11]=0x8a700000;
-  buffers[12]=0x8e400000;
-  buffers[13]=0x8e500000;
-  buffers[14]=0x8e600000;
-  buffers[15]=0x8e700000;
-  buffers[16]=0x80100000;//DRAM
-
-  const char *test_name = "emesh";
-
+  int status = 1;
   unsigned int result;
 
   unsigned PAT0 = 0x55555555;
   unsigned PAT1 = 0xAAAAAAAA;
 
   //Test Init
-  e_test_init(&row, &col);
-  
-  //Communicate with all cores on chip and DRAM
-  for(i=0; i<(CORES+1); i++){
-    offset = buffers[i] + 0x2000;
-    dummy = (unsigned *) (offset+buffer_size);
-    //Write/Read Buffer
-    for(k=0; k<(buffer_size); k=k+word_size){
-      addr=(unsigned *) (offset+k);
-      /*PAT0*/
-      (*(addr))=PAT0;
-      //call below b/c architecture does not guarantee RAW for external access
-      e_write_ack(dummy);                         
-      result=(*(addr));
-      if(result!=PAT0){
-	fail=1;
-	if(verbose>0){
-	  printf("FAIL-PAT0: core=(%d,%d) addr=(0x%x) result=0x%x\n",row,col,k,result); 
+  coreID=e_test_init();
+  row = (coreID >> 26) & 0x7;
+  col = (coreID >> 20 )& 0x7;
+
+  //Testing all cores
+  for(i=0;i<ROWS;i++){
+    for(j=0;j<COLS;j++){
+      offset=START+(i<<26)+(j<<20)+BANK2+(row*ROWS+col)*BUF_SIZE;
+#ifdef VERBOSE
+	    printf("offset=%x, id=%x, i=%d, j=%d, row=%d, col=%d\n",offset,coreID,i,j,row,col);
+#endif   
+      dummy = (unsigned *) (offset + BUF_SIZE-WORD_SIZE);
+      if(1){
+	if(!(offset==coreID)){
+	  //Write PAT0
+	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
+	    addr=(unsigned *) (offset+k);
+	    (*(addr))= ( PAT0 | k );
+#ifdef VERBOSE
+	    printf("addr=%p, id=%x, i=%d, j=%d, row=%d, col=%d\n",addr,coreID,i,j,row,col);
+#endif 
+	  }
+	  //Memory Ordering Sync (to get around RAW races)
+	  e_write_ack(dummy);  
+	  //Verify PAT0
+	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
+	    addr=(unsigned *) (offset+k);
+	    result=(*(addr));
+	    if(result!= ( PAT0  | k )){
+	      status=0;
+#ifdef VERBOSE
+	      printf("FAIL: core=(%d,%d) addr=(0x%x) result=0x%x\n",i,j,k,result); 
+#endif
+	    }
+	  }	
+	  //Write PAT1
+	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
+	    addr=(unsigned *) (offset+k);
+	    (*(addr))= ( PAT1 | k );
+	  }
+	  //Memory Ordering Sync (to get around RAW races)
+	  e_write_ack(dummy);  
+	  //Verify PAT0
+	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
+	    addr=(unsigned *) (offset+k);
+	    result=(*(addr));
+	    if(result!= ( PAT1  | k )){
+	      status=0;
+#ifdef VERBOSE
+	      printf("FAIL: core=(%d,%d) addr=(0x%x) result=0x%x\n",i,j,k,result); 
+#endif
+	    }
+	  }
 	}
       }
-      /*PAT1*/
-      (*(addr))=PAT1;
-      e_write_ack(dummy); 
-      result=(*(addr));
-      if(result!=PAT1){
-	fail=1;
-	if(verbose>0){	    
-	  printf("FAIL-PAT1: core=(%d,%d) addr=(0x%x) result=0x%x\n",row,col,k,result); 
-	}
-      }
-    }
+    }  
   }
-
-  //Fill input matrices with a constant
-  for (i=0; i<N; i++){
-     for (j=0; j<N; j++){
-      A(i,j) = 1.0f;
-      B(i,j) = 1.0f;
-       }
-    }
-
-  //Run matrix multiplication
-  for (i=0; i<N; i++){
-    for (j=0; j<N; j++){
-      C(i,j) = 0;
-      for (k=0; k<N; k++){
-         C(i,j) += A(i,k)*B(k,j);
-      }
-    }
-  }
-
-  //Sum up the C matrix
-  for (i=0; i<N; i++){
-    for (j=0; j<N; j++){
-      sum+=C(i,j);
-    }
-  }
-  
-  //Compare to expected result
-  if(sum!=4096.0f){
-    fail=1;
-    printf("FAIL: core=(%d,%d) expected=4096.0000 result=%f\n",row,col,sum); 
-  }
-  
   //Finish Test
-  return e_test_finish(test_name,fail,row,col);
+  return e_test_finish(status);
 }
+
 

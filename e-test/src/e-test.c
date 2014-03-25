@@ -26,6 +26,8 @@ along with this program, see the file COPYING. If not, see
 
 #include <e-hal.h>
 
+#define RAM_SIZE (0x8000)
+
 void e_check_test(void *dev, unsigned row, unsigned col, int *status);
 
 int main(int argc, char *argv[]){
@@ -33,9 +35,11 @@ int main(int argc, char *argv[]){
   e_platform_t platform;
   e_epiphany_t dev;
   unsigned int result;
-  unsigned int i,j;
+  unsigned int i,j,k;
   unsigned int rows,cols;
+  unsigned int data;
   int status=1;//pass
+  unsigned int read_buffer[RAM_SIZE/4];
 
   //Open
   e_loader_diag_t verbose;
@@ -44,6 +48,7 @@ int main(int argc, char *argv[]){
   e_open(&dev, 0, 0, platform.rows, platform.cols);
   //e_set_loader_verbosity(L_D3);
 
+  printf("-------------------------------------------------------\n");
   //##############################
   //Simple 32 Bit Memory Test
   //##############################
@@ -81,15 +86,53 @@ int main(int argc, char *argv[]){
   //##############################
   //Read/Write Test from Host
   //##############################
+  if(1){
+    for(k=0;k<RAM_SIZE/4;k++){
+      write_buffer[k]=0xffff;
+      printf("%x\n",read_buffer[k]);
+    }
+    exit;
+    e_reset_system();
+    printf("***Running Host Memory Test***\n");  
+    for (i=0; i<platform.rows; i++) {
+      for (j=0; j<platform.cols; j++) {   
+	data=0x55555555;
+	e_write(&dev, i, j, 0x0, &data, RAM_SIZE);
+	e_read(&dev, i, j, 0x0, &read_buffer, RAM_SIZE);	
+	for(k=0;k<RAM_SIZE/4;k=k+1){
+	  printf("%c\n",(char)read_buffer[k]);
+	}
+	data=0xaaaaaaaa;
+	e_write(&dev, i, j, 0x0, &data, RAM_SIZE);
+	e_read(&dev, i, j, 0x0, read_buffer, RAM_SIZE);
+	for(k=0;k<RAM_SIZE;k=k+1){
+	  printf("%c\n",(char)read_buffer[k]);
+	}
+      }
+    }
+  }
+  //##############################
+  //DRAM Read/Write Test from Core
+  //##############################
+  
 
   //##############################
   //EMESH Test
   //##############################
-    
-  //##############################
-  //DRAM Read/Write Test from Core
-  //##############################
-
+  if(1){
+    e_reset_system();
+    printf("***Running Emesh Test***\n");
+    i=0;
+    j=0;
+    rows=platform.rows;
+    cols=platform.cols;
+    e_load_group("bin/test_emesh.srec", &dev, i, j, rows, cols, E_TRUE);
+    for (i=0; i<platform.rows; i++) {
+      for (j=0; j<platform.cols; j++) {           
+	e_check_test(&dev, i, j, &status);
+      }
+    }
+  }
   //##############################
   //Simple Per Core Matmul Test
   //##############################
@@ -110,21 +153,21 @@ int main(int argc, char *argv[]){
   //##############################
   //Final Check
   //##############################
+  printf("-------------------------------------------------------\n");
   if(status>0){
-    
+    printf("GOOD: CHIP PASSED SELF-TEST!\n");
   }
   else{
-    printf("-------------------------------------------------------\n");
-    printf("CHIP FAILED!\n");
+    printf("BAD: CHIP FAILED!!!!\n");
   }
-
+  printf("-------------------------------------------------------\n");    
 
   //Close
   e_close(&dev);
   e_finalize();
   return 0;
 }
-
+//////////////////////////////////////////////////////////////////////////
 void e_check_test(void *dev, unsigned row, unsigned col, int *status){
   unsigned int result;
   while(1){

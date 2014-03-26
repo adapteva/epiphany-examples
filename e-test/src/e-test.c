@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
 
   printf("-------------------------------------------------------\n");
   //##############################
-  //Simple 32 Bit Memory Test
+  //1. Simple 32 Bit Memory Test
   //##############################
   if(1){
     e_reset_system();
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
     }
   }
   //##############################
-  //March Memory Test (run on 0,0)
+  //2. March Memory Test
   //##############################
   if(1){
     e_reset_system();
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
     e_check_test(&dev, 2, 2, &status);  
   }
   //##############################
-  //Read/Write Test from Host
+  //3. Read/Write Test from Host
   //##############################
   if(1){
     //Create write values
@@ -121,12 +121,25 @@ int main(int argc, char *argv[]){
     }
   }
   //##############################
-  //DRAM Read/Write Test from Core
+  //4. DRAM Read/Write Test from Core
   //##############################
-  
+  if(1){
+    e_reset_system();
+    printf("***Running DRAM Read/Write Test***\n");
+    i=0;
+    j=0;
+    rows=platform.rows;
+    cols=platform.cols;
+    e_load_group("bin/test_memory_dram.srec", &dev, i, j, rows, cols, E_TRUE);
+    for (i=0; i<platform.rows; i++) {
+      for (j=0; j<platform.cols; j++) {           
+	e_check_test(&dev, i, j, &status);
+      }
+    }
+  }
 
   //##############################
-  //EMESH Test
+  //5. EMESH Test
   //##############################
   if(1){
     e_reset_system();
@@ -143,7 +156,7 @@ int main(int argc, char *argv[]){
     }
   }
   //##############################
-  //Simple Per Core Matmul Test
+  //6. Simple Per Core Matmul Test
   //##############################
   if(1){
     e_reset_system();
@@ -162,8 +175,9 @@ int main(int argc, char *argv[]){
   //##############################
   //Max Power Test
   //##############################
-  //1.
-  //2.
+  //1.Convoluation kernel
+  //2.DMA channel 0 on chip
+  //3.DMA channel 1 off chip
 
   //##############################
   //Final Check

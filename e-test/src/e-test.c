@@ -39,7 +39,10 @@ int main(int argc, char *argv[]){
   unsigned int rows,cols;
   unsigned int data;
   int status=1;//pass
+
   unsigned int read_buffer[RAM_SIZE/4];
+  unsigned int write_55_buffer[RAM_SIZE/4];
+  unsigned int write_aa_buffer[RAM_SIZE/4];
 
   //Open
   e_loader_diag_t verbose;
@@ -87,26 +90,32 @@ int main(int argc, char *argv[]){
   //Read/Write Test from Host
   //##############################
   if(1){
+    //Create write values
     for(k=0;k<RAM_SIZE/4;k++){
-      write_buffer[k]=0xffff;
-      printf("%x\n",read_buffer[k]);
+      write_55_buffer[k]=0x55555555;
     }
-    exit;
+    for(k=0;k<RAM_SIZE/4;k++){
+      write_aa_buffer[k]=0xaaaaaaaa;
+    }
     e_reset_system();
-    printf("***Running Host Memory Test***\n");  
+    printf("***Running Host Read/Write Test***\n");  
     for (i=0; i<platform.rows; i++) {
       for (j=0; j<platform.cols; j++) {   
-	data=0x55555555;
-	e_write(&dev, i, j, 0x0, &data, RAM_SIZE);
-	e_read(&dev, i, j, 0x0, &read_buffer, RAM_SIZE);	
+	e_write(&dev, i, j, 0x0, &write_55_buffer, RAM_SIZE);
+	e_read(&dev, i, j,  0x0, &read_buffer, RAM_SIZE);	
 	for(k=0;k<RAM_SIZE/4;k=k+1){
-	  printf("%c\n",(char)read_buffer[k]);
+	  if(read_buffer[k]!=write_55_buffer[k]){
+	    printf("FAIL (%d,%d) k=%d data=%x\n",i,j,k,read_buffer[k]);
+	    status=0;
+	  }
 	}
-	data=0xaaaaaaaa;
-	e_write(&dev, i, j, 0x0, &data, RAM_SIZE);
-	e_read(&dev, i, j, 0x0, read_buffer, RAM_SIZE);
-	for(k=0;k<RAM_SIZE;k=k+1){
-	  printf("%c\n",(char)read_buffer[k]);
+	e_write(&dev, i, j, 0x0, &write_aa_buffer, RAM_SIZE);
+	e_read(&dev, i, j, 0x0, &read_buffer, RAM_SIZE);
+	for(k=0;k<RAM_SIZE/4;k=k+1){
+	  if(read_buffer[k]!=write_aa_buffer[k]){
+	    printf("FAIL (%d,%d) k=%d data=%x\n",i,j,k,read_buffer[k]);
+	    status=0;
+	  }
 	}
       }
     }
@@ -150,6 +159,12 @@ int main(int argc, char *argv[]){
       }
     }
   }
+  //##############################
+  //Max Power Test
+  //##############################
+  //1.
+  //2.
+
   //##############################
   //Final Check
   //##############################

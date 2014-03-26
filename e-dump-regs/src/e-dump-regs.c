@@ -46,38 +46,49 @@ int main(int argc, char *argv[]){
   e_init(NULL);
   e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols);
-
+  //e_set_loader_verbosity(L_D3);
   //Put Code here
-  printf("CORE\tCONFIG\t\tSTATUS\t\tPC\t\tDEBUG\t\tIRET\t\tIMASK\t\tILAT\t\tIPEND\n");
-  printf("------------------------------------------------------------------");
-  printf("------------------------------------------------------------------\n");
+  printf("CORE  CONFIG      STATUS      PC          CTIMER0     CTIMER1     DMA0STATUS  DMA1STATUS  DEBUG   IRET    IMASK    ILAT    IPEND\n");
+  printf("--------------------------------------------------------------------------------------------------------------------------------------------\n");
   for (i=0; i<platform.rows; i++) {
     for (j=0; j<platform.cols; j++) {     
-      printf("%02d%02d\t", i,j);
+      printf("%02d%02d  ", i,j);
 
       e_read(&dev, i, j, 0xf0400, &data, sizeof(unsigned));//config 
-      printf("0x%08x\t",data);
+      printf("0x%08x  ",data);
 
       e_read(&dev, i, j, 0xf0404, &data, sizeof(unsigned));//status 
-      printf("0x%08x\t",data);
+      printf("0x%08x  ",data);
 
       e_read(&dev, i, j, 0xf0408, &data, sizeof(unsigned));//pc 
-      printf("0x%08x\t",data);
+      printf("0x%08x  ",data);
+
+      e_read(&dev, i, j, 0xf0438, &data, sizeof(unsigned));//ctimer0
+      printf("0x%08x  ",data);
+
+      e_read(&dev, i, j, 0xf043C, &data, sizeof(unsigned));//ctimer1
+      printf("0x%08x  ",data);
+
+      e_read(&dev, i, j, 0xf051C, &data, sizeof(unsigned));//dam0status
+      printf("0x%08x  ",data);
+
+      e_read(&dev, i, j, 0xf053C, &data, sizeof(unsigned));//dma1status
+      printf("0x%08x  ",data);
 
       e_read(&dev, i, j, 0xf040C, &data, sizeof(unsigned));//debug
-      printf("0x%08x\t",data);
+      printf("0x%04x  ",data);
 
       e_read(&dev, i, j, 0xf0420, &data, sizeof(unsigned));//iret 
-      printf("0x%08x\t",data);
+      printf("0x%04x  ",data);
 
       e_read(&dev, i, j, 0xf0424, &data, sizeof(unsigned));//imask 
-      printf("0x%08x\t",data);
+      printf("0x%04x  ",data);
 
       e_read(&dev, i, j, 0xf0428, &data, sizeof(unsigned));//ilat
-      printf("0x%08x\t",data);
+      printf("0x%04x  ",data);
 
       e_read(&dev, i, j, 0xf0434, &data, sizeof(unsigned));//ipend 
-      printf("0x%08x\t",data);
+      printf("0x%04x  ",data);
       printf("\n");
     }
   }

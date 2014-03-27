@@ -4,9 +4,10 @@ ELIBS=${ESDK}/tools/host/lib
 EINCS=${ESDK}/tools/host/include
 ELDF=${ESDK}/bsps/current/internal.ldf
 
+mkdir -p bin
+
 #Cleaning the bin directory
-rm bin/*.elf
-rm bin/*.srec
+rm -f bin/* &> /dev/null
 
 #Host side program
 gcc src/e-test.c -o bin/e-test.elf -I ${EINCS} -L ${ELIBS} -le-hal

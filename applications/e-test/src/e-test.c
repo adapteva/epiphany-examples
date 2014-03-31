@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
   unsigned int rows,cols;
   unsigned int data;
   int status=1;//pass
-
+  
   unsigned int read_buffer[RAM_SIZE/4];
   unsigned int write_55_buffer[RAM_SIZE/4];
   unsigned int write_aa_buffer[RAM_SIZE/4];
@@ -194,7 +194,7 @@ int main(int argc, char *argv[]){
   //Close
   e_close(&dev);
   e_finalize();
-  return 0;
+  return ~status;
 }
 //////////////////////////////////////////////////////////////////////////
 void e_check_test(void *dev, unsigned row, unsigned col, int *status){

@@ -36,8 +36,22 @@ int main(int argc, char *argv[]){
   e_epiphany_t dev;
 
   unsigned int read_buffer[RAM_SIZE/4];
-  int i,j,k;
-  
+  unsigned int read_data;
+  unsigned int i,j;
+  int row0,col0,rows,cols,slow;
+  unsigned addr,k;
+
+  if(argc < 2){
+    usage();
+    return 1;
+  }
+  else{
+    row0  = atoi(argv[1]);
+    col0  = atoi(argv[2]);
+    rows  = atoi(argv[3]);
+    cols  = atoi(argv[4]);
+    slow  = atoi(argv[5]);
+  }
   //Open
   e_init(NULL);
   e_get_platform_info(&platform);
@@ -46,9 +60,19 @@ int main(int argc, char *argv[]){
   //Put Code here
   printf("(ROW,COL)   ADDRESS   DATA\n");
   printf("-----------------------------\n");
-  for (i=0; i<platform.rows; i++) {
-    for (j=0; j<platform.cols; j++) {           
-      e_read(&dev, i, j, 0x0, &read_buffer, RAM_SIZE);
+  for (i=row0; i<(row0+rows); i++) {
+    for (j=col0; j<(col0+cols); j++) {           
+      if(slow>0){
+	for(k=0;k<RAM_SIZE/4;k++){
+	  addr=4*k;
+	  e_read(&dev, i, j, addr, &read_data, sizeof(int));
+	  read_buffer[k]=read_data;
+	  //printf("addr=%x data=%x\n",addr,read_data);
+	}
+      }
+      else{
+	e_read(&dev, i, j, 0x0, &read_buffer, RAM_SIZE);
+      }
       for(k=0;k<RAM_SIZE/4;k++){
 	printf("(%2d,%2d)     0x%08x   0x%08x\n",i,j,k*4,read_buffer[k]);
       }
@@ -59,4 +83,7 @@ int main(int argc, char *argv[]){
   e_finalize();
   
   return 0;
+}
+void usage(){
+  printf("Usage: e-dump-mem <row-start> <col-start> <rows> <cols> <slow>\n");
 }

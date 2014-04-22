@@ -98,12 +98,12 @@ int main(int argc, char *argv[]){
   //---------------------------------------
   if(stage>3){
     //Change clock divider (EAST==2,7)
-    //e_open(&dev,2, 7, 1, 1);
-    //ee_write_esys(E_SYS_CONFIG, 0x50000000);
-    //data = 0x1;
-    //e_write(&dev, 0, 0, 0xf0300, &data, sizeof(int));
-    //ee_write_esys(E_SYS_CONFIG, 0x00000000);
-    //e_close(&dev);
+    e_open(&dev,2, 7, 1, 1);
+    ee_write_esys(E_SYS_CONFIG, 0x50000000);
+    data = 0x1;
+    e_write(&dev, 0, 0, 0xf0300, &data, sizeof(int));
+    ee_write_esys(E_SYS_CONFIG, 0x00000000);
+    e_close(&dev);
   }
   //-------------------------------------------------------
   e_finalize();  

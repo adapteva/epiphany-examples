@@ -105,6 +105,10 @@ int main(int argc, char *argv[]){
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
     e_close(&dev);
   }
+  if(stage>4){
+    //Enable timeout
+    ee_write_esys(E_SYS_CONFIG, 0x00000001);
+  }
   //-------------------------------------------------------
   e_finalize();  
   return 0;
@@ -114,7 +118,8 @@ void usage(){
   printf("Usage: e-init <stage>\n");
   printf("<stage>:\n");  
   printf(" 1 = reset & (power-down north)\n");
-  printf(" 2 = reset & (power-down north, west)\n");
-  printf(" 3 = reset & (power-down north, west, south)\n");
-  printf(" 4 = reset & (power-down north, west, south) & set east tx link to divide by 4\n");
+  printf(" 2 = #1 + power-down west\n");
+  printf(" 3 = #2 + power-down south\n");
+  printf(" 4 = #3 + set east tx link to divide by 4\n");
+  printf(" 5 = #4 + enable FPGA read timeout\n");
 }

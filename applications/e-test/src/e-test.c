@@ -29,9 +29,22 @@ along with this program, see the file COPYING. If not, see
 #define RAM_SIZE (0x8000)
 
 void e_check_test(void *dev, unsigned row, unsigned col, int *status);
-int my_reset_system();
+int  my_reset_system();
+void usage();
+
 int main(int argc, char *argv[]){
 
+  unsigned int stage;
+
+  if (argc < 2){
+    usage();
+    exit(1);
+  }  
+  else{
+    stage = atoi(argv[1]);
+  }
+
+  //----------------------------
   e_platform_t platform;
   e_epiphany_t dev;
   unsigned int result;
@@ -59,7 +72,7 @@ int main(int argc, char *argv[]){
   //##############################
   //1. Simple 32 Bit Memory Test
   //##############################
-  if(1){
+  if(stage==0 || stage==1 ){
     my_reset_system();
     printf("***Running simple memory test for all cores***\n");
 
@@ -73,7 +86,7 @@ int main(int argc, char *argv[]){
   //##############################
   //2. March Memory Test
   //##############################
-  if(1){
+  if(stage==0 || stage==2 ){
     my_reset_system();
     printf("***Running march-C memory test for all cores***\n");  
     //Running test, all in parallel
@@ -92,7 +105,7 @@ int main(int argc, char *argv[]){
   //##############################
   //3. Read/Write Test from Host
   //##############################
-  if(1){
+  if(stage==0 || stage==3 ){
     my_reset_system();    
     printf("***Running host read/write test for all cores***\n");  
 
@@ -140,7 +153,7 @@ int main(int argc, char *argv[]){
   //#################################
   //4. DRAM Read/Write Test from Core
   //#################################
-  if(1){
+  if(stage==0 || stage==4 ){
     my_reset_system();
     printf("***Running DRAM read/write test for all cores***\n");
     
@@ -179,7 +192,7 @@ int main(int argc, char *argv[]){
   //##############################
   //5. EMESH Test
   //##############################
-  if(1){
+  if(stage==0 || stage==5 ){
     my_reset_system();
     printf("***Running emesh test for all cores***\n");
 
@@ -193,7 +206,7 @@ int main(int argc, char *argv[]){
   //##############################
   //6. Simple Per Core Matmul Test
   //##############################
-  if(1){
+  if(stage==0 || stage==6 ){
     my_reset_system();
     printf("***Running simple matmul test for all cores***\n");
 
@@ -239,6 +252,7 @@ int main(int argc, char *argv[]){
 //////////////////////////////////////////////////////////////////////////
 void e_check_test(void *dev, unsigned row, unsigned col, int *status){
   unsigned int result;
+  int wait=1;
   while(1){
     e_read(dev,row, col, 0x24, &result, sizeof(unsigned));
     if(result==0xDEADBEEF){
@@ -253,14 +267,23 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status){
       break;
     }
     else{
-      usleep(1000000);
-      printf("waiting for core (%d,%d)\n",row,col);
+      if(wait){
+	usleep(1000000);      
+	printf("waiting for core (%d,%d)\n",row,col);
+	wait=0;
+      }
+      else{
+	printf("FAILED for core (%d,%d)\n",row,col);
+	*status=0;
+	break;
+      }
     }
   }		  
 }
 
 int my_reset_system()
 {
+
   e_epiphany_t dev;
   e_platform_t platform;
   e_init(NULL);
@@ -290,4 +313,16 @@ int my_reset_system()
   ee_write_esys(E_SYS_CONFIG, 0x00000000);
   e_close(&dev);
   return E_OK;
+}
+
+void usage(){
+  printf("Usage: e-init <stage>\n");
+  printf("<stage>:\n");  
+  printf(" 0 = run all tests)\n");
+  printf(" 1 = simple memory test\n");
+  printf(" 2 = march-c memory test\n");
+  printf(" 3 = host read/write test\n");
+  printf(" 4 = dram test\n");
+  printf(" 5 = emesh test\n");
+  printf(" 6 = matmul test\n");
 }

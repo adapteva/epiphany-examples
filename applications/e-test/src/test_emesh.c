@@ -21,8 +21,8 @@
 
 #define WORD_SIZE       (4)
 #define BUF_SIZE        (0x10)
-#define ROWS            4
-#define COLS            4
+#define ROWS            8
+#define COLS            8
 #define BANK2           (0x00004000)
 #define START           (0x80800000)
 //#define VERBOSE
@@ -47,8 +47,8 @@ int main(int argc, char *argv[]){
   col = (coreID >> 20 )& 0x7;
 
   //Testing all cores
-  for(i=0;i<ROWS;i++){
-    for(j=0;j<COLS;j++){
+  for(i=0;i<4;i++){
+    for(j=0;j<4;j++){
       offset=START+(i<<26)+(j<<20)+BANK2+(row*ROWS+col)*BUF_SIZE;
 #ifdef VERBOSE
 	    printf("offset=%x, id=%x, i=%d, j=%d, row=%d, col=%d\n",offset,coreID,i,j,row,col);

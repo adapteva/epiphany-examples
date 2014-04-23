@@ -215,8 +215,16 @@ int main(int argc, char *argv[]){
   //Final Check
   //##############################
   printf("-------------------------------------------------------\n");
+  char chip[32];
   if(status>0){
-    printf("GOOD: CHIP PASSED SELF-TEST %d!\n", status);
+    //Hack, can't make sense of hal data structure...
+    if ((dev.type == E_E64G401)){
+      strcpy(chip,"E64G401");
+    }
+    else{
+      strcpy(chip,"E16G301");
+    }
+    printf("GOOD: %s PASSED SELF-TEST!\n",chip);
   }
   else{
     printf("BAD: CHIP FAILED!!!!\n");

@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
   e_platform_t platform;
   e_epiphany_t dev;
   unsigned int data,stage;
-
+  int i,j;
   
   if(argc < 2){
     usage();
@@ -43,12 +43,13 @@ int main(int argc, char *argv[]){
   }
 
   //Open device
+  //e_set_loader_verbosity(H_D2);
   e_init(NULL);
   e_get_platform_info(&platform);
+
+
   //Reset the system
   e_reset_system();
-
-  
   
   //---------------------------------------
   //Shut down link (NORTH==0,2)
@@ -96,16 +97,37 @@ int main(int argc, char *argv[]){
     e_close(&dev);
   }
   //---------------------------------------
-  if(stage>3){
-    //Change clock divider (EAST==2,7)
+  if(stage>4){
+    //Configuring (EAST==2,7)
     e_open(&dev,2, 7, 1, 1);
     ee_write_esys(E_SYS_CONFIG, 0x50000000);
+    //Change clock divider to solve FPGA receiver speed path
     data = 0x1;
     e_write(&dev, 0, 0, 0xf0300, &data, sizeof(int));
+    //Up the current drive on the wait signal
+    //data = 0x02000000;
+    //e_write(&dev, 0, 0, 0xf0304, &data, sizeof(int));
+    //Return to normal mode
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
     e_close(&dev);
+    
   }
-  if(stage>4){
+  if(stage>3){
+    //Enable clock gating
+    e_open(&dev, 0, 0, platform.rows, platform.cols);
+    for (i=0; i<platform.rows; i++) {
+      for (j=0; j<platform.cols; j++) {
+	//eCore clock gating
+	data=0x00400000;
+	e_write(&dev, i, j, 0xf0400, &data, sizeof(data));
+	//eMesh clock gating
+	data=0x00000002;
+	e_write(&dev, i, j, 0xf0700, &data, sizeof(data));
+      }
+    }
+    e_close(&dev);
+  }
+  if(stage>5){
     //Enable timeout
     ee_write_esys(E_SYS_CONFIG, 0x00000001);
   }
@@ -117,9 +139,11 @@ int main(int argc, char *argv[]){
 void usage(){
   printf("Usage: e-init <stage>\n");
   printf("<stage>:\n");  
-  printf(" 1 = reset & (power-down north)\n");
+  printf(" 0 = reset)\n");
+  printf(" 1 = #0 + (power-down north)\n");
   printf(" 2 = #1 + power-down west\n");
   printf(" 3 = #2 + power-down south\n");
-  printf(" 4 = #3 + set east tx link to divide by 4\n");
-  printf(" 5 = #4 + enable FPGA read timeout\n");
+  printf(" 4 = #3 + enable clock gating\n");
+  printf(" 5 = #4 + set east tx link to divide by 4\n");
+  printf(" 6 = #5 + enable FPGA read timeout\n");
 }

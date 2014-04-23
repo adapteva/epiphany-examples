@@ -23,7 +23,7 @@
 
 #define WORD_SIZE       (4)            //testing 32 bit integers
 #define RAM_START       (0x2000)       //start after program
-#define RAM_END         (0x7000)       //only test bank 1 and 2, half bank 3
+#define RAM_END         (0x2010)       //only test bank 1 and 2, half bank 3
 
 int main(int argc, char *argv[]){
 

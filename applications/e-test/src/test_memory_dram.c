@@ -21,9 +21,9 @@
 
 #define WORD_SIZE       (4)
 #define BUF_SIZE        (0x100)
-#define ROWS            4
-#define COLS            4
-#define START           (0x8f000000)
+#define ROWS            8
+#define COLS            8
+#define START           (0x8e000000)
 //#define VERBOSE
 
 int main(int argc, char *argv[]){

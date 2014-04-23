@@ -20,7 +20,7 @@
 #include <stdio.h>
 
 #define WORD_SIZE       (4)
-#define BUF_SIZE        (0x80)
+#define BUF_SIZE        (0x10)
 #define ROWS            4
 #define COLS            4
 #define BANK2           (0x00004000)
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
 	    printf("offset=%x, id=%x, i=%d, j=%d, row=%d, col=%d\n",offset,coreID,i,j,row,col);
 #endif   
       dummy = (unsigned *) (offset + BUF_SIZE-WORD_SIZE);
-      if(1){
+      if(0){
 	if(!(offset==coreID)){
 	  //Write PAT0
 	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){

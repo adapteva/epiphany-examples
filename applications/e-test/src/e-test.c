@@ -29,7 +29,7 @@ along with this program, see the file COPYING. If not, see
 #define RAM_SIZE (0x8000)
 
 void e_check_test(void *dev, unsigned row, unsigned col, int *status);
-
+int my_reset_system();
 int main(int argc, char *argv[]){
 
   e_platform_t platform;
@@ -39,7 +39,9 @@ int main(int argc, char *argv[]){
   unsigned int rows,cols;
   unsigned int data;
   int status=1;//pass
-  
+  unsigned addr;
+  unsigned int read_data;
+
   unsigned int read_buffer[RAM_SIZE/4];
   unsigned int write_55_buffer[RAM_SIZE/4];
   unsigned int write_aa_buffer[RAM_SIZE/4];
@@ -50,19 +52,18 @@ int main(int argc, char *argv[]){
   e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols);
   //e_set_loader_verbosity(L_D3);
+  rows=platform.rows;
+  cols=platform.cols;
 
   printf("-------------------------------------------------------\n");
   //##############################
   //1. Simple 32 Bit Memory Test
   //##############################
   if(1){
-    e_reset_system();
-    printf("***Running Simple Memory Test***\n");
-    i=0;
-    j=0;
-    rows=platform.rows;
-    cols=platform.cols;
-    e_load_group("bin/test_memory_simple.srec", &dev, i, j, rows, cols, E_TRUE);
+    my_reset_system();
+    printf("***Running simple memory test for all cores***\n");
+
+    e_load_group("bin/test_memory_simple.srec", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<platform.rows; i++) {
       for (j=0; j<platform.cols; j++) {           
 	e_check_test(&dev, i, j, &status);
@@ -73,23 +74,28 @@ int main(int argc, char *argv[]){
   //2. March Memory Test
   //##############################
   if(1){
-    e_reset_system();
-    printf("***Running March-C Memory Test***\n");  
-    //Loading all four quadrants (speedup)
-    e_load_group("bin/test_memory_march.srec", &dev, 0, 0, 1, 1, E_TRUE);  
-    e_load_group("bin/test_memory_march.srec", &dev, 0, 2, 1, 1, E_TRUE);  
-    e_load_group("bin/test_memory_march.srec", &dev, 2, 0, 1, 1, E_TRUE);  
-    e_load_group("bin/test_memory_march.srec", &dev, 2, 2, 1, 1, E_TRUE);  
-    //Checking all four quadrants
-    e_check_test(&dev, 0, 0, &status);  
-    e_check_test(&dev, 0, 2, &status);  
-    e_check_test(&dev, 2, 0, &status);  
-    e_check_test(&dev, 2, 2, &status);  
+    my_reset_system();
+    printf("***Running march-C memory test for all cores***\n");  
+    //Running test, all in parallel
+    for (i=0; i<rows; i=i+4) {
+      for (j=0; j<cols; j=j+4) {   
+	e_load_group("bin/test_memory_march.srec", &dev, i, j, 1, 1, E_TRUE); 
+      }
+    }
+    //Checking results one by one
+    for (i=0; i<rows; i=i+4){
+      for (j=0; j<cols; j=j+4){   
+	e_check_test(&dev, i, j, &status);  
+      }
+    }
   }
   //##############################
   //3. Read/Write Test from Host
   //##############################
   if(1){
+    my_reset_system();    
+    printf("***Running host read/write test for all cores***\n");  
+
     //Create write values
     for(k=0;k<RAM_SIZE/4;k++){
       write_55_buffer[k]=0x55555555;
@@ -97,20 +103,31 @@ int main(int argc, char *argv[]){
     for(k=0;k<RAM_SIZE/4;k++){
       write_aa_buffer[k]=0xaaaaaaaa;
     }
-    e_reset_system();
-    printf("***Running Host Read/Write Test***\n");  
-    for (i=0; i<platform.rows; i++) {
-      for (j=0; j<platform.cols; j++) {   
+    for (i=0; i<rows; i++) {
+      for (j=0; j<cols; j++) {   
+	//Write 555 buffer
 	e_write(&dev, i, j, 0x0, &write_55_buffer, RAM_SIZE);
-	e_read(&dev, i, j,  0x0, &read_buffer, RAM_SIZE);	
+	//Read back one word at a time to overcome 64-core row 1-3 issue
+	//Note! Temporary
+	for(k=0;k<RAM_SIZE/4;k++){
+	  addr=4*k;
+	  e_read(&dev, i, j, addr, &read_data, sizeof(int));
+          read_buffer[k]=read_data;
+	}
+	//Comparing result
 	for(k=0;k<RAM_SIZE/4;k=k+1){
 	  if(read_buffer[k]!=write_55_buffer[k]){
 	    printf("FAIL (%d,%d) k=%d data=%x\n",i,j,k,read_buffer[k]);
 	    status=0;
 	  }
 	}
+	//Write AAA buffer
 	e_write(&dev, i, j, 0x0, &write_aa_buffer, RAM_SIZE);
-	e_read(&dev, i, j, 0x0, &read_buffer, RAM_SIZE);
+	for(k=0;k<RAM_SIZE/4;k++){
+	  addr=4*k;
+	  e_read(&dev, i, j, addr, &read_data, sizeof(int));
+          read_buffer[k]=read_data;
+	}
 	for(k=0;k<RAM_SIZE/4;k=k+1){
 	  if(read_buffer[k]!=write_aa_buffer[k]){
 	    printf("FAIL (%d,%d) k=%d data=%x\n",i,j,k,read_buffer[k]);
@@ -120,35 +137,53 @@ int main(int argc, char *argv[]){
       }
     }
   }
-  //##############################
+  //#################################
   //4. DRAM Read/Write Test from Core
-  //##############################
+  //#################################
   if(1){
-    e_reset_system();
-    printf("***Running DRAM Read/Write Test***\n");
-    i=0;
-    j=0;
-    rows=platform.rows;
-    cols=platform.cols;
-    e_load_group("bin/test_memory_dram.srec", &dev, i, j, rows, cols, E_TRUE);
-    for (i=0; i<platform.rows; i++) {
-      for (j=0; j<platform.cols; j++) {           
+    my_reset_system();
+    printf("***Running DRAM read/write test for all cores***\n");
+    
+    //Testing row 0
+    e_load_group("bin/test_memory_dram.srec", &dev, 0, 0, 1, cols, E_TRUE);
+    //Skipping row 1-2 for e64
+    if ((dev.type == E_E64G401)){
+      printf("(Note: skipping row 1-2 for E64G401)\n");
+    }
+    else{
+      e_load_group("bin/test_memory_dram.srec", &dev, 1, 0, 2, cols, E_TRUE);
+    }
+    e_load_group("bin/test_memory_dram.srec", &dev, 3, 0, (rows-3), cols, E_TRUE);
+    
+    //Check (0,0)--(0,7)
+    for (i=0; i<1; i++) {
+      for (j=0; j<cols; j++) {           
+	e_check_test(&dev, i, j, &status);
+      }
+    }
+    //Check (1,0)--(2,7) only if ! E64
+    if (!(dev.type == E_E64G401)){
+      for (i=1; i<3; i++) {
+	for (j=0; j<cols; j++) {           
+	  e_check_test(&dev, i, j, &status);
+	}
+      }
+    }
+    //Checking (3,0)-->(rows,cols)
+    for (i=3; i<rows; i++) {
+      for (j=0; j<cols; j++) {           
 	e_check_test(&dev, i, j, &status);
       }
     }
   }
-
   //##############################
   //5. EMESH Test
   //##############################
   if(1){
-    e_reset_system();
-    printf("***Running Emesh Test***\n");
-    i=0;
-    j=0;
-    rows=platform.rows;
-    cols=platform.cols;
-    e_load_group("bin/test_emesh.srec", &dev, i, j, rows, cols, E_TRUE);
+    my_reset_system();
+    printf("***Running emesh test for all cores***\n");
+
+    e_load_group("bin/test_emesh.srec", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<platform.rows; i++) {
       for (j=0; j<platform.cols; j++) {           
 	e_check_test(&dev, i, j, &status);
@@ -159,13 +194,10 @@ int main(int argc, char *argv[]){
   //6. Simple Per Core Matmul Test
   //##############################
   if(1){
-    e_reset_system();
-    printf("***Running Simple Matmul Test***\n");
-    i=0;
-    j=0;
-    rows=platform.rows;
-    cols=platform.cols;
-    e_load_group("bin/test_matmul.srec", &dev, i, j, rows, cols, E_TRUE);
+    my_reset_system();
+    printf("***Running simple matmul test for all cores***\n");
+
+    e_load_group("bin/test_matmul.srec", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<platform.rows; i++) {
       for (j=0; j<platform.cols; j++) {           
 	e_check_test(&dev, i, j, &status);
@@ -207,14 +239,37 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status){
       break;
     }
     else if(result==0x12345678){
-      //printf("PASSED\n");
+      //printf("PASSED for core (%d,%d)\n",row,col);
       unsigned clr= ( unsigned ) 0x0;
       e_write(dev,row, col, 0x24, &clr, sizeof(clr));
       break;
     }
     else{
       usleep(1000000);
-      //printf("waiting for core (%d,%d)\n",row,col);
+      printf("waiting for core (%d,%d)\n",row,col);
     }
   }		  
+}
+
+int my_reset_system()
+{
+	ee_write_esys(E_SYS_RESET, 0);
+	usleep(200000);
+
+	//Change elink clock divider (temporary workaround due to FPGA timing issue)
+	e_epiphany_t dev;
+	unsigned int data;
+	if ((dev.type == E_E64G401)){
+	  e_open(&dev,2, 7, 1, 1);
+	}
+	else{
+	  e_open(&dev,2, 3, 1, 1);
+	}
+	ee_write_esys(E_SYS_CONFIG, 0x50000000);
+	data = 0x1;
+	e_write(&dev, 0, 0, 0xf0300, &data, sizeof(int));
+	ee_write_esys(E_SYS_CONFIG, 0x00000000);
+	e_close(&dev);
+
+	return E_OK;
 }

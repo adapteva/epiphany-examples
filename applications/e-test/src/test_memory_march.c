@@ -31,8 +31,8 @@ REFERENCE: "Using March Tests to Test SRAM", by AD J Van De Good
 int main(int argc, char *argv[]){
 
   unsigned int   k,i,j;
-  unsigned rows    = 2;
-  unsigned cols    = 2;
+  unsigned rows    = 4;
+  unsigned cols    = 4;
   int      status  = 1;
   unsigned offset;
   unsigned coreID;

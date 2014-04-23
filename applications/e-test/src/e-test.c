@@ -184,8 +184,8 @@ int main(int argc, char *argv[]){
     printf("***Running emesh test for all cores***\n");
 
     e_load_group("bin/test_emesh.srec", &dev, 0, 0, rows, cols, E_TRUE);
-    for (i=0; i<platform.rows; i++) {
-      for (j=0; j<platform.cols; j++) {           
+    for (i=0; i<rows; i++) {
+      for (j=0; j<cols; j++) {           
 	e_check_test(&dev, i, j, &status);
       }
     }
@@ -216,7 +216,7 @@ int main(int argc, char *argv[]){
   //##############################
   printf("-------------------------------------------------------\n");
   if(status>0){
-    printf("GOOD: CHIP PASSED SELF-TEST!\n");
+    printf("GOOD: CHIP PASSED SELF-TEST %d!\n", status);
   }
   else{
     printf("BAD: CHIP FAILED!!!!\n");
@@ -235,7 +235,7 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status){
     e_read(dev,row, col, 0x24, &result, sizeof(unsigned));
     if(result==0xDEADBEEF){
       printf("FAILED for core (%d,%d)\n",row,col);
-      status=0;
+      *status=0;
       break;
     }
     else if(result==0x12345678){
@@ -253,23 +253,33 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status){
 
 int my_reset_system()
 {
-	ee_write_esys(E_SYS_RESET, 0);
-	usleep(200000);
+  e_epiphany_t dev;
+  e_platform_t platform;
+  e_init(NULL);
+  e_get_platform_info(&platform);
+  ee_write_esys(E_SYS_RESET, 0);
+  usleep(200000);
+  
+  //Change elink clock divider (temporary workaround due to FPGA timing issue)
+  
+  unsigned int data,col;
 
-	//Change elink clock divider (temporary workaround due to FPGA timing issue)
-	e_epiphany_t dev;
-	unsigned int data;
-	if ((dev.type == E_E64G401)){
-	  e_open(&dev,2, 7, 1, 1);
-	}
-	else{
-	  e_open(&dev,2, 3, 1, 1);
-	}
-	ee_write_esys(E_SYS_CONFIG, 0x50000000);
-	data = 0x1;
-	e_write(&dev, 0, 0, 0xf0300, &data, sizeof(int));
-	ee_write_esys(E_SYS_CONFIG, 0x00000000);
-	e_close(&dev);
+  e_open(&dev, 0, 0, platform.rows, platform.cols);
 
-	return E_OK;
+  //Setting transaction control mode in FPGA
+  ee_write_esys(E_SYS_CONFIG, 0x50000000);
+  data = 0x1;
+
+  //east link register is in a different place in e64
+  if ((dev.type == E_E64G401)){
+    col=7;
+  }
+  else{
+    col=3;
+  }
+  //Writing to the ELINK transmit config register
+  e_write(&dev, 2, col, 0xf0300, &data, sizeof(int));
+  ee_write_esys(E_SYS_CONFIG, 0x00000000);
+  e_close(&dev);
+  return E_OK;
 }

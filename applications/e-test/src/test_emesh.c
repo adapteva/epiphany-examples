@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
 	    printf("offset=%x, id=%x, i=%d, j=%d, row=%d, col=%d\n",offset,coreID,i,j,row,col);
 #endif   
       dummy = (unsigned *) (offset + BUF_SIZE-WORD_SIZE);
-      if(0){
+      if(1){
 	if(!(offset==coreID)){
 	  //Write PAT0
 	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){

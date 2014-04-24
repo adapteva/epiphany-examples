@@ -199,33 +199,28 @@ int main(int argc, char *argv[]){
     printf("Running DRAM read/write test for all cores\n");
     
     //Testing row 0
-    e_load_group("bin/test_memory_dram.srec", &dev, 0, 0, 1, cols, E_TRUE);
+     for (i=0; i<1; i++) {
+	for (j=0; j<cols; j++) {      
+	  e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
+	  e_check_test(&dev, i, j, &status);
+	}
+     }
     //Skipping row 1-2 for e64
     if ((dev.type == E_E64G401)){
       printf("(Note: skipping row 1-2 for E64G401)\n");
     }
     else{
-      e_load_group("bin/test_memory_dram.srec", &dev, 1, 0, 2, cols, E_TRUE);
-    }
-    e_load_group("bin/test_memory_dram.srec", &dev, 3, 0, (rows-3), cols, E_TRUE);
-    
-    //Check (0,0)--(0,7)
-    for (i=0; i<1; i++) {
-      for (j=0; j<cols; j++) {           
-	e_check_test(&dev, i, j, &status);
-      }
-    }
-    //Check (1,0)--(2,7) only if ! E64
-    if (!(dev.type == E_E64G401)){
       for (i=1; i<3; i++) {
 	for (j=0; j<cols; j++) {           
+	  e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
 	  e_check_test(&dev, i, j, &status);
 	}
       }
     }
-    //Checking (3,0)-->(rows,cols)
+    //Row 3-4 (or 3-7)            
     for (i=3; i<rows; i++) {
       for (j=0; j<cols; j++) {           
+	e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
 	e_check_test(&dev, i, j, &status);
       }
     }

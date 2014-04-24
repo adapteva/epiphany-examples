@@ -69,45 +69,12 @@ int main(int argc, char *argv[]){
   cols=platform.cols;
 
   printf("-------------------------------------------------------\n");
-  //##############################
-  //1. Simple 32 Bit Memory Test
+ //##############################
+  //1. Read/Write Test from Host
   //##############################
   if(stage==0 || stage==1 ){
-    my_reset_system();
-    printf("***Running simple memory test for all cores***\n");
-
-    e_load_group("bin/test_memory_simple.srec", &dev, 0, 0, rows, cols, E_TRUE);
-    for (i=0; i<platform.rows; i++) {
-      for (j=0; j<platform.cols; j++) {           
-	e_check_test(&dev, i, j, &status);
-      }
-    }
-  }
-  //##############################
-  //2. March Memory Test
-  //##############################
-  if(stage==0 || stage==2 ){
-    my_reset_system();
-    printf("***Running march-C memory test for all cores***\n");  
-    //Running test, all in parallel
-    for (i=0; i<rows; i=i+4) {
-      for (j=0; j<cols; j=j+4) {   
-	e_load_group("bin/test_memory_march.srec", &dev, i, j, 1, 1, E_TRUE); 
-      }
-    }
-    //Checking results one by one
-    for (i=0; i<rows; i=i+4){
-      for (j=0; j<cols; j=j+4){   
-	e_check_test(&dev, i, j, &status);  
-      }
-    }
-  }
-  //##############################
-  //3. Read/Write Test from Host
-  //##############################
-  if(stage==0 || stage==3 ){
     my_reset_system();    
-    printf("***Running host read/write test for all cores***\n");  
+    printf("Running host read/write test for all cores\n");  
 
     //Create write values
     for(k=0;k<RAM_SIZE/4;k++){
@@ -150,12 +117,86 @@ int main(int argc, char *argv[]){
       }
     }
   }
-  //#################################
-  //4. DRAM Read/Write Test from Core
-  //#################################
+  //##############################
+  //2. Test elink from core (0,0)
+  //##############################
+  if(stage==0 || stage==2 ){
+     my_reset_system();
+    printf("Testing elink from core (0,0)\n");
+    e_load_group("bin/test_elink.srec", &dev, 0, 0, 1, 1, E_TRUE);
+    e_check_test(&dev, 0, 0, &status);
+  }
+  //##############################
+  //3. Simple 32 Bit Memory Test
+  //##############################
+  if(stage==0 || stage==3 ){
+    my_reset_system();
+    printf("Running simple memory test for all cores\n");
+
+    e_load_group("bin/test_memory_simple.srec", &dev, 0, 0, rows, cols, E_TRUE);
+    for (i=0; i<platform.rows; i++) {
+      for (j=0; j<platform.cols; j++) {           
+	e_check_test(&dev, i, j, &status);
+      }
+    }
+  }
+  //##############################
+  //4. March Memory Test
+  //##############################
   if(stage==0 || stage==4 ){
     my_reset_system();
-    printf("***Running DRAM read/write test for all cores***\n");
+    printf("Running march-C memory test for all cores\n");  
+    //Running test, all in parallel
+    for (i=0; i<rows; i=i+4) {
+      for (j=0; j<cols; j=j+4) {   
+	e_load_group("bin/test_memory_march.srec", &dev, i, j, 1, 1, E_TRUE); 
+      }
+    }
+    //Checking results one by one
+    for (i=0; i<rows; i=i+4){
+      for (j=0; j<cols; j=j+4){   
+	e_check_test(&dev, i, j, &status);  
+      }
+    }
+  }
+ 
+
+  //##############################
+  //5. Simple Per Core Matmul Test
+  //##############################
+  if(stage==0 || stage==5 ){
+    my_reset_system();
+    printf("Running simple matmul test for all cores\n");
+
+    e_load_group("bin/test_matmul.srec", &dev, 0, 0, rows, cols, E_TRUE);
+    for (i=0; i<platform.rows; i++) {
+      for (j=0; j<platform.cols; j++) {           
+	e_check_test(&dev, i, j, &status);
+      }
+    }
+  }
+
+  //##############################
+  //6. EMESH Test
+  //##############################
+  if(stage==0 || stage==6 ){
+    my_reset_system();
+    printf("Running emesh test for all cores\n");
+
+    e_load_group("bin/test_emesh.srec", &dev, 0, 0, rows, cols, E_TRUE);
+    for (i=0; i<rows; i++) {
+      for (j=0; j<cols; j++) {           
+	e_check_test(&dev, i, j, &status);
+      }
+    }
+  }
+ 
+ //#################################
+  //7. DRAM Read/Write Test from Core
+  //#################################
+  if(stage==0 || stage==7 ){
+    my_reset_system();
+    printf("Running DRAM read/write test for all cores\n");
     
     //Testing row 0
     e_load_group("bin/test_memory_dram.srec", &dev, 0, 0, 1, cols, E_TRUE);
@@ -189,34 +230,7 @@ int main(int argc, char *argv[]){
       }
     }
   }
-  //##############################
-  //5. EMESH Test
-  //##############################
-  if(stage==0 || stage==5 ){
-    my_reset_system();
-    printf("***Running emesh test for all cores***\n");
 
-    e_load_group("bin/test_emesh.srec", &dev, 0, 0, rows, cols, E_TRUE);
-    for (i=0; i<rows; i++) {
-      for (j=0; j<cols; j++) {           
-	e_check_test(&dev, i, j, &status);
-      }
-    }
-  }
-  //##############################
-  //6. Simple Per Core Matmul Test
-  //##############################
-  if(stage==0 || stage==6 ){
-    my_reset_system();
-    printf("***Running simple matmul test for all cores***\n");
-
-    e_load_group("bin/test_matmul.srec", &dev, 0, 0, rows, cols, E_TRUE);
-    for (i=0; i<platform.rows; i++) {
-      for (j=0; j<platform.cols; j++) {           
-	e_check_test(&dev, i, j, &status);
-      }
-    }
-  }
   //##############################
   //Max Power Test
   //##############################
@@ -269,7 +283,7 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status){
     else{
       if(wait){
 	usleep(1000000);      
-	printf("waiting for core (%d,%d)\n",row,col);
+	printf("...waiting for core (%d,%d)\n",row,col);
 	wait=0;
       }
       else{
@@ -280,7 +294,7 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status){
     }
   }		  
 }
-
+//////////////////////////////////////////////////////////////////////////
 int my_reset_system()
 {
 
@@ -314,15 +328,16 @@ int my_reset_system()
   e_close(&dev);
   return E_OK;
 }
-
+//////////////////////////////////////////////////////////////////////////
 void usage(){
   printf("Usage: e-init <stage>\n");
   printf("<stage>:\n");  
-  printf(" 0 = run all tests)\n");
-  printf(" 1 = simple memory test\n");
-  printf(" 2 = march-c memory test\n");
-  printf(" 3 = host read/write test\n");
-  printf(" 4 = dram test\n");
-  printf(" 5 = emesh test\n");
-  printf(" 6 = matmul test\n");
+  printf(" 0 = run all tests\n");
+  printf(" 1 = host read/write test\n");
+  printf(" 2 = elink test from core 0,0\n");
+  printf(" 3 = simple memory test\n");
+  printf(" 4 = march-c memory test\n");
+  printf(" 5 = matmul test\n");
+  printf(" 6 = emesh test\n");
+  printf(" 7 = dram test\n");
 }

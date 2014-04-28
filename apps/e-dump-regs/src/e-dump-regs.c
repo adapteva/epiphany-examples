@@ -35,9 +35,21 @@ int main(int argc, char *argv[]){
   e_epiphany_t dev;
 
   unsigned int row, col;
-  unsigned int data, led_state;
+  unsigned int data;
+  int row0,col0,rows,cols;
   int i,j;
  
+  if(argc < 2){
+    usage();
+    return EXIT_FAILURE;
+  }
+  else{
+    row0  = atoi(argv[1]);
+    col0  = atoi(argv[2]);
+    rows  = atoi(argv[3]);
+    cols  = atoi(argv[4]);
+  }
+
   //Open
   e_init(NULL);
   e_get_platform_info(&platform);
@@ -46,10 +58,10 @@ int main(int argc, char *argv[]){
   //Put Code here
   printf("CORE  CONFIG      STATUS      PC          CTIMER0     CTIMER1     DMA0STATUS  DMA1STATUS  DEBUG   IRET    IMASK    ILAT    IPEND\n");
   printf("--------------------------------------------------------------------------------------------------------------------------------------------\n");
-  for (i=0; i<platform.rows; i++) {
-    for (j=0; j<platform.cols; j++) {     
+  for (i=row0; i<rows; i++) {
+    for (j=col0; j<cols; j++) {     
       printf("%02d%02d  ", i,j);
-
+      
       e_read(&dev, i, j, 0xf0400, &data, sizeof(unsigned));//config 
       printf("0x%08x  ",data);
 
@@ -94,4 +106,21 @@ int main(int argc, char *argv[]){
   e_finalize();
   
   return EXIT_SUCCESS;
+}
+
+void usage()
+{
+  printf("---------------------------------------------------\n");
+  printf("Function: Dumps important register values to STDIO\n");
+  printf("Usage:    e-dump-regs <row> <col> <rows> <cols>\n");
+  printf("Example:  e-dump-regs 0 0 4 4\n");
+  printf("\n");
+  printf("Options:\n");
+  printf("  row   - target core row coordinate\n");
+  printf("  col   - target core column coordinate\n");
+  printf("  rows  - number of rows to dump\n");
+  printf("  cols  - number of columns to dump\n");
+  printf("---------------------------------------------------\n");
+  return;
+
 }

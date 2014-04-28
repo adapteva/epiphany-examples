@@ -89,16 +89,14 @@ void usage()
 {
   printf("-----------------------------------------------\n");
   printf("Function: Dumps SRAM locations to STDIO\n");
-  printf("\n");
   printf("Usage:    e-dump-mem <row> <col> <rows> <cols>\n");
+  printf("Example:  e-dump-mem 0 0 4 4\n");
   printf("\n");
   printf("Options:\n");
   printf("  row     - target core row coordinate\n");
   printf("  col     - target core column coordinate\n");
   printf("  rows    - number of rows to dump\n");
   printf("  cols    - number of columns to dump\n");
-  printf("\n");
-  printf("Example:  e-dump-mem 0 0 4 4\n");
   printf("-----------------------------------------------\n");
   return;
 

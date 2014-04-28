@@ -26,8 +26,6 @@ along with this program, see the file COPYING. If not, see
 
 #include <e-hal.h>
 
-#define _BufSize   (1024)
-#define _BufOffset (0x01000000)
 
 void usage();
 
@@ -35,8 +33,6 @@ int main(int argc, char *argv[]){
 
   e_platform_t platform;
   e_epiphany_t dev;
-  char emsg[_BufSize];
-  
 
   unsigned int row, col;
   unsigned int data, led_state;
@@ -97,5 +93,5 @@ int main(int argc, char *argv[]){
   e_close(&dev);
   e_finalize();
   
-  return 0;
+  return EXIT_SUCCESS;
 }

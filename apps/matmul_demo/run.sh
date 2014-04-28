@@ -11,7 +11,7 @@ EXEPATH=$(dirname "$SCRIPT")
 
 LOG=$PWD/matmul_demo.log
 
-pushd $EXEPATH/host/Release
+cd $EXEPATH/host/Release
 
 sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./matmul.elf $@ ../../device/Release/e_matmul.srec > $LOG
 

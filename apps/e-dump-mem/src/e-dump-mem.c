@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
 
   if(argc < 2){
     usage();
-    return 1;
+    return EXIT_FAILURE;
   }
   else{
     row0  = atoi(argv[1]);
@@ -88,15 +88,17 @@ int main(int argc, char *argv[]){
 void usage()
 {
   printf("-----------------------------------------------\n");
-  printf("Usage:   e-dump-mem <row> <col> <rows> <cols>\n");
+  printf("Function: Dumps SRAM locations to STDIO\n");
+  printf("\n");
+  printf("Usage:    e-dump-mem <row> <col> <rows> <cols>\n");
   printf("\n");
   printf("Options:\n");
-  printf("  row    - target core row coordinate\n");
-  printf("  col    - target core column coordinate\n");
-  printf("  rows   - number of rows to dump\n");
-  printf("  cols   - number of columns to dump\n");
+  printf("  row     - target core row coordinate\n");
+  printf("  col     - target core column coordinate\n");
+  printf("  rows    - number of rows to dump\n");
+  printf("  cols    - number of columns to dump\n");
   printf("\n");
-  printf("Example: e-dump-mem 0 0 4 4\n");
+  printf("Example:  e-dump-mem 0 0 4 4\n");
   printf("-----------------------------------------------\n");
   return;
 

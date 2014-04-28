@@ -1,6 +1,4 @@
 /*
-e-dump-regs.c
-
 Copyright (C) 2013 Adapteva, Inc.
 Contributed by Andreas Olofsson <support@adapteva.com>
 

@@ -8,6 +8,8 @@ ELDF=${ESDK}/bsps/current/internal.ldf
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
+e-reset
+
 sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-dump-mem.elf 0 0 4 4 > e-dump-mem.log
 
 if [ $? -ne 0 ] 

@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
     col0  = atoi(argv[2]);
     rows  = atoi(argv[3]);
     cols  = atoi(argv[4]);
-    slow  = atoi(argv[5]);
+    slow  = 0;//atoi(argv[5]);
   }
   //Open
   e_init(NULL);
@@ -82,8 +82,22 @@ int main(int argc, char *argv[]){
   e_close(&dev);
   e_finalize();
   
-  return 0;
+  //Always return sucess if it runs to completion
+  return EXIT_SUCCESS;
 }
-void usage(){
-  printf("Usage: e-dump-mem <row-start> <col-start> <rows> <cols> <slow>\n");
+void usage()
+{
+  printf("-----------------------------------------------\n");
+  printf("Usage:   e-dump-mem <row> <col> <rows> <cols>\n");
+  printf("\n");
+  printf("Options:\n");
+  printf("  row    - target core row coordinate\n");
+  printf("  col    - target core column coordinate\n");
+  printf("  rows   - number of rows to dump\n");
+  printf("  cols   - number of columns to dump\n");
+  printf("\n");
+  printf("Example: e-dump-mem 0 0 4 4\n");
+  printf("-----------------------------------------------\n");
+  return;
+
 }

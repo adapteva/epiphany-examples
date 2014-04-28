@@ -1,19 +1,23 @@
 #!/bin/bash
 
-set -e
 
-if [[ "$1" == "-d" ]]; then
-	Config='Debug'
-else
-	Config='Release'
-fi
-
-ELIBS="${EPIPHANY_HOME}/tools/host/lib"
+ESDK=${EPIPHANY_HOME}
+ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
 EHDF=${EPIPHANY_HDF}
+ELDF=${ESDK}/bsps/current/internal.ldf
 
-cd host/${Config}
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./matmul.elf $@ ../../device/${Config}/e_matmul.srec
+LOG=$PWD/matmul_demo.log
 
-cd ../../
+pushd $EXEPATH/host/Release
 
+sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./matmul.elf $@ ../../device/Release/e_matmul.srec > $LOG
+
+if [ $? -ne 0 ] 
+then
+    echo "$SCRIPT FAILED"
+else
+    echo "$SCRIPT PASSED"
+fi

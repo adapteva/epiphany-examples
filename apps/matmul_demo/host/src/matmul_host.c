@@ -105,10 +105,10 @@ int main(int argc, char *argv[])
 	fo = stderr;
 	fi = stdin;
 
-	fprintf(fo, "\nMatrix: C[%d][%d] = A[%d][%d] * B[%d][%d]\n\n", _Smtx, _Smtx, _Smtx, _Smtx, _Smtx, _Smtx);
-	fprintf(fo, "Using %d x %d cores\n\n", _Nside, _Nside);
+	printf( "\nMatrix: C[%d][%d] = A[%d][%d] * B[%d][%d]\n\n", _Smtx, _Smtx, _Smtx, _Smtx, _Smtx, _Smtx);
+	printf( "Using %d x %d cores\n\n", _Nside, _Nside);
 	seed = 0.0;
-	fprintf(fo, "Seed = %f\n", seed);
+	printf( "Seed = %f\n", seed);
 
 
 
@@ -120,12 +120,12 @@ int main(int argc, char *argv[])
 
 	if (e_alloc(pDRAM, 0x00000000, msize))
 	{
-		fprintf(fo, "\nERROR: Can't allocate Epiphany DRAM!\n\n");
+		printf( "\nERROR: Can't allocate Epiphany DRAM!\n\n");
 		exit(1);
 	}
 	if (e_open(pEpiphany, 0, 0, e_platform.chip[0].rows, e_platform.chip[0].cols))
 	{
-		fprintf(fo, "\nERROR: Can't establish connection to Epiphany device!\n\n");
+		printf( "\nERROR: Can't establish connection to Epiphany device!\n\n");
 		exit(1);
 	}
 
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 	Mailbox.core.ready = 0;
 	e_write(pDRAM, 0, 0, addr, &Mailbox.core.ready, sizeof(Mailbox.core.ready));
 
-	fprintf(stderr, "Loading program on Epiphany chip...\n");
+	printf("Loading program on Epiphany chip...\n");
 	e_set_loader_verbosity(ar.verbose);
 	result = e_load_group(ar.srecFile, pEpiphany, 0, 0, pEpiphany->rows, pEpiphany->cols, ar.run_target);
 	if (result == E_ERR) {
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
 	// Wipe-out any previous remains in result matrix (for verification)
 	addr = offsetof(shared_buf_t, C[0]);
 	sz = sizeof(Mailbox.C);
-	fprintf(fo, "Writing C[%uB] to address %08x...\n", sz, addr);
+	printf( "Writing C[%uB] to address %08x...\n", sz, addr);
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 #endif
 
@@ -160,34 +160,34 @@ int main(int argc, char *argv[])
 	// Copy operand matrices to Epiphany system
 	addr = offsetof(shared_buf_t, A[0]);
 	sz = sizeof(Mailbox.A);
-	fprintf(fo, "Writing A[%uB] to address %08x...\n", sz, addr);
+	printf( "Writing A[%uB] to address %08x...\n", sz, addr);
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.A, sz);
 	
 	addr = offsetof(shared_buf_t, B[0]);
 	sz = sizeof(Mailbox.B);
-	fprintf(fo, "Writing B[%uB] to address %08x...\n", sz, addr);
+	printf( "Writing B[%uB] to address %08x...\n", sz, addr);
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.B, sz);
 
 
 	// Call the Epiphany matmul() function
-	fprintf(fo, "GO Epiphany! ...   ");
+	printf( "GO Epiphany! ...   ");
 //	gettimeofday(&timer[0], NULL);
 	matmul_go(pDRAM);
 //	gettimeofday(&timer[1], NULL);
-	fprintf(fo, "Finished calculating Epiphany result.\n");
+	printf( "Finished calculating Epiphany result.\n");
 
 
 	// Read result matrix and timing
 	addr = offsetof(shared_buf_t, C[0]);
 	sz = sizeof(Mailbox.C);
-	fprintf(fo, "Reading result from address %08x...\n", addr);
+	printf( "Reading result from address %08x...\n", addr);
 	e_read(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 
 	gettimeofday(&timer[1], NULL);
 
 
 	// Calculate a reference result
-	fprintf(fo, "Calculating result on Host ...   ");
+	printf( "Calculating result on Host ...   ");
 	gettimeofday(&timer[2], NULL);
 #ifndef __DO_STRASSEN__
 	matmul(Mailbox.A, Mailbox.B, Cref, _Smtx);
@@ -195,12 +195,12 @@ int main(int argc, char *argv[])
 	matmul_strassen(Mailbox.A, Mailbox.B, Cref, _Smtx);
 #endif
 	gettimeofday(&timer[3], NULL);
-	fprintf(fo, "Finished calculating Host result.\n");
+	printf( "Finished calculating Host result.\n");
 
 
 	addr = offsetof(shared_buf_t, core.clocks);
 	sz = sizeof(Mailbox.core.clocks);
-	fprintf(fo, "Reading time from address %08x...\n", addr);
+	printf( "Reading time from address %08x...\n", addr);
 	e_read(pDRAM,0, 0, addr, &Mailbox.core.clocks, sizeof(Mailbox.core.clocks));
 //	clocks = Mailbox.core.clocks;
 
@@ -209,8 +209,8 @@ int main(int argc, char *argv[])
 
 
 	// Calculate the difference between the Epiphany result and the reference result
-	fprintf(fo, "\n*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	fprintf(fo, "Verifying result correctness ...   ");
+	printf( "\n*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+	printf( "Verifying result correctness ...   ");
 	matsub(Mailbox.C, Cref, Cdiff, _Smtx);
 
 	tdiff[0] = (timer[1].tv_sec - timer[0].tv_sec) * 1000 + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000.0);
@@ -222,33 +222,33 @@ int main(int argc, char *argv[])
 	// calculation was correct
 	if (iszero(Cdiff, _Smtx))
 	  {
-	    fprintf(fo, "C_epiphany == C_host\n");
-	    fprintf(fo, "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	    fprintf(fo, "Epiphany -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[0], eMHz);
-	    fprintf(fo, "Host     -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
-	    fprintf(fo, "\n* * *   EPIPHANY FTW !!!   * * *\n");
-	    fprintf(fo, "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	    fprintf(fo, "GOOD: TEST PASSED\n");
-	    fprintf(fo, "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+	    printf( "C_epiphany == C_host\n");
+	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+	    printf( "Epiphany -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[0], eMHz);
+	    printf( "Host     -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
+	    printf( "\n* * *   EPIPHANY FTW !!!   * * *\n");
+	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+	    printf( "GOOD: TEST PASSED\n");
+	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 	    rerval = 0;
 	} else {
-	  fprintf(fo, "\n\nERROR: C_epiphany is different from C_host !!!\n");
-	  fprintf(fo, "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	  fprintf(fo, "BAD: CHIP FAILED!!!\n");
+	  printf( "\n\nERROR: C_epiphany is different from C_host !!!\n");
+	  printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+	  printf( "BAD: CHIP FAILED!!!\n");
 	  rerval = 1;
 	}
-	fprintf(fo, "\n");
+	printf( "\n");
 
 
 #ifdef __DUMP_MATRICES__
-	fprintf(fo, "\n\n\n");
-	fprintf(fo, "A[][] = \n");
+	printf( "\n\n\n");
+	printf( "A[][] = \n");
 	matprt(Mailbox.A, _Smtx);
-	fprintf(fo, "B[][] = \n");
+	printf( "B[][] = \n");
 	matprt(Mailbox.B, _Smtx);
-	fprintf(fo, "C[][] = \n");
+	printf( "C[][] = \n");
 	matprt(Mailbox.C, _Smtx);
-	fprintf(fo, "Cref[][] = \n");
+	printf( "Cref[][] = \n");
 	matprt(Cref, _Smtx);
 
 	int i, j;
@@ -260,9 +260,9 @@ int main(int argc, char *argv[])
 			e_read(pEpiphany, i, j, 0x4000+0*sizeof(float), &Bepi[(i*_Score+0)*_Smtx + j*_Score], 2*sizeof(float));
 			e_read(pEpiphany, i, j, 0x4000+2*sizeof(float), &Bepi[(i*_Score+1)*_Smtx + j*_Score], 2*sizeof(float));
 		}
-	fprintf(fo, "Aepi[][] = \n");
+	printf( "Aepi[][] = \n");
 	matprt(Aepi, _Smtx);
-	fprintf(fo, "Bepi[][] = \n");
+	printf( "Bepi[][] = \n");
 	matprt(Bepi, _Smtx);
 #endif
 
@@ -272,12 +272,12 @@ int main(int argc, char *argv[])
 	// Close connection to device
 	if (e_close(pEpiphany))
 	{
-		fprintf(fo, "\nERROR: Can't close connection to Epiphany device!\n\n");
+		printf( "\nERROR: Can't close connection to Epiphany device!\n\n");
 		exit(1);
 	}
 	if (e_free(pDRAM))
 	{
-		fprintf(fo, "\nERROR: Can't release Epiphany DRAM!\n\n");
+		printf( "\nERROR: Can't release Epiphany DRAM!\n\n");
 		exit(1);
 	}
 
@@ -293,14 +293,14 @@ int matmul_go(e_mem_t *pDRAM)
 	unsigned int addr;
 	
 	// Wait until cores finished previous calculation
-	if (ar.verbose > 0) fprintf(fo, "Waiting for Epiphany to be ready...\n");
+	if (ar.verbose > 0) printf( "Waiting for Epiphany to be ready...\n");
 	addr = offsetof(shared_buf_t, core.go);
 	Mailbox.core.go = 1;
 	while (Mailbox.core.go != 0)
 		e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
 
 	// Signal cores to start crunching
-	fprintf(fo, "Writing the GO!...\n");
+	printf( "Writing the GO!...\n");
 	addr = offsetof(shared_buf_t, core.go);
 	Mailbox.core.go = _MAX_MEMBER_;
 	e_write(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
@@ -311,7 +311,7 @@ int matmul_go(e_mem_t *pDRAM)
 	while (Mailbox.core.go != 0)
 		e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
 
-	fprintf(fo, "Done...\n");
+	printf( "Done...\n");
 
 	return 0;
 }
@@ -351,7 +351,7 @@ int matcmp(volatile float * a, volatile float * b, int NN)
 		for (j=0; j<NN; j++)
 			if (fabs(a[i*NN+j] - b[i*NN+j]) > EPS)
 			{
-				fprintf(fo, "%10d , %10d , %f , %f\n", i, j, a[i*NN+j], b[i*NN+j]);
+				printf( "%10d , %10d , %f , %f\n", i, j, a[i*NN+j], b[i*NN+j]);
 				z = z | 1;
 			}
 
@@ -368,10 +368,10 @@ int matprt(volatile float * a, int NN)
 	{
 		for (j=0; j<NN; j++)
 		{
-			fprintf(fo, "%9.1f  ", a[i*NN+j]);
-//			fprintf(fo, "0x%08x  ", *((int *) (&a[i*NN+j])));
+			printf( "%9.1f  ", a[i*NN+j]);
+//			printf( "0x%08x  ", *((int *) (&a[i*NN+j])));
 		}
-		fprintf(fo, "\n");
+		printf( "\n");
 	}
 
 	return 0;

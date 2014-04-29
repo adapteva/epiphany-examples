@@ -106,16 +106,16 @@ int main(int argc, char *argv[]){
 
   //Print out result
   printf("Sum of Product Is %d!\n",sop);
-
+  fflush(stdout);
   //Close down Epiphany device
   e_close(&dev);
   e_finalize();
 
-  //if(sop==4096){
-  //  return EXIT_SUCCESS;
-  // }
-  //else{
-  //  return EXIT_FAILURE;
-  //}
+  if(sop==4096){
+    return EXIT_SUCCESS;
+  }
+  else{
+    return EXIT_FAILURE;
+  }
 }
 

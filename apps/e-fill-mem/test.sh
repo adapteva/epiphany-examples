@@ -10,9 +10,7 @@ EXEPATH=$(dirname "$SCRIPT")
 
 e-reset
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/main.elf 0 0 4 4 0x12345678 
-
-#> dotproduct.log
+sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-fill-mem.elf 0 0 4 4 0x12345678 > e-fill-mem.log
 
 if [ $? -ne 0 ] 
 then
@@ -20,3 +18,4 @@ then
 else
     echo "$SCRIPT PASSED"
 fi
+

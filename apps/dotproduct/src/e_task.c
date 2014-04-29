@@ -28,9 +28,9 @@ for (i=0; i<N; i++) {
   
 */
 #include <stdio.h>
-//#include <stdlib.h>
-//#include "e-lib.h"
-//#include "common.h"
+#include <stdlib.h>
+#include "e-lib.h"
+#include "common.h"
 
 int main(void)
 {

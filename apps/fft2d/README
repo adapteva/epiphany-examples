@@ -19,3 +19,4 @@ For reference on the FFTW library, read:
 
 http://www.fftw.org
 
+>>sudo apt-get install fftw3 fftw3-dev

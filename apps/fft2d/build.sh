@@ -56,14 +56,14 @@ g++ \
 	-ljpeg
 
 
-echo "=== Building FFTW bemchmark program ==="
-
-gcc \
-	-O0 \
-	host/src/fftw.c \
-	-o host/Release/fftw.elf \
-	-L /usr/local/lib \
-	-lfftw3f \
-	-lm
+#echo "=== Building FFTW bemchmark program ==="
+#
+#gcc \
+#	-O0 \
+#	host/src/fftw.c \
+#	-o host/Release/fftw.elf \
+#	-L /usr/local/lib \
+#	-lfftw3f \
+#	-lm
 
 

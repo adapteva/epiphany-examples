@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
 	 printf(       "FFT2D         - %7u cycles (%5.3f msec)\n", time_d[6], (time_d[6] * 1000.0 / eMHz));
 	 printf(       "  FFT Setup   - %7u cycles (%5.3f msec)\n", time_d[2], (time_d[2] * 1000.0 / eMHz));
 	 printf(       "  BITREV      - %7u cycles (%5.3f msec)\n", time_d[3], (time_d[3] * 1000.0 / eMHz));
-	 printf(       "  FFT1D       - %7u cycles (%5.3f msec)\n", time_d[4], (time_d[4] * 1000.0 / eMHz));
+	 printf(       "  FFT1D       - %7u cycles (%5.3f msec x2)\n", time_d[4], (time_d[4] * 1000.0 / eMHz));
 	 printf(       "  Corner Turn - %7u cycles (%5.3f msec)\n", time_d[5], (time_d[5] * 1000.0 / eMHz));
 	 printf(       "LPF           - %7u cycles (%5.3f msec)\n", time_d[7], (time_d[7] * 1000.0 / eMHz));
 	 printf(       "\n");
@@ -391,10 +391,16 @@ int main(int argc, char *argv[])
 	fflush(fo);
 	fclose(fo);
 
-	return 0;
+	//Returnin success if test runs expected number of clock cycles
+	//Need to add comparison with golden reference image!
+	if(time_d[9]>50000){
+	  return EXIT_SUCCESS;
+	}
+	else{
+	  return EXIT_FAILURE;
+	}
 }
-
-
+	
 // Call (invoke) the fft2d() function
 int fft2d_go(e_mem_t *pDRAM)
 {

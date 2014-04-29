@@ -31,89 +31,78 @@ along with this program, see the file COPYING. If not, see
 #include <unistd.h>
 
 #include <e-hal.h>
-#define mas_row (1)
-#define mas_col (1)
+
+#define mas_row (0)
+#define mas_col (0)
 
 int main(int argc, char *argv[])
 {
-	unsigned row, col, coreid, i, j, m, n, k;
-	e_platform_t platform;
-	e_epiphany_t dev;
-	unsigned time;
-	unsigned signal = 0xdeadbeef;
-	unsigned clr = 0x00000000;
-	unsigned master_row, master_col;
-	master_row = mas_row;
-	master_col = mas_col;
-	float result1;
-	srand(1);
-	
+  unsigned row, col, coreid, i, j, m, n, k;
+  e_platform_t platform;
+  e_epiphany_t dev;
+  unsigned time;
+  unsigned signal = 0xdeadbeef;
+  unsigned clr = 0x00000000;
+  unsigned master_row, master_col;
+  master_row = mas_row;
+  master_col = mas_col;
+  float result;
+  srand(1);
+  
+  
+  // initialize system, read platform params from
+  // default HDF. Then, reset the platform and
+  e_init(NULL);
+  e_reset_system();
+  e_get_platform_info(&platform);
+  
+  // Open a workgroup
+  e_open(&dev, 0, 0, platform.rows, platform.cols);
+  
+  // Load the device program onto target core
+  e_load("e_mesh_one.srec", &dev, mas_row, mas_col, E_TRUE);
+  
+  // Let other cores know the core id of the target core
+  for(i=0; i<platform.rows; i++){
+    for(j=0; j<platform.cols; j++){
+      e_write(&dev, i, j, 0x6000, &master_row, sizeof(master_row));
+      e_write(&dev, i, j, 0x6004, &master_col, sizeof(master_col));
+    }
+  }
+  
+  // Load the device program onto all cores except for target core
+  for (i=0; i<platform.rows; i++){
+    for(j=0; j<platform.cols; j++){
+      if((i!=mas_row)|(j!=mas_col)){
+	e_load("e_mesh_one1.srec",&dev, i, j, E_TRUE);
+      }
+    }
+  }
+  
+  usleep(10000);
+  
+  // Sent the signal to start transfer
+  
+  e_write(&dev, mas_row, mas_col, 0x6100, &signal, sizeof(signal));
+  
+  // Wait for cores to run
+  usleep(1000000);
+  
+  // Read message from target core
+  e_read(&dev, mas_row, mas_col, 0x5000, &time, sizeof(time));
 
-	// initialize system, read platform params from
-	// default HDF. Then, reset the platform and
-	e_init(NULL);
-	e_reset_system();
-	e_get_platform_info(&platform);
-	
-    	// Open a workgroup
-	e_open(&dev, 0, 0, platform.rows, platform.cols);
-	
-	// Load the device program onto target core
-	e_load("e_mesh_one.srec", &dev, mas_row, mas_col, E_TRUE);
-	
-	// Make sure that target core is prepared to receive data
-	usleep(10000);
-	
-	// Let other cores know the core id of the target core
-	for(i=0; i<platform.rows; i++)
-	{
-		for(j=0; j<platform.cols; j++)
-		{
-			e_write(&dev, i, j, 0x6000, &master_row, sizeof(master_row));
-			e_write(&dev, i, j, 0x6004, &master_col, sizeof(master_col));
-	
-		}
-	}
-	
-	// Load the device program onto all cores except for target core
-	for (i=0; i<platform.rows; i++)
-	{
-		for(j=0; j<platform.cols; j++)
-		{
-			if((i!=mas_row)|(j!=mas_col))
-			{
-				e_load("e_mesh_one1.srec",&dev, i, j, E_TRUE);
-			}
-		}
-	}
-	
-	usleep(10000);
-	
-	// Sent the signal to start transfer
-
-	e_write(&dev, mas_row, mas_col, 0x6100, &signal, sizeof(signal));
-	
-	// Wait for cores to run
-	usleep(1000000);
-			
-	// Read message from target core
-	
-	e_read(&dev, mas_row, mas_col, 0x5000, &time, sizeof(time));
-			
-	// Calculate the bandwidth
-	result1 = (120*585938)/(time);
-	
-	// Print the message
-	
-	fprintf(stderr, "0x%08x!\n", time);
-	
-	fprintf(stderr, "The bandwidth of all-to-one is %.2fMB/s!\n", result1);		
-	
-	// Close the workgroup
-	e_close(&dev);
-	
-	// Finalize the e-platform connection.
-	e_finalize();
-
-	return 0;
+  // Close the workgroup
+  e_close(&dev); 
+  e_finalize();
+  
+  // Calculate the bandwidth
+  result = (120*585938)/(time);
+  
+  printf("The bandwidth of all-to-one is %.2fMB/s!\n", result);		  
+  if(result > 1000){
+    return EXIT_SUCCESS;    
+  }
+  else{
+    return EXIT_FAILURE;    
+  }
 }

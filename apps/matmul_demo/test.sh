@@ -13,4 +13,11 @@ LOG=$PWD/matmul_demo.log
 
 cd $EXEPATH/host/Release
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./matmul.elf $@ ../../device/Release/e_matmul.srec
+sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./matmul.elf $@ ../../device/Release/e_matmul.srec > $LOG
+
+if [ $? -ne 0 ] 
+then
+    echo "$SCRIPT FAILED"
+else
+    echo "$SCRIPT PASSED"
+fi

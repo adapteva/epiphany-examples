@@ -33,6 +33,7 @@ int main(int argc, char *argv[]){
   e_epiphany_t dev;
   unsigned int data,stage;
   int i,j;
+  int row,col;
   
   if(argc < 2){
     usage();
@@ -46,75 +47,83 @@ int main(int argc, char *argv[]){
   //e_set_loader_verbosity(H_D2);
   e_init(NULL);
   e_get_platform_info(&platform);
-
-
+  e_open(&dev,0, 0, platform.rows, platform.cols);
   //Reset the system
   e_reset_system();
   
   //---------------------------------------
   //Shut down link (NORTH==0,2)
   if(stage>0){
-    e_open(&dev,0, 2, 1, 1);
+    row=0;
+    col=2;    
     ee_write_esys(E_SYS_CONFIG, 0x10000000);
     
     data = 0x000000FFF;
-    e_write(&dev, 0, 0, 0xf0304, &data, sizeof(int));  
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
     
     data = 0x000000FFF;
-    e_write(&dev, 0, 0, 0xf0308, &data, sizeof(int));  
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
     
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
-    e_close(&dev);
   }
   //---------------------------------------
   //Shut down south link (SOUTH==7,2)
-  if(stage>1){
-    e_open(&dev,7, 2, 1, 1);
+  if(stage>1){   
+    col=2;
+    if ((dev.type == E_E64G401)){
+      row=7;
+    }
+    else{
+      row=3;
+    }
     ee_write_esys(E_SYS_CONFIG, 0x90000000);
     
     data = 0x000000FFF;
-    e_write(&dev, 0, 0, 0xf0304, &data, sizeof(int));  
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
     
     data = 0x000000FFF;
-    e_write(&dev, 0, 0, 0xf0308, &data, sizeof(int));  
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
     
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
-    e_close(&dev);
   }
   //---------------------------------------
-  //Shut down link (WEST==2,0)
+  //Shut down west link (WEST==2,0)
   if(stage>2){
-    e_open(&dev,2, 0, 1, 1);
+    row=2;
+    col=0;
     ee_write_esys(E_SYS_CONFIG, 0xd0000000);
     
     data = 0x000000FFF;
-    e_write(&dev, 0, 0, 0xf0304, &data, sizeof(int));  
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
     
     data = 0x000000FFF;
-    e_write(&dev, 0, 0, 0xf0308, &data, sizeof(int));  
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
     
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
-    e_close(&dev);
   }
   //---------------------------------------
   if(stage>4){
-    //Configuring (EAST==2,7)
-    e_open(&dev,2, 7, 1, 1);
+    //Configuring clock divider(EAST==2,7)
+    row=2;
+    if ((dev.type == E_E64G401)){
+      col=7;
+    }
+    else{
+      col=3;
+    }
     ee_write_esys(E_SYS_CONFIG, 0x50000000);
     //Change clock divider to solve FPGA receiver speed path
     data = 0x1;
-    e_write(&dev, 0, 0, 0xf0300, &data, sizeof(int));
+    e_write(&dev, row, col, 0xf0300, &data, sizeof(int));
     //Up the current drive on the wait signal
     //data = 0x02000000;
     //e_write(&dev, 0, 0, 0xf0304, &data, sizeof(int));
     //Return to normal mode
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
-    e_close(&dev);
     
   }
   if(stage>3){
     //Enable clock gating
-    e_open(&dev, 0, 0, platform.rows, platform.cols);
     for (i=0; i<platform.rows; i++) {
       for (j=0; j<platform.cols; j++) {
 	//eCore clock gating
@@ -125,13 +134,13 @@ int main(int argc, char *argv[]){
 	e_write(&dev, i, j, 0xf0700, &data, sizeof(data));
       }
     }
-    e_close(&dev);
   }
   if(stage>5){
     //Enable timeout
     ee_write_esys(E_SYS_CONFIG, 0x00000001);
   }
   //-------------------------------------------------------
+  e_close(&dev);
   e_finalize();  
   return 0;
 }
@@ -139,10 +148,10 @@ int main(int argc, char *argv[]){
 void usage(){
   printf("Usage: e-init <stage>\n");
   printf("<stage>:\n");  
-  printf(" 0 = reset)\n");
-  printf(" 1 = #0 + (power-down north)\n");
-  printf(" 2 = #1 + power-down west\n");
-  printf(" 3 = #2 + power-down south\n");
+  printf(" 0 = Reset the Epiphany\n");
+  printf(" 1 = #0 + power down north link\n");
+  printf(" 2 = #1 + power down west link\n");
+  printf(" 3 = #2 + power down south link\n");
   printf(" 4 = #3 + enable clock gating\n");
   printf(" 5 = #4 + set east tx link to divide by 4\n");
   printf(" 6 = #5 + enable FPGA read timeout\n");

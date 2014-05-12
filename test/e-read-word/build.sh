@@ -11,6 +11,6 @@ ELDF=${ESDK}/bsps/current/internal.ldf
 mkdir -p bin/
 
 # Build HOST side application
-gcc src/e-reset.c -o bin/e-reset.elf -I ${EINCS} -L ${ELIBS} -le-hal
+gcc src/e-read-word.c -o bin/e-read-word.elf -I ${EINCS} -L ${ELIBS} -le-hal
 
 

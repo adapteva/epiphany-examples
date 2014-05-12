@@ -80,7 +80,7 @@ float Cref[_Smtx * _Smtx];
 float Cdiff[_Smtx * _Smtx];
 
 typedef struct timeval timeval_t;
-timeval_t timer[4];
+timeval_t timer[6];
 
 extern e_platform_t e_platform;
 
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 	float        seed;
 	unsigned int addr; //, clocks;
 	size_t       sz;
-	double       tdiff[2];
+	double       tdiff[4];
 	int          result, rerval;
 	
 	pEpiphany = &Epiphany;
@@ -171,9 +171,9 @@ int main(int argc, char *argv[])
 
 	// Call the Epiphany matmul() function
 	fprintf(fo, "GO Epiphany! ...   ");
-//	gettimeofday(&timer[0], NULL);
+	gettimeofday(&timer[1], NULL);
 	matmul_go(pDRAM);
-//	gettimeofday(&timer[1], NULL);
+	gettimeofday(&timer[2], NULL);
 	fprintf(fo, "Finished calculating Epiphany result.\n");
 
 
@@ -183,18 +183,18 @@ int main(int argc, char *argv[])
 	fprintf(fo, "Reading result from address %08x...\n", addr);
 	e_read(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 
-	gettimeofday(&timer[1], NULL);
+	gettimeofday(&timer[3], NULL);
 
 
 	// Calculate a reference result
 	fprintf(fo, "Calculating result on Host ...   ");
-	gettimeofday(&timer[2], NULL);
+	gettimeofday(&timer[4], NULL);
 #ifndef __DO_STRASSEN__
 	matmul(Mailbox.A, Mailbox.B, Cref, _Smtx);
 #else
 	matmul_strassen(Mailbox.A, Mailbox.B, Cref, _Smtx);
 #endif
-	gettimeofday(&timer[3], NULL);
+	gettimeofday(&timer[5], NULL);
 	fprintf(fo, "Finished calculating Host result.\n");
 
 
@@ -205,17 +205,15 @@ int main(int argc, char *argv[])
 //	clocks = Mailbox.core.clocks;
 
 
-
-
-
 	// Calculate the difference between the Epiphany result and the reference result
 	fprintf(fo, "\n*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 	fprintf(fo, "Verifying result correctness ...   ");
 	matsub(Mailbox.C, Cref, Cdiff, _Smtx);
 
-	tdiff[0] = (timer[1].tv_sec - timer[0].tv_sec) * 1000 + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000.0);
-//	tdiff[0] = ((double) clocks) / eMHz * 1000;
-	tdiff[1] = (timer[3].tv_sec - timer[2].tv_sec) * 1000 + ((double) (timer[3].tv_usec - timer[2].tv_usec) / 1000.0);
+	tdiff[0] = (timer[2].tv_sec - timer[1].tv_sec) * 1000 + ((double) (timer[2].tv_usec - timer[1].tv_usec) / 1000.0);//total
+	tdiff[1] = (timer[1].tv_sec - timer[0].tv_sec) * 1000 + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000.0);//write
+	tdiff[2] = (timer[3].tv_sec - timer[2].tv_sec) * 1000 + ((double) (timer[3].tv_usec - timer[2].tv_usec) / 1000.0);//read
+	tdiff[3] = (timer[5].tv_sec - timer[4].tv_sec) * 1000 + ((double) (timer[5].tv_usec - timer[4].tv_usec) / 1000.0);//ref
 
 
 	// If the difference is 0, then the matrices are identical and the
@@ -230,8 +228,11 @@ int main(int argc, char *argv[])
 	}
 	fprintf(fo, "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 	fprintf(fo, "\n");
-	fprintf(fo, "Epiphany -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[0], eMHz);
-	fprintf(fo, "Host     -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
+	fprintf(fo, "Epiphany (compute):  %9.1f msec  (@ %03d MHz)\n"   , tdiff[0], eMHz);
+	fprintf(fo, "         (write)  :  %9.1f msec \n"                , tdiff[1]);
+	fprintf(fo, "         (read)   :  %9.1f msec\n"                 , tdiff[2]);
+	fprintf(fo, "         (*total*):  %9.1f msec\n\n"               , tdiff[2]+tdiff[1]+tdiff[0]);
+	fprintf(fo, "Host     (*total*):  %9.1f msec  (@ %03d MHz)\n"   , tdiff[3], aMHz);
 
 
 #ifdef __DUMP_MATRICES__
@@ -720,9 +721,9 @@ void matmul_strassen(volatile float * a, volatile float * b, volatile float * c,
     	}
 
 	LEAF_SIZE = 32;
-	gettimeofday(&timer[2], NULL);
+	gettimeofday(&timer[4], NULL);
 	strassen(as, bs, cs, NN, LEAF_SIZE);
-	gettimeofday(&timer[3], NULL);
+	gettimeofday(&timer[5], NULL);
 
     for (i=0; i<NN; i++)
     	for (j=0; j<NN; j++)

@@ -16,12 +16,13 @@ my $Usage =<<EOF;
 #                            [-row0  <RowOrigin>]
 #                            [-col0  <ColOrigin>]
 #                            [-skip  <SkipFile>]
+#                            [-p     <RunParallel>]
 #
 ##########################################################################
 EOF
 
 #Defining options to parse
-    my $result =  GetOptions('l:s','d:s','rows:s','cols:s','row0:s','col0:s','skip:s','h:s');
+    my $result =  GetOptions('l:s','d:s','rows:s','cols:s','row0:s','col0:s','skip:s','p:s','h:s');
 
 if(defined $opt_h){
     print "$Usage";
@@ -35,6 +36,7 @@ elsif(!defined $opt_l || !defined $opt_d || !defined $opt_rows || !defined $opt_
 }	
 $Row0=0;
 $Col0=0;
+$Para=0;
 $Rows=$opt_rows;
 $Cols=$opt_cols;
 $Fail=0;
@@ -44,11 +46,15 @@ if(defined $opt_row0){
 if(defined $opt_col0){
     $Col0=$opt_col0;
 }
+if(defined $opt_p){
+    $Para=1;
+}
 
 
 ###############################################################
 #Reading in Test List
 ###############################################################
+$Test=0;
 open(FILE,$opt_l);
 while(<FILE>){
     #Use ; as comment
@@ -80,12 +86,12 @@ while(<FILE>){
 if(-e $opt_d){
     system("rm -r $opt_d");
 }
-else{
-    system("mkdir -p $opt_d");    
-}
+system("mkdir -p $opt_d");    
 chdir("$opt_d");
 foreach  $Test (sort(keys %TestHash)){    
     print "Running $TestHash{$Test}{\"name\"} ";
+
+    #Run Once Only Test
     if($TestHash{$Test}{"type"} eq "1"){
 	$Status=system("$TestHash{$Test}{\"name\"} $i $j 1 1 >& test.$Test.log");
 	if($Status ne "0"){
@@ -98,17 +104,35 @@ foreach  $Test (sort(keys %TestHash)){
     }
     elsif($TestHash{$Test}{"type"} eq "all"){	
 	$CoreFail=0;
-	for $i ($Row0..$Rows-1){
-	    for $j ($Col0..$Cols-1){
-		if(!$SkipHash{$i}{$j}){
-		    $Status=system("$TestHash{$Test}{\"name\"} $i $j 1 1 >> test.$Test.log");	
-		    if($Status ne "0"){
-			$Fail=1;
-			$CoreFail=1;
+	if($Para>0){
+	    $ENV{EROW0}=$Row0;
+	    $ENV{ECOL0}=$Col0;
+	    $ENV{EROWS}=$Rows;
+	    $ENV{ECOLS}=$Cols;
+	    $Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
+	    if($Status ne "0"){
+		$Fail=1;
+		$CoreFail=1;
+	    }
+	}
+	else{
+	    for $i ($Row0..$Rows-1){
+		for $j ($Col0..$Cols-1){
+		    $ENV{EROW0}=$i;
+		    $ENV{ECOL0}=$j;
+		    $ENV{EROWS}=1;
+		    $ENV{ECOLS}=1;
+		    if(!$SkipHash{$i}{$j}){			
+			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
+			print "$i $j\n";
+			if($Status ne "0"){
+			    $Fail=1;
+			    $CoreFail=1;
+			}
 		    }
-		}
-		else{
-		    system("echo Skipping $TestHash{$Test}{\"name\"} on core $i $j >> test.$Test.log");
+		    else{
+			system("echo Skipping $TestHash{$Test}{\"name\"} on core $i $j >> test.$Test.log");
+		    }
 		}
 	    }
 	}

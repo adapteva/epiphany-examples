@@ -1,11 +1,32 @@
-#BASIC TESTS
-/home/linaro/test/epiphany-examples/test/e-reset/test.sh       1
-/home/linaro/test/epiphany-examples/test/e-write-word/test.sh  1
-/home/linaro/test/epiphany-examples/test/e-read-word/test.sh   1
-/home/linaro/test/epiphany-examples/test/e-write-buf/test.sh   1 
-/home/linaro/test/epiphany-examples/test/e-read-buf/test.sh    1
-/home/linaro/test/epiphany-examples/test/e-main/test.sh        1
-
-/home/linaro/test/epiphany-examples/test/e-matmul-test/e-matmul-test all
+#####################
+#ALIVE TESTS
+#####################
+/home/linaro/test/epiphany-examples/test/e-reset/test.sh 1
+/home/linaro/test/epiphany-examples/test/e-write-word/test.sh 1
+/home/linaro/test/epiphany-examples/test/e-read-word/test.sh 1
+/home/linaro/test/epiphany-examples/test/e-write-buf/test.sh 1 
+/home/linaro/test/epiphany-examples/test/e-read-buf/test.sh 1
+/home/linaro/test/epiphany-examples/test/e-main/test.sh 1
+							
+#####################
+#MEMORY TEST
+#####################		
 /home/linaro/test/epiphany-examples/test/e-mem-test/e-mem-test all
+
+#####################
+#EXHAUSTIVE TESTS
+#####################							       
+/home/linaro/test/epiphany-examples/test/e-matmul-test/test.sh all
+
+#####################
+#APPS
+#####################
+/home/linaro/test/epiphany-examples/apps/e-dump-regs/test.sh all	
+/home/linaro/test/epiphany-examples/apps/e-dump-regs/test.sh all
+/home/linaro/test/epiphany-examples/apps/e-fill-mem/test.sh all
+/home/linaro/test/epiphany-examples/apps/e-dump-mem/test.sh all
+/home/linaro/test/epiphany-examples/apps/matmul-64/test.sh 1
+/home/linaro/test/epiphany-examples/apps/e-bandwidth-test/test.sh 1
+
+
 

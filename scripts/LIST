@@ -19,6 +19,11 @@
 /home/linaro/epiphany-examples/test/e-matmul-test/test.sh all
 
 #####################
+#EMESH
+#####################
+/home/linaro/epiphany-examples/emesh/emesh_bandwidth_all2one/test.sh 1	
+
+#####################
 #APPS
 #####################
 /home/linaro/epiphany-examples/apps/e-dump-regs/test.sh all	

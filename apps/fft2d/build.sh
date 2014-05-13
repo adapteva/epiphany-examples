@@ -9,7 +9,7 @@ MK_ALL="yes"
 Config="Release"
 
 if [[ "${BUILD_DEVICE}" == "yes" ]]; then
-	echo "=== Building device programs ==="
+
 
 	pushd device/${Config} >& /dev/null
 	if [[ "${MK_CLEAN}" == "yes" ]]; then
@@ -17,7 +17,7 @@ if [[ "${BUILD_DEVICE}" == "yes" ]]; then
 		make clean
 	fi
 	if [[ "${MK_ALL}" == "yes" ]]; then
-		echo "*** Building device library"
+
 		make --warn-undefined-variables BuildConfig=${Config} all
 	fi
 	popd >& /dev/null
@@ -33,7 +33,7 @@ fi
 
 rm -f ./host/${Config}/fft2d_host.elf
 
-echo "=== Building host program ==="
+
 
 g++ \
 	-Ofast -Wall -g0 \

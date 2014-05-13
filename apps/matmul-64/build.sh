@@ -23,7 +23,6 @@ MK_ALL='yes'
 
 
 if [[ "${BUILD_DEVICE}" == "yes" ]]; then
-	echo "=== Building device programs ==="
 
 	pushd device/${Config} >& /dev/null
 	if [[ "${MK_CLEAN}" == "yes" ]]; then
@@ -31,7 +30,6 @@ if [[ "${BUILD_DEVICE}" == "yes" ]]; then
 		make clean
 	fi
 	if [[ "${MK_ALL}" == "yes" ]]; then
-		echo "*** Building device/${Config}"
 		make --warn-undefined-variables BuildConfig=${Config} all
 	fi
 
@@ -44,7 +42,7 @@ EINCS="${EPIPHANY_HOME}/tools/host/include"
 ELIBS="${EPIPHANY_HOME}/tools/host/lib"
 
 if [[ "${BUILD_HOST}" == "yes" ]]; then
-	echo "=== Building host program ==="
+
 
 	pushd ./host/${Config} >& /dev/null
 	if [[ "${MK_CLEAN}" == "yes" ]]; then
@@ -52,7 +50,6 @@ if [[ "${BUILD_HOST}" == "yes" ]]; then
 		make clean
 	fi
 	if [[ "${MK_ALL}" == "yes" ]]; then
-		echo "*** Building host program"
 		make --warn-undefined-variables BuildConfig=${Config} all
 	fi
 	popd >& /dev/null

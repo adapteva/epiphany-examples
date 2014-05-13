@@ -9,6 +9,10 @@ ERM=../erm
 ERMI=${ERM}/src
 ELDF=${ESDK}/bsps/current/internal.ldf
 
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
+cd $EXEPATH
+
 # Create the binaries directory
 mkdir -p bin/
 

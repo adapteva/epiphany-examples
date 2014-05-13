@@ -7,6 +7,10 @@ ELIBS=${ESDK}/tools/host/lib
 EINCS=${ESDK}/tools/host/include
 ELDF=${ESDK}/bsps/current/internal.ldf
 
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
+cd $EXEPATH
+
 # Create the binaries directory
 mkdir -p bin/
 

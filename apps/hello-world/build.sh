@@ -7,6 +7,11 @@ ELIBS=${ESDK}/tools/host/lib
 EINCS=${ESDK}/tools/host/include
 ELDF=${ESDK}/bsps/current/fast.ldf
 
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
+cd $EXEPATH
+
+
 # Build HOST side application
 gcc src/hello_world.c -o Debug/hello_world.elf -I ${EINCS} -L ${ELIBS} -le-hal
 

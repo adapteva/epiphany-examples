@@ -6,11 +6,10 @@ EHDF=${EPIPHANY_HDF}
 
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
-
 LOG=$PWD/emesh_bandwidth_all2one.log
-cd $EXEPATH/bin
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./mesh_one.elf > $LOG
+cd $EXEPATH
+sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/mesh_one.elf > $LOG
 
 if [ $? -ne 0 ] 
 then

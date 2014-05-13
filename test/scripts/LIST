@@ -1,0 +1,11 @@
+#BASIC TESTS
+/home/linaro/test/epiphany-examples/test/e-reset/test.sh       1
+/home/linaro/test/epiphany-examples/test/e-write-word/test.sh  1
+/home/linaro/test/epiphany-examples/test/e-read-word/test.sh   1
+/home/linaro/test/epiphany-examples/test/e-write-buf/test.sh   1 
+/home/linaro/test/epiphany-examples/test/e-read-buf/test.sh    1
+/home/linaro/test/epiphany-examples/test/e-main/test.sh        1
+
+/home/linaro/test/epiphany-examples/test/e-matmul-test/e-matmul-test all
+/home/linaro/test/epiphany-examples/test/e-mem-test/e-mem-test all
+

@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
   col = (coreID >> 20 )& 0x7;
 
   //Testing all cores
-  offset=START;
+  offset=START+BUF_SIZE*(row*32+col);//hack!
 
 #ifdef VERBOSE
   printf("offset=%x, id=%x, row=%d, col=%d\n",offset,coreID,row,col);

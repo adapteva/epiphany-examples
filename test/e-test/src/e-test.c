@@ -27,10 +27,11 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status);
 void usage();
 
 int main(int argc, char *argv[]){
+
   e_loader_diag_t e_verbose;
   e_platform_t platform;
   e_epiphany_t dev;
-  int row0,col0,rows,cols;
+  int row0,col0,rows,cols,para;
   char elfFile[4096];
   int status=1;//pass
   int i,j;
@@ -44,7 +45,8 @@ int main(int argc, char *argv[]){
     col0    = atoi(argv[2]);
     rows    = atoi(argv[3]);
     cols    = atoi(argv[4]);
-    strcpy(elfFile, argv[5]);
+    para    = atoi(argv[5]);
+    strcpy(elfFile, argv[6]);
 
     //Initalize Epiphany device
     e_init(NULL);                      
@@ -53,15 +55,26 @@ int main(int argc, char *argv[]){
     //e_set_loader_verbosity(L_D3);
     e_open(&dev, 0, 0, platform.rows, platform.cols); //open all cores
     
-
     //Load program one at a time, checking one a time
+    if(para){
+      printf("Running in parallel\n");
+      for (i=row0; i<(row0+rows); i++) {
+	for (j=col0; j<(col0+cols); j++) {   
+	  e_load_group(elfFile, &dev, i, j, 1, 1, E_TRUE);
+	}
+      }    
+    }  
+    else{
+      e_load_group(elfFile, &dev, row0, col0, (row0+rows), (col0+cols), E_TRUE);
+    }
+    //Checking the test
     for (i=row0; i<(row0+rows); i++) {
       for (j=col0; j<(col0+cols); j++) {   
-	e_load_group(elfFile, &dev, i, j, 1, 1, E_TRUE);
 	e_check_test(&dev, i, j, &status);
       }
-    }      
-    
+    }
+
+
     //Close down Epiphany device
     e_close(&dev);
     e_finalize();
@@ -100,7 +113,7 @@ void e_check_test( void *dev,
     }
     else{
       if(wait){
-	usleep(1000000);      
+	usleep(10000);      
 	printf("Core (%d,%d) WAITING...\n",row,col);
 	wait=0;
       }
@@ -117,13 +130,14 @@ void usage(){
  printf("-----------------------------------------------\n");
   printf("Function: Runs exhaustive march-c memory test\n");
   printf("Usage:    e-test <row> <col> <rows> <cols> <elf>\n");
-  printf("Example:  e-test 0 0 4 4 my.elf\n");
+  printf("Example:  e-test 0 0 4 4 1 my.elf\n");
   printf("\n");
   printf("Options:\n");
   printf("  row     - target core start row coordinate\n");
   printf("  col     - target core start column coordinate\n");
   printf("  rows    - number of rows to test\n");
   printf("  cols    - number of columns to test\n");
+  printf("  para    - run test in parallel\n");
   printf("  elf     - path to elf file\n");
   printf("-----------------------------------------------\n");
   return;

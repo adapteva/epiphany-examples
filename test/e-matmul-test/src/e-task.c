@@ -69,6 +69,7 @@ int main(int argc, char *argv[]){
   //Compare to expected result
   // printf("sum=%f\n",sum);
 
+  //sum!=-9.114673f
   if(sum!=-9.114673f){//testing for bit exact sum from Epiphany golden chip(s)
     status=0;         //fail
   }

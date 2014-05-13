@@ -42,13 +42,13 @@ int main(int argc, char *argv[]){
   unsigned int data;
   int status=1;//pass
 
-  int row0,col0,rows,cols,verbose;
- 
+  int row0,col0,rows,cols;
+  int verbose=0;
 
   char result,data_in,expected;
   char high_pattern = 0xff;
   char low_pattern  = 0x00;
-
+  
 
   if (argc < 5){
     usage();
@@ -59,7 +59,6 @@ int main(int argc, char *argv[]){
     col0    = atoi(argv[2]);
     rows    = atoi(argv[3]);
     cols    = atoi(argv[4]);
-    verbose = atoi(argv[5]);
   }
   //Open
   e_init(NULL);
@@ -69,10 +68,10 @@ int main(int argc, char *argv[]){
   //e_set_loader_verbosity(L_D3);
 
   printf("-------------------------------------------------------\n");  
-  printf("Running host march-C read/write test for all cores\n");      
+
   for (i=row0; i<(row0+rows); i++) {
     for (j=col0; j<(col0+cols); j++) {   
-      printf("Testing core (%d,%d)\n", i,j);
+      printf("Running host march-C read/write test for core (%d,%d)\n", i,j);      
       //M0: UP{w0}
       for(k=0;k<(RAM_SIZE);k=k+WORD_SIZE){
 	addr= k;

@@ -20,7 +20,7 @@
 #include <stdio.h>
 
 #define WORD_SIZE       (4)
-#define BUF_SIZE        (0x8000)
+#define BUF_SIZE        (0x100)
 #define START           (0x8e000000)
 //#define VERBOSE
 

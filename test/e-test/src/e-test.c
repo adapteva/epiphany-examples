@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
     e_reset_system();
     e_get_platform_info(&platform);                          
     //e_set_loader_verbosity(L_D3);
-    e_open(&dev, 0, 0, rows, cols); //open core 0,0
+    e_open(&dev, 0, 0, platform.rows, platform.cols); //open all cores
     
 
     //Load program one at a time, checking one a time
@@ -88,23 +88,24 @@ void e_check_test( void *dev,
   while(1){
     e_read(dev,row, col, 0x24, &result, sizeof(unsigned));
     if(result==0xDEADBEEF){
-      printf("FAILED for core (%d,%d)\n",row,col);
+      printf("Core (%d,%d) FAILED\n",row,col);
       *status=0;
       break;
     }
     else if(result==0x12345678){
       unsigned clr= ( unsigned ) 0x0;
       e_write(dev,row, col, 0x24, &clr, sizeof(clr));
+      printf("Core (%d,%d) PASSED\n",row,col);
       break;
     }
     else{
       if(wait){
 	usleep(1000000);      
-	printf("...waiting for core (%d,%d)\n",row,col);
+	printf("Core (%d,%d) WAITING...\n",row,col);
 	wait=0;
       }
       else{
-	printf("FAILED for core (%d,%d)\n",row,col);
+	printf("Core (%d,%d) FAILED\n",row,col);
 	*status=0;
 	break;
       }

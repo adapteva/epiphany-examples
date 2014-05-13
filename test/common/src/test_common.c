@@ -26,3 +26,12 @@ int e_test_finish(int status){
   }
   while(1);
 }
+
+void e_write_ack(unsigned *addr){
+  unsigned probe_data;
+  probe_data = (*(addr));              //read old data
+  probe_data = probe_data ^ 0xFFFFFFFF;//toggle old data
+  (*(addr)) = probe_data;              //write new toggled data
+  while(probe_data != *(addr)){        //keep reading until match is met  
+  }
+}

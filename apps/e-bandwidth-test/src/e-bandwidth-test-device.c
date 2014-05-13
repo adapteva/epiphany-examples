@@ -24,9 +24,9 @@ along with this program, see the file COPYING. If not, see
 
 #define USE_DMA
 #ifdef USE_DMA
-#	define e_memcopy(dst, src, size) e_dma_copy(dst, src, size)
+#define e_memcopy(dst, src, size) e_dma_copy(dst, src, size)
 #else
-#	define e_memcopy(dst, src, size) memcpy(dst, src, size)
+#define e_memcopy(dst, src, size) memcpy(dst, src, size)
 #endif
 
 #define _BUF_SZ (8*1024)

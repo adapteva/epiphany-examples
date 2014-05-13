@@ -10,7 +10,7 @@ EXEPATH=$(dirname "$SCRIPT")
 
 e-reset
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-fill-mem.elf 0 0 $EROWS $ECOLS 0x12345678 > e-fill-mem.log
+sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-fill-mem.elf $EROW0 $ECOL0 $EROWS $ECOLS 8192 0x12345678 > e-fill-mem.log
 
 if [ $? -ne 0 ] 
 then

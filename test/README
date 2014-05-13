@@ -1,22 +1,32 @@
+----------------------------------------------------------------
 LEVEL0: (fufu)
- ***e-reset
- ***write integer to core 0,0 from host
- ***read integer in core 0,0 from host
- ***write buffer to core 0,0 from host
- ***read buffer in core 0,0 from host
- *run empty main() on core 0,0
+***e-reset
+***write integer to core (0,0) from host
+***read integer in core (0,0) from host
+***write buffer to core (0,0) from host
+***read buffer in core (0,0) from host
+***run empty main() on core (0,0)
 
+read integer from DRAM by core (0,0)
+read buffer from DRAM by core (0,0)
+write integer to DRAM by core (0,0)
+write buffer to DRAM by core (0,0)
+
+---------------------------------------------------------------
 LEVEL1: (one core at a time)
- *write byte to all other cores on chip from core (x,y)
+***e-mem-test, from host
+
+ *read/write to/from register file(x,y)
+ *write an integer to all other cores on chip from core (x,y)
  *read from all cores on chip from core (x,y)
  *write to DRAM from core (x,y)
  *read from DRAM for core (x,y)
- *e-mem-test, from host
- *read/write to/from register file(x,y)
+
+
  *floating point test (x,y)
  *dma test for DRAM (x,y)
- *dma test for core 2 core (x,y)
-
+ *dma test to other cores (x,y)
+---------------------------------------------------------------
 LEVEL2:
  *dump-regs, range 
  *dump-mem, range
@@ -24,7 +34,8 @@ LEVEL2:
  *matmul
  *2D fft
  *bandwidth measurement
-
+ *massive emesh tests
+---------------------------------------------------------------
 
 
  

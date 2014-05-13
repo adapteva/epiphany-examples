@@ -8,8 +8,7 @@ EHDF=${EPIPHANY_HDF}
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-e-reset
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-mem-test.elf 0 0 $EROWS $ECOLS 1 > e-mem-test.log
+sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-main.elf 0 0 $EROWS $ECOLS > e-matmul-test.log
 
 if [ $? -ne 0 ] 
 then

@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
 
   unsigned int write_buffer[N];
   unsigned int read_buffer[N];
-  int i,j,k;
+  int i,j,k,words;
   int row0,col0,rows,cols;
   unsigned int pattern,addr,read_data;
   int status=1;//pass
@@ -49,41 +49,24 @@ int main(int argc, char *argv[]){
     col0    = atoi(argv[2]);
     rows    = atoi(argv[3]);
     cols    = atoi(argv[4]);
-    sscanf(argv[5], "%x", &pattern);
+    words   = atoi(argv[5]);
+    sscanf(argv[6], "%x", &pattern);
   }
 
-  //Open
+  //Init Device
   e_init(NULL);
   e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols);
 
-  //Create array
+  //Create write buffer
   for (i=0; i<N; i++){
     write_buffer[i] = pattern;
-    //printf("%x %x\n",i,buffer[i]);
   }
 
-  //write in buffer
+  //write in buffer to each Epiphany core
   for (i=row0; i<(row0+rows); i++) {
     for (j=col0; j<(col0+cols); j++) {           
-      e_write(&dev, i, j, 0x0, &write_buffer, N*sizeof(int));
-    }
-  }
-
-  //Checking that writes worked
-  for (i=row0; i<(row0+rows); i++) {
-    for (j=col0; j<(col0+cols); j++) {   
-      for(k=0;k<RAM_SIZE/4;k++){
-          addr=4*k;
-          e_read(&dev, i, j, addr, &read_data, sizeof(int));
-          read_buffer[k]=read_data;
-      }
-      for(k=0;k<RAM_SIZE/4;k=k+1){
-	if(read_buffer[k]!=pattern){
-	  printf("FAIL (%d,%d) k=%d data=%x\n",i,j,k,read_buffer[k]);
-	  status=0;
-	}
-      }
+      e_write(&dev, i, j, 0x0, &write_buffer, words*sizeof(int));
     }
   }
   //Close
@@ -101,14 +84,15 @@ void usage(){
   printf("---------------------------------------------------\n");
   printf("Function: Fills memory with a constant pattern\n");
   printf("Usage:    e-fill-mem <row> <col> <rows> <cols> <pat>\n");
-  printf("Example:  e-fill-mem  0 0 4 4 0x12345678\n");
+  printf("Example:  e-fill-mem  0 0 4 4 1 0x12345678\n");
   printf("\n");
   printf("Options:\n");
   printf("  row   - target core row coordinate\n");
   printf("  col   - target core column coordinate\n");
   printf("  rows  - number of rows to dump\n");
   printf("  cols  - number of columns to dump\n");
-  printf("  pat   - 32-bit hex pattern starting with 0x\n");
+  printf("  words - #32 bit words to write\n");
+  printf("  pat   - 32-bit hex pattern starting starting with 0x\n");
   printf("---------------------------------------------------\n");
   return;
 }

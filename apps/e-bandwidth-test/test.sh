@@ -8,8 +8,6 @@ ELDF=${ESDK}/bsps/current/internal.ldf
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-e-reset
-
 sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-bandwidth-test-host.elf > e-bandwidth-test.log
 
 #> dotproduct.log

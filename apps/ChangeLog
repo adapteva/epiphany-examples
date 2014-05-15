@@ -1,0 +1,19 @@
+2014-05-15  Ben Chaco  <bchaco@x3-c.com>
+
+	* apps/dotproduct/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/e-bandwidth-test/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c: Wrong srec file
+	* apps/e-dump-mem/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/e-dump-regs/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/e-fill-mem/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/e-init/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/e-mem-sync/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/e-toggle-led/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/erm/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/erm_example/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/fft2d/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/hello-world/build.sh: Updates for cross compiling, link with libe-loader.so
+	* apps/matmul-64/host/Debug/objects.mk: Link with libe-loader.so
+	* apps/matmul-64/host/Release/objects.mk: Link with libe-loader.so
+	* apps/matmul_demo/host/Debug/objects.mk: Link with libe-loader.so
+	* apps/matmul_demo/host/Release/objects.mk: Link with libe-loader.so

@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 	for (m=0; m<platform.rows; m++)
 	{	for(n=0; n<platform.cols;n++)
 		{	
-			e_reset_core(&dev, m, n);
+			ee_reset_core(&dev, m, n);
 		}
 	}
 	

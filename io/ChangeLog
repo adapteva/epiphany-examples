@@ -1,0 +1,3 @@
+2014-05-15  Ben Chaco  <bchaco@x3-c.com>
+
+	* io/link_lowpower_mode/build.sh: Updates for cross compiling, link with libe-loader.so

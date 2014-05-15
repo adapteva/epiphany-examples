@@ -103,10 +103,10 @@ int main(void)
 		
 		q = mode[0];
 		
-		mesh_reg = e_reg_read(E_REG_MESH_CONFIG);
+		mesh_reg = e_reg_read(E_REG_MESHCFG);
 		mesh_reg_modify = mesh_reg & 0xffffff0f;
 		mesh_reg_modify = mesh_reg_modify |mesh_type[1][q]; 
-		e_reg_write(E_REG_MESH_CONFIG, mesh_reg_modify);
+		e_reg_write(E_REG_MESHCFG, mesh_reg_modify);
 		
 		// Set the ctimer
 		e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
@@ -134,8 +134,8 @@ int main(void)
 		time = time_p - time_c;		
 		mailbox[(*mode)] = time;
 		
-		// Load the original value to E_REG_MESH_CONFIG system register
-		e_reg_write(E_REG_MESH_CONFIG, mesh_reg);
+		// Load the original value to E_REG_MESHCFG system register
+		e_reg_write(E_REG_MESHCFG, mesh_reg);
 		
 		if(mode[0] == 12)
 		{

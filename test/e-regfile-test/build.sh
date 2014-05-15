@@ -14,7 +14,19 @@ cd $EXEPATH
 # Create the binaries directory
 mkdir -p bin/
 
+CROSS_PREFIX=
+case $(uname -p) in
+	arm*)
+		# Use native arm compiler (no cross prefix)
+		CROSS_PREFIX=
+		;;
+	   *)
+		# Use cross compiler
+		CROSS_PREFIX="arm-linux-gnueabihf-"
+		;;
+esac
+
 # Build HOST side application
-gcc src/e-regfile-test.c -o bin/e-regfile-test.elf -I ${EINCS} -L ${ELIBS} -le-hal
+${CROSS_PREFIX}gcc src/e-regfile-test.c -o bin/e-regfile-test.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 

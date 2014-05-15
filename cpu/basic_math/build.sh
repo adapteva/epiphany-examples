@@ -10,8 +10,20 @@ ELDF=${ESDK}/bsps/current/fast.ldf
 # Create the binaries directory
 mkdir -p bin/
 
+CROSS_PREFIX=
+case $(uname -p) in
+	arm*)
+		# Use native arm compiler (no cross prefix)
+		CROSS_PREFIX=
+		;;
+	   *)
+		# Use cross compiler
+		CROSS_PREFIX="arm-linux-gnueabihf-"
+		;;
+esac
+
 # Build HOST side application
-gcc src/math_test.c -o bin/math_test.elf -I ${EINCS} -L ${ELIBS} -le-hal -lm
+${CROSS_PREFIX}gcc src/math_test.c -o bin/math_test.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader -lm
 
 # Build DEVICE side program
 e-gcc -O3 -T ${ELDF} src/e_math_test.c -o bin/e_math_test.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math

@@ -84,7 +84,7 @@ int main(void)
 
 	//set the mem protect
 	int mem_pages = 0xff;
-	e_reg_write(E_REG_MEM_PROTECT, mem_pages);
+	e_reg_write(E_REG_MEMPROTECT, mem_pages);
 
 	while (mailbox[0] != clear) { e_wait(E_CTIMER_0, delay); }
 	for (i=0; i<8; i++)
@@ -100,7 +100,7 @@ int main(void)
 
 	//set the mem protect
 	mem_pages = 000;
-	e_reg_write(E_REG_MEM_PROTECT, mem_pages);
+	e_reg_write(E_REG_MEMPROTECT, mem_pages);
 	for (i=0; i<8; i++)
 	{
 		//tell the host that write_succeed is expected here
@@ -115,7 +115,7 @@ int main(void)
 
 	mailbox[2] = i;
 	mailbox[0] = finished;
-	e_reg_write(E_REG_MEM_PROTECT, 0);
+	e_reg_write(E_REG_MEMPROTECT, 0);
 	
 	return EXIT_SUCCESS;
 }

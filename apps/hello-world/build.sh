@@ -11,9 +11,20 @@ SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 cd $EXEPATH
 
+CROSS_PREFIX=
+case $(uname -p) in
+	arm*)
+		# Use native arm compiler (no cross prefix)
+		CROSS_PREFIX=
+		;;
+	   *)
+		# Use cross compiler
+		CROSS_PREFIX="arm-linux-gnueabihf-"
+		;;
+esac
 
 # Build HOST side application
-gcc src/hello_world.c -o Debug/hello_world.elf -I ${EINCS} -L ${ELIBS} -le-hal
+${CROSS_PREFIX}gcc src/hello_world.c -o Debug/hello_world.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 # Build DEVICE side program
 e-gcc -T ${ELDF} src/e_hello_world.c -o Debug/e_hello_world.elf -le-lib

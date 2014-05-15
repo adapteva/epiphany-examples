@@ -14,8 +14,20 @@ cd $EXEPATH
 # Create the binaries directory
 mkdir -p bin/
 
+CROSS_PREFIX=
+case $(uname -p) in
+	arm*)
+		# Use native arm compiler (no cross prefix)
+		CROSS_PREFIX=
+		;;
+	   *)
+		# Use cross compiler
+		CROSS_PREFIX="arm-linux-gnueabihf-"
+		;;
+esac
+
 # Build HOST side application
-gcc src/mesh_bi.c -o bin/mesh_bi.elf -I ${EINCS} -L ${ELIBS} -le-hal
+${CROSS_PREFIX}gcc src/mesh_bi.c -o bin/mesh_bi.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 # Build DEVICE side program
 e-gcc -O0 -T ${ELDF} src/e_mesh_bi00.c -o bin/e_mesh_bi00.elf -le-lib 

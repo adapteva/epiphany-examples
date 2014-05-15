@@ -1,0 +1,9 @@
+2014-05-15  Ben Chaco  <bchaco@x3-c.com>
+
+	* emesh/emesh_bandwidth_all2one/build.sh: Updates for cross compiling, link with libe-loader.so
+	* emesh/emesh_bandwidth_bisection/build.sh: Updates for cross compiling, link with libe-loader.so
+	* emesh/emesh_bandwidth_neighbour/build.sh: Updates for cross compiling, link with libe-loader.so
+	* emesh/emesh_read_latency/build.sh: Updates for cross compiling, link with libe-loader.so
+	* emesh/emesh_traffic/build.sh: Updates for cross compiling, link with libe-loader.so
+	* emesh/emesh_traffic/src/e_mesh_receiver.c (int main): E_REG_MESHCFG register name
+	* emesh/emesh_traffic/src/e_mesh_transmitter.c: E_REG_MESHCFG register name

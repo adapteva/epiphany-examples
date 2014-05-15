@@ -1,0 +1,7 @@
+2014-05-15  Ben Chaco  <bchaco@x3-c.com>
+
+	* labs/clockgating_mode/build.sh: Updates for cross compiling, link with libe-loader.so
+	* labs/hardware_barrier/build.sh: Updates for cross compiling, link with libe-loader.so
+	* labs/hardware_loops/build.sh: Updates for cross compiling, link with libe-loader.so
+	* labs/mem_protect/build.sh: Updates for cross compiling, link with libe-loader.so
+	* labs/mem_protect/src/emain.c (int main): E_REG_MEMPROTECT register name change

@@ -124,7 +124,6 @@ foreach  $Test (sort(keys %TestHash)){
 		    $ENV{ECOLS}=1;
 		    if(!$SkipHash{$i}{$j}){			
 			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
-			print "$i $j\n";
 			if($Status ne "0"){
 			    $Fail=1;
 			    $CoreFail=1;

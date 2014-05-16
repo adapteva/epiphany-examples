@@ -88,12 +88,13 @@ if(-e $opt_d){
 }
 system("mkdir -p $opt_d");    
 chdir("$opt_d");
-foreach  $Test (sort(keys %TestHash)){    
-    print "Running $TestHash{$Test}{\"name\"} ";
+foreach  $Test (sort {$a<=>$b} keys %TestHash){    
+    print "Running $Test $TestHash{$Test}{\"name\"} ";
 
     #Run Once Only Test
     if($TestHash{$Test}{"type"} eq "1"){
-	$Status=system("$TestHash{$Test}{\"name\"} $i $j 1 1 >& test.$Test.log");
+	print "$TestHash{$Test}{\"name\"} >& test.$Test.log\n";
+	$Status=system("$TestHash{$Test}{\"name\"} >& test.$Test.log");
 	if($Status ne "0"){
 	    print "FAILED\n";
 	    $Fail=1;

@@ -1,22 +1,25 @@
 #####################
 #ALIVE TESTS
 #####################
-/home/linaro/epiphany-examples/test/e-reset/test.sh 1
-/home/linaro/epiphany-examples/test/e-write-word/test.sh 1
-/home/linaro/epiphany-examples/test/e-read-word/test.sh 1
-/home/linaro/epiphany-examples/test/e-write-buf/test.sh 1 
-/home/linaro/epiphany-examples/test/e-read-buf/test.sh 1
-/home/linaro/epiphany-examples/test/e-main/test.sh 1
+/home/linaro/epiphany-examples/test/e-reset/test.sh                  1
+/home/linaro/epiphany-examples/test/e-write-word/test.sh             1
+/home/linaro/epiphany-examples/test/e-read-word/test.sh              1
+/home/linaro/epiphany-examples/test/e-write-buf/test.sh              1 
+/home/linaro/epiphany-examples/test/e-read-buf/test.sh               1
+/home/linaro/epiphany-examples/test/e-main/test.sh                   1
 							
 #####################
 #MEMORY TEST
 #####################		
-/home/linaro/epiphany-examples/test/e-mem-test/e-mem-test all
+/home/linaro/epiphany-examples/test/e-mem-test/test.sh               all
 
 #####################
 #EXHAUSTIVE TESTS
 #####################							       
-/home/linaro/epiphany-examples/test/e-matmul-test/test.sh all
+/home/linaro/epiphany-examples/test/e-matmul-test/test.sh            all
+/home/linaro/epiphany-examples/apps/e-dump-regs/test.sh              all	
+/home/linaro/epiphany-examples/apps/e-fill-mem/test.sh               all
+/home/linaro/epiphany-examples/apps/e-dump-mem/test.sh               all
 
 #####################
 #EMESH
@@ -26,12 +29,8 @@
 #####################
 #APPS
 #####################
-/home/linaro/epiphany-examples/apps/e-dump-regs/test.sh all	
-/home/linaro/epiphany-examples/apps/e-dump-regs/test.sh all
-/home/linaro/epiphany-examples/apps/e-fill-mem/test.sh all
-/home/linaro/epiphany-examples/apps/e-dump-mem/test.sh all
-/home/linaro/epiphany-examples/apps/matmul/test.sh 1
-/home/linaro/epiphany-examples/apps/e-bandwidth-test/test.sh 1
-
+/home/linaro/epiphany-examples/apps/matmul-16/test.sh                1
+/home/linaro/epiphany-examples/apps/e-bandwidth-test/test.sh         1
+/home/linaro/epiphany-examples/apps/fft2d/test.sh                    1
 
 

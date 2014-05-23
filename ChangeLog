@@ -7,4 +7,5 @@
 	* jenkins:
 	* jenkins/setup.sh:
 	Added jenkins directory for configuring Epiphany Tests as a nightly Jenkins project
-	
+	* README.md:
+	Updated to describe how to run the TestEpiphany.pl test harness script

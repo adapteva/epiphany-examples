@@ -12,7 +12,7 @@ my $Usage =<<EOF;
 #USAGE     : TestEpiphany.pl -l      <TestList>
 #                            -rows   <TotalRows>
 #                            -cols   <TotalCols>
-#                            [-d     <RunDirectory]
+#                            -d      <RunDirectory
 #                            [-row0  <RowOrigin>]
 #                            [-col0  <ColOrigin>]
 #                            [-skip  <SkipFile>]
@@ -31,9 +31,9 @@ if(defined $opt_h){
     exit;
 }
 elsif(!defined $opt_l || !defined $opt_d || !defined $opt_rows || !defined $opt_cols){
-  print "$Usage";		
-  exit;
-}	
+	print "$Usage";       
+	exit;
+}   
 $Row0=0;
 $Col0=0;
 $Para=0;
@@ -50,6 +50,7 @@ if(defined $opt_p){
     $Para=1;
 }
 
+$testRoot=$ENV{'EPIPHANY_TEST_HOME'};
 
 ###############################################################
 #Reading in Test List
@@ -61,11 +62,11 @@ while(<FILE>){
     s/(.*)\#.*$/$1/;
     chomp($_);
     if(/\w/){
-	@List      =split(' ',$_);
-	$ELF=(File::Spec->rel2abs($List[0]));
-	$TestHash{$Test}{"name"} = $ELF;
-	$TestHash{$Test}{"type"} = $List[1];#0,1,all
-	$Test=$Test+1;
+		@List      =split(' ',$_);
+		$ELF="$testRoot/$List[0]";
+		$TestHash{$Test}{"name"} = $ELF;
+		$TestHash{$Test}{"type"} = $List[1];#0,1,all
+		$Test=$Test+1;
     }
 }
 ###############################################################
@@ -76,8 +77,8 @@ while(<FILE>){
     s/(.*)\#.*$/$1/;
     chomp($_);
     if(/\w/){
-	@List      =split(' ',$_);
-	$SkipHash{$List[0]}{$List[1]} = 1;
+		@List      =split(' ',$_);
+		$SkipHash{$List[0]}{$List[1]} = 1;
     }
 }
 ##############################################################
@@ -93,55 +94,55 @@ foreach  $Test (sort(keys %TestHash)){
 
     #Run Once Only Test
     if($TestHash{$Test}{"type"} eq "1"){
-	$Status=system("$TestHash{$Test}{\"name\"} $i $j 1 1 >& test.$Test.log");
-	if($Status ne "0"){
-	    print "FAILED\n";
-	    $Fail=1;
-	}
-	else{
-	    print "PASSED\n";
-	}
-    }
-    elsif($TestHash{$Test}{"type"} eq "all"){	
-	$CoreFail=0;
-	if($Para>0){
-	    $ENV{EROW0}=$Row0;
-	    $ENV{ECOL0}=$Col0;
-	    $ENV{EROWS}=$Rows;
-	    $ENV{ECOLS}=$Cols;
-	    $Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
-	    if($Status ne "0"){
-		$Fail=1;
-		$CoreFail=1;
-	    }
-	}
-	else{
-	    for $i ($Row0..$Rows-1){
-		for $j ($Col0..$Cols-1){
-		    $ENV{EROW0}=$i;
-		    $ENV{ECOL0}=$j;
-		    $ENV{EROWS}=1;
-		    $ENV{ECOLS}=1;
-		    if(!$SkipHash{$i}{$j}){			
-			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
-			print "$i $j\n";
-			if($Status ne "0"){
-			    $Fail=1;
-			    $CoreFail=1;
-			}
-		    }
-		    else{
-			system("echo Skipping $TestHash{$Test}{\"name\"} on core $i $j >> test.$Test.log");
-		    }
+		$Status=system("$TestHash{$Test}{\"name\"} $i $j 1 1 >& test.$Test.log");
+		if($Status ne "0"){
+			print "FAILED\n";
+			$Fail=1;
 		}
-	    }
-	}
-	if($CoreFail){
-	    print "FAILED\n";
-	}
-	else{
-	    print "PASSED\n";
-	}
+		else{
+			print "PASSED\n";
+		}
+    }
+    elsif($TestHash{$Test}{"type"} eq "all"){   
+		$CoreFail=0;
+		if($Para>0){
+			$ENV{EROW0}=$Row0;
+			$ENV{ECOL0}=$Col0;
+			$ENV{EROWS}=$Rows;
+			$ENV{ECOLS}=$Cols;
+			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log"); 
+			if($Status ne "0"){
+				$Fail=1;
+				$CoreFail=1;
+			}
+		}
+		else{
+			for $i ($Row0..$Rows-1){
+				for $j ($Col0..$Cols-1){
+					$ENV{EROW0}=$i;
+					$ENV{ECOL0}=$j;
+					$ENV{EROWS}=1;
+					$ENV{ECOLS}=1;
+					if(!$SkipHash{$i}{$j}){         
+						$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log"); 
+						#print "$i $j\n";
+						if($Status ne "0"){
+							$Fail=1;
+							$CoreFail=1;
+						}
+					}
+					else{
+						system("echo Skipping $TestHash{$Test}{\"name\"} on core $i $j >> test.$Test.log");
+					}
+				}
+			}
+		}
+		if($CoreFail){
+			print "FAILED\n";
+		}
+		else{
+			print "PASSED\n";
+		}
     }
 }    
 chdir("../");

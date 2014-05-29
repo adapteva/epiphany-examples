@@ -17,7 +17,7 @@ sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./matmul.elf $@ ../../devi
 
 if [ $? -ne 0 ] 
 then
-    echo "$SCRIPT FAILED"
+    echo "$SCRIPT FAILED!!!!"
 else
     echo "$SCRIPT PASSED"
 fi

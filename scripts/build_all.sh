@@ -17,8 +17,8 @@
 ../apps/dotproduct/build.sh        
 ../apps/e-fill-mem/build.sh    
 ../apps/matmul-64/build.sh
+../apps/matmul-16/build.sh
 ../apps/e-bandwidth-test/build.sh  
-../apps/matmul_demo/build.sh
 ../apps/e-dump-mem/build.sh        
 ../apps/e-mem-sync/build.sh    
 ../apps/fft2d/build.sh

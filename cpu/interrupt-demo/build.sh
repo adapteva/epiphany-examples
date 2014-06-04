@@ -2,20 +2,25 @@
 
 set -e
 
-if [[ "`arch`" == "x86_64" ]]; then
-	echo "Setting path to ARM tools."
-	GNU_PATH=${HOME}'/CodeSourcery/Sourcery_CodeBench_Lite_for_ARM_GNU_Linux/bin/arm-none-linux-gnueabi-'
-else
-	GNU_PATH=''
-fi
-
 ESDK=${EPIPHANY_HOME}
 ELIBS=${ESDK}/tools/host/lib
 EINCS=${ESDK}/tools/host/include
 ELDF=${ESDK}/bsps/current/internal.ldf
 
+CROSS_PREFIX=
+case $(uname -p) in
+	arm*)
+		# Use native arm compiler (no cross prefix)
+		CROSS_PREFIX=
+		;;
+	   *)
+		# Use cross compiler
+		CROSS_PREFIX="arm-linux-gnueabihf-"
+		;;
+esac
+
 # Build HOST side application
-${GNU_PATH}gcc int-test.c -o int-test.elf -I ${EINCS} -L ${ELIBS} -le-hal
+${CROSS_PREFIX}gcc int-test.c -o int-test.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 # Build DEVICE side program
 e-gcc -O0 -T ${ELDF} e-int-test.master.c -o e-int-test.master.elf -le-lib

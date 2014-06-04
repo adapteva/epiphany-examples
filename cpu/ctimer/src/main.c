@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include <e-hal.h>
 
 #define _BufSize   (0x100)

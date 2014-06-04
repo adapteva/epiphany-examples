@@ -33,9 +33,20 @@ fi
 
 rm -f ./host/${Config}/fft2d_host.elf
 
+CROSS_PREFIX=
+case $(uname -p) in
+    arm*)
+        # Use native arm compiler (no cross prefix)
+        CROSS_PREFIX=
+        ;;
+       *)
+        # Use cross compiler
+        CROSS_PREFIX="arm-linux-gnueabihf-"
+        ;;
+esac
 
-
-g++ \
+# Build HOST side application
+${CROSS_PREFIX}g++ \
 	-Ofast -Wall -g0 \
 	-D__HOST__ \
 	-Dasm=__asm__ \
@@ -50,6 +61,7 @@ g++ \
 	-o "./host/${Config}/fft2d_host.elf" \
 	"./host/src/fft2d_host.c" \
 	-le-hal \
+	-le-loader \
 	-lIL \
 	-lILU \
 	-lILUT \

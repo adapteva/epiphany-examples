@@ -1,0 +1,11 @@
+2014-05-23  Ben Chaco  <bchaco@x3-c.com>
+
+	* scripts/LIST:
+	Updated paths so that they are relative to the epiphany-examples root
+	* scripts/TestEpiphany.pl:
+	Fixed Usage -d option is required. Test path prefix comes from EPIPHANY_TEST_HOME env var.
+	* jenkins:
+	* jenkins/setup.sh:
+	Added jenkins directory for configuring Epiphany Tests as a nightly Jenkins project
+	* README.md:
+	Updated to describe how to run the TestEpiphany.pl test harness script

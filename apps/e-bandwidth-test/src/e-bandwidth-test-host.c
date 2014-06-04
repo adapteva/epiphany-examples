@@ -38,7 +38,7 @@ typedef struct {
 	char srecFile[4096];
 } args_t;
 
-args_t ar = {E_TRUE, E_TRUE, E_FALSE, L_D0, "bin/e_startup_test.srec"};
+args_t ar = {E_TRUE, E_TRUE, E_FALSE, L_D0, "bin/e_bandwidth-test-device.srec"};
 
 e_epiphany_t Epiphany, *pEpiphany;
 e_mem_t      ERAM,     *pERAM;

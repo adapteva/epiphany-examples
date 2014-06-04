@@ -1,0 +1,8 @@
+2014-05-15  Ben Chaco  <bchaco@x3-c.com>
+
+	* dma/dma_2d/build.sh: Updates for cross compiling, link with libe-loader.so
+	* dma/dma_chain/build.sh: Updates for cross compiling, link with libe-loader.so
+	* dma/dma_interrupt/build.sh: Updates for cross compiling, link with libe-loader.so
+	* dma/dma_message_read/build.sh: Updates for cross compiling, link with libe-loader.so
+	* dma/dma_message_write/build.sh: Updates for cross compiling, link with libe-loader.so
+	* dma/dma_slave/build.sh: Updates for cross compiling, link with libe-loader.so

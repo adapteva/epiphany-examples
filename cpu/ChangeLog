@@ -1,0 +1,16 @@
+2014-05-15  Ben Chaco  <bchaco@x3-c.com>
+
+	* cpu/arithmode/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/assembly/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/basic_math/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/ctimer/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/ctimer/src/main.c: Updates for cross compiling, link with libe-loader.so
+	* cpu/interrupt-demo/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/interrupts/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/interrupts/src/interrupt_test.c (int main): ee_reset_core
+	* cpu/mutex/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/nested_interrupts/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/nested_interrupts/src/interrupt_test.c: ee_reset_core
+	* cpu/register_test/build.sh: Updates for cross compiling, link with libe-loader.so
+	* cpu/register_test/src/register-test.c: ee_reset_core
+	* cpu/remote_call/build.sh: Updates for cross compiling, link with libe-loader.so

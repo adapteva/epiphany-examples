@@ -1,0 +1,11 @@
+2014-05-15  Ben Chaco  <bchaco@x3-c.com>
+
+	* test/e-main/build.sh: Updates for cross compiling, link with libe-loader.so
+	* test/e-mem-test/build.sh: Updates for cross compiling, link with libe-loader.so
+	* test/e-read-buf/build.sh: Updates for cross compiling, link with libe-loader.so
+	* test/e-read-word/build.sh: Updates for cross compiling, link with libe-loader.so
+	* test/e-regfile-test/build.sh: Updates for cross compiling, link with libe-loader.so
+	* test/e-reset/build.sh: Updates for cross compiling, link with libe-loader.so
+	* test/e-test/build.sh: Updates for cross compiling, link with libe-loader.so
+	* test/e-write-buf/build.sh: Updates for cross compiling, link with libe-loader.so
+	* test/e-write-word/build.sh: Updates for cross compiling, link with libe-loader.so

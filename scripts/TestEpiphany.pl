@@ -89,7 +89,7 @@ if(-e $opt_d){
 }
 system("mkdir -p $opt_d");    
 chdir("$opt_d");
-foreach  $Test (sort(keys %TestHash)){    
+foreach  $Test (sort {$a<=>$b} keys %TestHash){    
     print "Running $TestHash{$Test}{\"name\"} ";
 
     #Run Once Only Test
@@ -111,6 +111,39 @@ foreach  $Test (sort(keys %TestHash)){
 			$ENV{EROWS}=$Rows;
 			$ENV{ECOLS}=$Cols;
 			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log"); 
+	#print "$TestHash{$Test}{\"name\"} >& test.$Test.log\n";
+	$Status=system("$TestHash{$Test}{\"name\"} >& test.$Test.log");
+	if($Status ne "0"){
+	    print "FAILED\n";
+	    $Fail=1;
+	}
+	else{
+	    print "PASSED\n";
+	}
+    }
+    elsif($TestHash{$Test}{"type"} eq "all"){	
+	$CoreFail=0;
+	if($Para>0){
+	    $ENV{EROW0}=$Row0;
+	    $ENV{ECOL0}=$Col0;
+	    $ENV{EROWS}=$Rows;
+	    $ENV{ECOLS}=$Cols;
+	    $Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
+	    if($Status ne "0"){
+		$Fail=1;
+		$CoreFail=1;
+	    }
+	}
+	else{
+	    for $i ($Row0..$Rows-1){
+		for $j ($Col0..$Cols-1){
+		    $ENV{EROW0}=$i;
+		    $ENV{ECOL0}=$j;
+		    $ENV{EROWS}=1;
+		    $ENV{ECOLS}=1;
+		    if(!$SkipHash{$i}{$j}){			
+			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
+>>>>>>> master
 			if($Status ne "0"){
 				$Fail=1;
 				$CoreFail=1;

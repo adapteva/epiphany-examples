@@ -31,9 +31,9 @@ if(defined $opt_h){
     exit;
 }
 elsif(!defined $opt_l || !defined $opt_d || !defined $opt_rows || !defined $opt_cols){
-	print "$Usage";       
+	print "$Usage";
 	exit;
-}   
+}
 $Row0=0;
 $Col0=0;
 $Para=0;
@@ -50,7 +50,7 @@ if(defined $opt_p){
     $Para=1;
 }
 
-$testRoot=$ENV{'EPIPHANY_TEST_HOME'};
+$testRoot=$ENV{'EPIPHANY_TESTS'};
 
 ###############################################################
 #Reading in Test List
@@ -94,7 +94,8 @@ foreach  $Test (sort {$a<=>$b} keys %TestHash){
 
     #Run Once Only Test
     if($TestHash{$Test}{"type"} eq "1"){
-		$Status=system("$TestHash{$Test}{\"name\"} $i $j 1 1 >& test.$Test.log");
+		#print "$TestHash{$Test}{\"name\"} >& test.$Test.log\n";
+		$Status=system("$TestHash{$Test}{\"name\"} >& test.$Test.log");
 		if($Status ne "0"){
 			print "FAILED\n";
 			$Fail=1;
@@ -103,47 +104,14 @@ foreach  $Test (sort {$a<=>$b} keys %TestHash){
 			print "PASSED\n";
 		}
     }
-    elsif($TestHash{$Test}{"type"} eq "all"){   
+    elsif($TestHash{$Test}{"type"} eq "all"){
 		$CoreFail=0;
 		if($Para>0){
 			$ENV{EROW0}=$Row0;
 			$ENV{ECOL0}=$Col0;
 			$ENV{EROWS}=$Rows;
 			$ENV{ECOLS}=$Cols;
-			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log"); 
-	#print "$TestHash{$Test}{\"name\"} >& test.$Test.log\n";
-	$Status=system("$TestHash{$Test}{\"name\"} >& test.$Test.log");
-	if($Status ne "0"){
-	    print "FAILED\n";
-	    $Fail=1;
-	}
-	else{
-	    print "PASSED\n";
-	}
-    }
-    elsif($TestHash{$Test}{"type"} eq "all"){	
-	$CoreFail=0;
-	if($Para>0){
-	    $ENV{EROW0}=$Row0;
-	    $ENV{ECOL0}=$Col0;
-	    $ENV{EROWS}=$Rows;
-	    $ENV{ECOLS}=$Cols;
-	    $Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
-	    if($Status ne "0"){
-		$Fail=1;
-		$CoreFail=1;
-	    }
-	}
-	else{
-	    for $i ($Row0..$Rows-1){
-		for $j ($Col0..$Cols-1){
-		    $ENV{EROW0}=$i;
-		    $ENV{ECOL0}=$j;
-		    $ENV{EROWS}=1;
-		    $ENV{ECOLS}=1;
-		    if(!$SkipHash{$i}{$j}){			
-			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");	
-
+			$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");
 			if($Status ne "0"){
 				$Fail=1;
 				$CoreFail=1;
@@ -156,9 +124,8 @@ foreach  $Test (sort {$a<=>$b} keys %TestHash){
 					$ENV{ECOL0}=$j;
 					$ENV{EROWS}=1;
 					$ENV{ECOLS}=1;
-					if(!$SkipHash{$i}{$j}){         
-						$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log"); 
-						#print "$i $j\n";
+					if(!$SkipHash{$i}{$j}){
+						$Status=system("$TestHash{$Test}{\"name\"} >> test.$Test.log");
 						if($Status ne "0"){
 							$Fail=1;
 							$CoreFail=1;

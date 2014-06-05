@@ -1,3 +1,11 @@
+2014-06-05  Ben Chaco  <bchaco@x3-c.com>
+
+	* scripts/LIST.E16:
+ 	Updated paths so that they are relative to the epiphany-examples root
+	* scripts/TestEpiphany.pl:
+	Changed env var from EPIPHANY_TEST_HOME to EPIPHANY_TESTS
+
+
 2014-05-23  Ben Chaco  <bchaco@x3-c.com>
 
 	* scripts/LIST:

@@ -1,36 +1,40 @@
+##
+## Note: paths are relative to $EPIPHANY_TESTS
+##
+
 #####################
 #ALIVE TESTS
 #####################
-/home/linaro/epiphany-examples/test/e-reset/test.sh                  1
-/home/linaro/epiphany-examples/test/e-write-word/test.sh             1
-/home/linaro/epiphany-examples/test/e-read-word/test.sh              1
-/home/linaro/epiphany-examples/test/e-write-buf/test.sh              1 
-/home/linaro/epiphany-examples/test/e-read-buf/test.sh               1
-/home/linaro/epiphany-examples/test/e-main/test.sh                   1
+test/e-reset/test.sh                  1
+test/e-write-word/test.sh             1
+test/e-read-word/test.sh              1
+test/e-write-buf/test.sh              1 
+test/e-read-buf/test.sh               1
+test/e-main/test.sh                   1
 							
 #####################
 #MEMORY TEST
 #####################		
-/home/linaro/epiphany-examples/test/e-mem-test/test.sh               all
+test/e-mem-test/test.sh               all
 
 #####################
 #EXHAUSTIVE TESTS
 #####################							       
-/home/linaro/epiphany-examples/test/e-matmul-test/test.sh            all
-/home/linaro/epiphany-examples/apps/e-dump-regs/test.sh              all	
-/home/linaro/epiphany-examples/apps/e-fill-mem/test.sh               all
-/home/linaro/epiphany-examples/apps/e-dump-mem/test.sh               all
+test/e-matmul-test/test.sh            all
+apps/e-dump-regs/test.sh              all	
+apps/e-fill-mem/test.sh               all
+apps/e-dump-mem/test.sh               all
 
 #####################
 #EMESH
 #####################
-/home/linaro/epiphany-examples/emesh/emesh_bandwidth_all2one/test.sh 1	
+emesh/emesh_bandwidth_all2one/test.sh 1	
 
 #####################
 #APPS
 #####################
-/home/linaro/epiphany-examples/apps/matmul-16/test.sh                1
-/home/linaro/epiphany-examples/apps/e-bandwidth-test/test.sh         1
-/home/linaro/epiphany-examples/apps/fft2d/test.sh                    1
+apps/matmul-16/test.sh                1
+apps/e-bandwidth-test/test.sh         1
+apps/fft2d/test.sh                    1
 
 

@@ -27,6 +27,6 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-regfile-test.c -o bin/e-regfile-test.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
+${CROSS_PREFIX}gcc src/e-regfile-test.c -o bin/e-regfile-test.elf -I ${EINCS} -L ${ELIBS} -le-hal #-le-loader
 
 

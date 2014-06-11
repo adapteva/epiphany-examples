@@ -23,7 +23,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/math_test.c -o bin/math_test.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader -lm
+${CROSS_PREFIX}gcc src/math_test.c -o bin/math_test.elf -I ${EINCS} -L ${ELIBS} -le-hal  -lm #-le-loader
 
 # Build DEVICE side program
 e-gcc -O3 -T ${ELDF} src/e_math_test.c -o bin/e_math_test.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math

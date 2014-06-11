@@ -28,6 +28,6 @@ esac
 
 # Build HOST side application
 ${CROSS_PREFIX}gcc src/e-dump-mem.c -o bin/e-dump-mem.elf -I ${EINCS} -L \
-	${ELIBS} -le-hal -le-loader
+	${ELIBS} -le-hal #-le-loader
 
 

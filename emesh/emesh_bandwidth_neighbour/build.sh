@@ -27,7 +27,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/mesh_bandwidth.c -o bin/mesh_bandwidth.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
+${CROSS_PREFIX}gcc src/mesh_bandwidth.c -o bin/mesh_bandwidth.elf -I ${EINCS} -L ${ELIBS} -le-hal #-le-loader
 
 
 # Build DEVICE side program

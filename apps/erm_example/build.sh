@@ -29,7 +29,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/main.c ${ERM}/src/ermlib.c -o bin/main.elf -I ${ERMI} -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
+${CROSS_PREFIX}gcc src/main.c ${ERM}/src/ermlib.c -o bin/main.elf -I ${ERMI} -I ${EINCS} -L ${ELIBS} -le-hal #-le-loader
 
 # Build DEVICE side program
 e-gcc -O0 -T ${ELDF} src/e_demo.c -o bin/e_demo.elf -le-lib

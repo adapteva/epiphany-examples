@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -le-hal -le-loader -lrt
+LIBS := -le-hal -lrt
 

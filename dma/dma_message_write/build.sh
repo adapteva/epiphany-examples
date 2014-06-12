@@ -23,7 +23,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/dma_message_test.c -o bin/dma_message_test.elf -I ${EINCS} -L ${ELIBS} -le-hal #-le-loader
+${CROSS_PREFIX}gcc src/dma_message_test.c -o bin/dma_message_test.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 # Build DEVICE side program
 e-gcc -O3 -T ${ELDF} src/e_dma_message_test.c -o bin/e_dma_message_test.elf -le-lib 

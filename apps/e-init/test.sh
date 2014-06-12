@@ -10,7 +10,10 @@ SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
 e-reset
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-init.elf 6 > e-init.log
+
+export LD_LIBRARY_PATH=${ELIBS}
+
+$EXEPATH/bin/e-init.elf 6 > e-init.log
 
 if [ $? -ne 0 ] 
 then

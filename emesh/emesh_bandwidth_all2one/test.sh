@@ -9,7 +9,9 @@ EXEPATH=$(dirname "$SCRIPT")
 LOG=$PWD/emesh_bandwidth_all2one.log
 
 cd $EXEPATH
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/mesh_one.elf > $LOG
+
+export LD_LIBRARY_PATH=${ELIBS}
+$EXEPATH/bin/mesh_one.elf > $LOG
 
 if [ $? -ne 0 ] 
 then

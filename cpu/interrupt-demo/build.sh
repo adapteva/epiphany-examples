@@ -20,7 +20,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc int-test.c -o int-test.elf -I ${EINCS} -L ${ELIBS} -le-hal #-le-loader
+${CROSS_PREFIX}gcc int-test.c -o int-test.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 # Build DEVICE side program
 e-gcc -O0 -T ${ELDF} e-int-test.master.c -o e-int-test.master.elf -le-lib

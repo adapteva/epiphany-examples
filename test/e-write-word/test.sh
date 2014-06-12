@@ -9,7 +9,8 @@ EHDF=${EPIPHANY_HDF}
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-write-word.elf > e-write-word.log
+export LD_LIBRARY_PATH=${ELIBS}
+$EXEPATH/bin/e-write-word.elf > e-write-word.log
 
 if [ $? -ne 0 ] 
 then

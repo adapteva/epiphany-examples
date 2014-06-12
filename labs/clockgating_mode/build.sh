@@ -23,7 +23,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/clockgating_mode.c -o bin/clockgating_mode.elf -I ${EINCS} -L ${ELIBS} -le-hal #-le-loader
+${CROSS_PREFIX}gcc src/clockgating_mode.c -o bin/clockgating_mode.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 
 

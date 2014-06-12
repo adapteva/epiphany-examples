@@ -10,7 +10,9 @@ EXEPATH=$(dirname "$SCRIPT")
 
 e-reset
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-dump-regs.elf $EROW0 $ECOL0 $EROWS $ECOLS > e-dump-regs.log
+export LD_LIBRARY_PATH=${ELIBS}
+
+$EXEPATH/bin/e-dump-regs.elf $EROW0 $ECOL0 $EROWS $ECOLS > e-dump-regs.log
 
 if [ $? -ne 0 ] 
 then

@@ -28,7 +28,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf -I ${EINCS} -L ${ELIBS} -le-hal #-le-loader
+${CROSS_PREFIX}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 # Build DEVICE side program
 e-gcc -T ${ELDF} src/device-e-toggle-led.c -o bin/device-e-toggle-led.elf -le-lib

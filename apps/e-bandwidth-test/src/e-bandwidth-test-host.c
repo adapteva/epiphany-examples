@@ -71,22 +71,29 @@ int main(int argc, char *argv[])
   pERAM     = &ERAM;
   
   e_set_host_verbosity(H_D0);
-  e_init(NULL);
-  e_reset_system();
+
+  if ( E_OK != e_init(NULL) ) {
+      fprintf(stderr, "\nERROR: epiphinay initialization failed!\n\n");
+      exit(1);
+  }
+
+  if (E_OK != e_reset_system() ) {
+      fprintf(stderr, "\nWARNING: epiphinay system rest failed!\n\n");
+  }
 
   // prepare ERAM
-  if (e_alloc(pERAM, 0x00000000, e_platform.emem[0].size))
-    {
+  if (E_OK != e_alloc(pERAM, 0x00000000, e_platform.emem[0].size))
+  {
       fprintf(stderr, "\nERROR: Can't allocate Epiphany DRAM!\n\n");
       exit(1);
-    }
+  }
   e_set_host_verbosity(H_D0);
   
-  if (e_open(pEpiphany, 0, 0, e_platform.rows, e_platform.cols))
-    {
+  if (E_OK != e_open(pEpiphany, 0, 0, e_platform.rows, e_platform.cols))
+  {
       fprintf(stderr, "\nERROR: Can't establish connection to Epiphany device!\n\n");
       exit(1);
-    }
+  }
   
   
   fail = 0;

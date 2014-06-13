@@ -10,7 +10,8 @@ EXEPATH=$(dirname "$SCRIPT")
 
 e-reset
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/e-mem-sync.elf 0 0 4 4 0x12345678 > e-mem-sync.log
+export LD_LIBRARY_PATH=${ELIBS}
+$EXEPATH/bin/e-mem-sync.elf 0 0 4 4 0x12345678 > e-mem-sync.log
 
 if [ $? -ne 0 ] 
 then

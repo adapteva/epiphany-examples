@@ -1,3 +1,74 @@
+2014-06-12  Ben Chaco  <bchaco@x3-c.com>
+
+	* apps/dotproduct/build.sh:
+	* apps/e-bandwidth-test/build.sh:
+	* apps/e-dump-mem/build.sh:
+	* apps/e-dump-regs/build.sh:
+	* apps/e-fill-mem/build.sh:
+	* apps/e-toggle-led/build.sh:
+	* apps/erm_example/build.sh:
+	* apps/hello-world/build.sh:
+	* cpu/arithmode/build.sh:
+	* cpu/assembly/build.sh:
+	* cpu/basic_math/build.sh:
+	* cpu/ctimer/build.sh:
+	* cpu/interrupt-demo/build.sh:
+	* cpu/interrupts/build.sh:
+	* cpu/mutex/build.sh:
+	* cpu/nested_interrupts/build.sh:
+	* cpu/register_test/build.sh:
+	* cpu/remote_call/build.sh:
+	* dma/dma_2d/build.sh:
+	* dma/dma_chain/build.sh:
+	* dma/dma_interrupt/build.sh:
+	* dma/dma_message_read/build.sh:
+	* dma/dma_message_write/build.sh:
+	* dma/dma_slave/build.sh:
+	* emesh/emesh_bandwidth_all2one/build.sh:
+	* emesh/emesh_bandwidth_all2one/test.sh:
+	* emesh/emesh_bandwidth_bisection/build.sh:
+	* emesh/emesh_bandwidth_neighbour/build.sh:
+	* emesh/emesh_read_latency/build.sh:
+	* emesh/emesh_traffic/build.sh:
+	* io/link_lowpower_mode/build.sh:
+	* labs/clockgating_mode/build.sh:
+	* labs/hardware_barrier/build.sh:
+	* labs/hardware_loops/build.sh:
+	* labs/mem_protect/build.sh:
+	* test/e-mem-test/build.sh:
+	* test/e-main/build.sh:
+	* test/e-read-buf/build.sh:
+	* test/e-read-word/build.sh:
+	* test/e-regfile-test/build.sh:
+	* test/e-reset/build.sh:
+	* test/e-test/build.sh:
+	* test/e-write-buf/build.sh:
+	* test/e-write-word/build.sh:
+	Uncommented the linking of libe-loader.so
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c:
+	Check return values from e-hal function calls
+	* apps/e-bandwidth-test/test.sh:
+	* apps/e-dump-mem/test.sh:
+	* apps/e-dump-regs/test.sh:
+	* apps/e-fill-mem/test.sh:
+	* apps/e-init/test.sh:
+	* apps/e-mem-sync/test.sh:
+	* apps/erm/src/main.c:
+	* apps/fft2d/test.sh:
+	* apps/matmul-16/test.sh:
+	* scripts/build_all.sh:
+	* test/e-main/test.sh:
+	* test/e-matmul-test/test.sh:
+	* test/e-mem-test/test.sh:
+	* test/e-read-buf/test.sh:
+	* test/e-read-word/test.sh:
+	* test/e-regfile-test/test.sh:
+	* test/e-reset/test.sh:
+	* test/e-test/test.sh:
+	* test/e-write-buf/test.sh:
+	* test/e-write-word/test.sh:
+	Removed execution with root privs (sudo)
+
 2014-06-05  Ben Chaco  <bchaco@x3-c.com>
 
 	* scripts/LIST.E16:

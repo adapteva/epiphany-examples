@@ -54,12 +54,12 @@ int main(int argc, char *argv[])
 	switch (mode)
 	{
 		case w_monitor:
-			fprintf(stderr, "mode: with monitor.\n", mode);
+			fprintf(stderr, "mode: %d with monitor.\n", mode);
 			erm_init(&rowSize, &colSize);
 			erm_monitor(rowSize, colSize);
 			break;
 		case wo_monitor:
-			fprintf(stderr, "mode: without monitor.\n", mode);
+			fprintf(stderr, "mode: %d without monitor.\n", mode);
 			erm_init(&rowSize, &colSize);
 			fprintf(stderr, "Initialized\n\n");
 			break;

@@ -37,11 +37,13 @@ int main(void)
 	float volatile cf;
 	float volatile df;
 	float re_f0, re_f1;
+  unsigned int *mailbox;
 	unsigned int time_p;
 	unsigned int time_c;
 	unsigned int time_compare;
 	unsigned int time1, time2;
 
+	mailbox = (unsigned *)0x6000;
 	af = 3.5f;
 	bf = 2.8f;
 
@@ -67,7 +69,7 @@ int main(void)
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
 
-	time1 = time_p - time_c - time_compare;
+	mailbox[0] = time_p - time_c - time_compare;
 
   // Second measurement
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
@@ -79,7 +81,7 @@ int main(void)
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
 
-	time2 = time_p - time_c - time_compare;
+	mailbox[1] = time_p - time_c - time_compare;
 
 	return 0;
 

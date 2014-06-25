@@ -43,12 +43,12 @@ cacheman:
 	movt r48, %high(cachespacebot)
 	mov r49, %low(cachespacetop)
 	movt r49, %high(cachespacetop)
-	add r63, r48, #160
+	add r63, r48, #320
 
 	;; We store a table of used space, in a similar design to
-	;; | startaddr | endaddr |
-	;; |-----------+---------|
-	;; |      0x80 |    0x81 |
+	;; | startaddr | endaddr | ref count | plt line|
+	;; |-----------+---------+-----------+---------|
+	;; |      0x80 |    0x81 |           |         |
 	;; Note we use r56-r59 as temporary registers throughout
 ;;; # iter = 0
 ;;; FIXME: Assign this to another register
@@ -60,28 +60,28 @@ cacheman:
 	;; This is done by checking that the end entry has a start address
 	;; equal to cachespacetop
 ;;; if (start[20] != CACHESPACETOP) goto endoftable
-	ldr r56, [r48, #38]	; final entry start addr (152>>2)
+	ldr r56, [r48, #76]	; final entry start addr (304>>2)
 	sub r56, r56, r49
 	bne .endoftable
 
 	;;  We don't use all the data *THIS* iteration, but doing a double
 	;;  load here means we don't have to do lots of little loads later
 ;;; currentrow = *row++
-	ldrd r52, [r54], #1
+	ldrd r52, [r54], #2
 .checkloop:
 ;;; previousrow = currentrow
 	mov r50, r52		; move element across
 	mov r51, r53
 ;;; currentrow = *row++
-	ldrd r52, [r54], #1	; load next entry
+	ldrd r52, [r54], #2	; load next entry
 ;;; availsize = currentrow[start]-previousrow[end]
 	sub r55, r52, r51
 ;;; if (availsize >= neededsize) goto copy
 	sub r56, r55, r47
 	bgte .copy
 	; check if we are at end of table
-;;; if (row < CACHESPACETOP+160) goto checkloop
-	sub r56, r54, #160	; 160 bytes, 20 loaded
+;;; if (row < CACHESPACETOP+320) goto checkloop
+	sub r56, r54, #320	; 320 bytes, 20 loaded
 	sub r56, r56, r48
 	blt .checkloop
 
@@ -115,44 +115,77 @@ cacheman:
 	b .copyloop
 .copyloopend:
 	;; Store loaded memory table entry and sort
-	mov r52, r51
-	mov r53, r56
-;;; row = CACHESPACEBOT + 152
-	add r54, r48, #152		; row pointer for final entry
+	mov r54, r51
+	mov r55, r56
+;;; row = CACHESPACEBOT + 304
+	add r58, r48, #304		; row pointer for final entry
 ;;; *row = currentrow
-	strd r52, [r54]
+	strd r54, [r58]
+;;; set ref count to 1
+	mov r56, #1
+;;; store plt entry
+        mov r57, lr
+        strd r56, [r58, #+1]
 .copysortloop:
 ;;; previousrow = *(row-1)
-	ldrd r50, [r54, #-1]
+	ldrd r50, [r58, #-2]
+        ldrd r52, [r58, #-1]
 ;;; if currentrow[start] > previousrow[start] goto editplt
-	sub r56, r52, r50
+	sub r59, r54, r50
 	bgte .editplt
 ;;; *row = previousrow; *(row-1) = currentrow
-	strd r50, [r54]
-	strd r52, [r54, #-1]
+	strd r50, [r58]
+        strd r52, [r58, #+1]
+	strd r54, [r58, #-2]
+        strd r56, [r58, #-1]
 ;;; *row--
-	sub r54, r54, #8
+	sub r58, r58, #16
 ;;; if (row != CACHESPACETOP) goto copysortloop
-	sub r56, r54, r48
+	sub r59, r58, r48
 	bne .copysortloop
 .editplt:
+	mov r59, %low(countedcall)
+	movt r59, %high(countedcall)
+        sub r59, r59, #4
 	;; diff = destaddr - (lr-8)
-	sub r50, r52, lr
+	sub r50, r59, lr
 	add r50, r50, #8
 ;;; diff >>=1, <<=8  (mask and shift bits)
 	lsr r50, r50, #1
 	lsl r50, r50, #8
 ;;; diff |= 0xe8 (unconditional branch)
-	mov r56, 0xe8
+	mov r56, 0xf8
 	orr r50, r50, r56
 ;;; *(lr-1) = diff
 	str r50, [lr, #-1]
 
-	;; Restore original link register and stack
-	ldr lr, [sp, #2]
-	add sp, sp, #8
-	;; branch to moved fn
-	jr r52
+	str lr, [sp, #2]
+        jalr r54
+
+	;; Scan cachedata table for LR. We are called from the PLT.
+	mov r48, %low(cachespacebot)
+	movt r48, %high(cachespacebot)
+	add r55, r48, #24
+
+	ldr r53, [sp, #2]
+
+.scanloop:
+	ldrd r50, [r55], #2
+	sub r52, r51, r53
+        bne .scanloop
+
+        sub r50, r50, #1
+        str r50, [r55, #-4]
+
+	ldr lr, [sp, #4]
+        add sp, sp, #16
+	rts
+
+	/* ;; Restore original link register and stack */
+	/* ldr lr, [sp, #2] */
+	/* add sp, sp, #8 */
+	/* ;; branch to moved fn */
+	/* jr r54 */
 
 .cachefail:
 	;; If we are loading this, then we have failed to load the cache.
@@ -161,145 +194,198 @@ cacheman:
 	movt r3, 0x5049
 	trap 3
 
-;;;
 ;;; UNLOADING STARTS HERE
 ;;; Note: don't clobber r46 (addr), r47 (size), r48 (top), r49 (bot), r62/63
 ;;; (Using same register meanings as above)
-;;;
+
 .unload:
-	add r54, r48, #8	; First table entry is second row
+	add r51, r48, #16	; First table entry is second row
 .unloadloop:
 	;; Load table entry
-	ldrd r52, [r54], #1
+	ldrd r52, [r51], #2
 	;; If the start address equals the end of space, we are done
 	sub r56, r52, r49
 	bgte .unloadfinish
 
-	;; For each stack frame, if lr is within range, then this is still loaded
-	;; r56 - lr, r57 - fp,   if (lr-min)<0 or (max-lr)<0 then out of range
-	;; FIXME: offsets may be wrong, but algorithm is right
-	ldr r56, [sp, #+2]	; first lr
-	mov r57, sp     	; first sp
-.unloadframeloop:
-	sub r55, r56, r52
-	blt .unloadnextframe
-	sub r55, r53, r56
-	blt .unloadnextframe
-	b .unloadnextentry
-
-.unloadnextframe:
-	;; FIXME: Check whether ldrd is valid
-	;; sub {at top}
-	;; bne .unloaddelframe
-	ldr r56, [r57, #+2]
-	ldr r57, [r57, #+1]
-	sub r57, r57, #0
-	bne .unloadframeloop
+	ldr r56, [r51, #-2]
+	sub r60, r56, #0
+	bne .unloadloop
 
 .unloaddelframe:
-	;; We have a frame we want to clean out, fill it with endtable value
-	str r49, [r54, #-2]
-	str r49, [r54, #-1]
-;;; Sort
-	mov r50, r54
-	;; If we are beyond the end of the table, we are done
+    ;; We have a frame we want to clean out, fill it with endtable value
+    str r49, [r51, #-4]
+    str r49, [r51, #-3]
+;; Sort
+    mov r50, r51
+    ;; If we are beyond the end of the table, we are done
 .unloadsort:
-	sub r55, r50, r63	; (current row - end of table)
-	;; 	sub r55, r55, #8
-	bgte .unloadsortend
-	;; Load row and previous row
-	ldrd r56, [r50, #-1]
-	ldrd r58, [r50]
-	;; if previous is less than next, swap
-	sub r55, r58, r56
-	bgt .unloadnoswap
-	strd r56, [r50]
-	strd r58, [r50, #-1]
+    sub r60, r50, r63	; (current row - end of table)
+    bgte .unloadsortend
+    ;; Load row and previous row
+    ldrd r56, [r50, #-2]
+    ldrd r52, [r50, #-1]
+    ldrd r58, [r50]
+    ldrd r54, [r50, #+1]
+    ;; if previous is less than next, swap
+    sub r60, r58, r56
+    bgt .unloadnoswap
+    strd r56, [r50]
+    strd r52, [r50, #+1]
+    strd r58, [r50, #-2]
+    strd r54, [r50, #-1]
 .unloadnoswap:
-	add r50, r50, #8
-	b .unloadsort
+    add r50, r50, #16
+    b .unloadsort
 
 .unloadsortend:
-	;; Finally, we need to check this entry again and clear its PLT entry
-	sub r54, r54, #8
-	;; We load the top of the PLT and search for the start address of
-	;; the cache we are unloading
-	mov r56, %low(_PROCEDURE_LINKAGE_TABLE+4)
-	movt r56, %high(_PROCEDURE_LINKAGE_TABLE+4)
-.unloadnextsort:
-	ldr r57, [r56], #4
-	sub r57, r57, r52
-	bne .unloadnextsort
+    ;; Finally, we need to check this entry again and clear its PLT entry
+    ;; We load the top of the PLT and search for the start address of
+    ;; the cache we are unloading
+    ldr r56, [r63, #-1]
+    str r49, [r63, #-1]
 
-	;; Calculate and write new PLT
-	sub r56, r56, #16
-	mov r57, %low(cacheman)
-	movt r57, %high(cacheman)
-	sub r57, r57, r56
-	lsr r57, r57, #1
-	lsl r57, r57, #8
-	mov r58, 0xf8
-	orr r57, r57, r58
-	str r57, [r56]
-	;; (And put back in original store and branch)
-	;; str lr, [sp], -0x2
-	mov r57, 0xd55c
-	movt r57, 0x2700
-	str r57, [r56, #-1]
+    ;; Calculate and write new PLT
+    sub r56, r56, #4
+    mov r57, %low(cacheman)
+    movt r57, %high(cacheman)
+    sub r57, r57, r56
+    lsr r57, r57, #1
+    lsl r57, r57, #8
+    mov r58, 0xf8
+    orr r57, r57, r58
+    str r57, [r56]
 
 .unloadnextentry:
-	;; Check next entry if not done
-	sub r56, r54, #160
-	sub r56, r56, r48
-	blt .unloadloop
+	sub r51, r51, #16
+	b .unloadloop
 
 .unloadfinish:
 	;; Branch to second iteration
 	b .cachebegin
 
+        .global countedcall
+countedcall:
+	;; Scan cachedata table for LR. We are called from the PLT.
+	mov r48, %low(cachespacebot)
+	movt r48, %high(cachespacebot)
+	add r55, r48, #24
+.countedcallscanloop:
+	ldrd r50, [r55], #2
+	sub r52, r51, lr
+        bne .countedcallscanloop
+
+	;; inc ref count
+        add r50, r50, #1
+        str r50, [r55, #-4]
+
+        ;; call function
+        ldr r50, [r55, #-6]
+        str lr, [sp, #2]
+        jalr r50
+
+	;; Scan cachedata table for LR. We are called from the PLT.
+	mov r48, %low(cachespacebot)
+	movt r48, %high(cachespacebot)
+	add r55, r48, #24
+
+	ldr r53, [sp, #2]
+
+.countedcallscanloopagain:
+	ldrd r50, [r55], #2
+	sub r52, r51, r53
+        bne .countedcallscanloopagain
+
+        sub r50, r50, #1
+        str r50, [r55, #-4]
+
+        ldr lr, [sp, #4]
+        add sp, sp, #16
+	rts
 	.size  cacheman, .-cacheman
+
+
 
 	;; Starting Cache Entry Table
 	;; ???: Should this be elsewhere?
 	.balign 8
 	.section .cachedata,"awx"
-	.4byte cachespacebot+160
-	.4byte cachespacebot+160
+	.4byte cachespacebot+320
+	.4byte cachespacebot+320
+	.4byte 0
+	.4byte cachespacebot+320
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
 	.4byte cachespacetop
 	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte 0
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte 0
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte 0
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte 0
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte 0
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte 0
 	.4byte cachespacetop

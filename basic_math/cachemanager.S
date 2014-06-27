@@ -25,11 +25,55 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-/* Current PLT Design:
-   [....] Push LR to stack
-   [....] Jump with Link to cachemanager
-   [....] Startaddr
-   [....] Size (or should this be endaddr?) */
+/* Reserved registers. DO NOT CLOBBER THEM*/
+
+#define ORIG_FN r46
+#define ORIG_FN_SIZE r47
+
+#define CACHE_SPACE_LOW r63
+#define CACHE_SPACE_HIGH r49
+
+#define CACHE_TABLE_LOW r48
+#define CACHE_TABLE_HIGH r63
+
+/* r48: CACHE_TABLE_LOW                    ^
+                                           |
+                                           | internal table
+                                           |
+                                           V
+   r63: CACHE_TABLE_HIGH - CACHE_SPACE_LOW ^
+                                           |
+                                           | space for functions
+                                           |
+                                           V
+   r49: CACHE_SPACE_HIGH
+ */
+
+#define ITER r62
+
+#define CACHE_TABLE_SIZE 20
+#define CACHE_TABLE_ENTRY_WIDTH 16
+
+	.macro mov_label dest, label
+	mov \dest, %low(\label)
+	movt \dest, %high(\label)
+        .endm
+
+	.macro get_csp stack, base
+	mov \base, %low(__cache_stack)
+	movt \base, %high(__cache_stack)
+        ldr \stack, [\base]
+        .endm
+
+        .macro gen_cachedata n
+	.4byte cachespacetop
+	.4byte cachespacetop
+	.4byte 0
+	.4byte cachespacetop
+        .if \n > 1
+        gen_cachedata \n - 1
+        .endif
+        .endm
 
 	.section .cacheman,"ax",@progbits
 	.balign 4
@@ -47,53 +91,72 @@ cacheman:
         str lr, [r16, #-1]
         str r16, [r17]
 
-	;; lr points to address to actual function (and size)
-	ldrd r46,[lr]
-	;; Load high and low of cachespace (and end of table)
-	mov r48, %low(cachespacebot)
-	movt r48, %high(cachespacebot)
-	mov r49, %low(cachespacetop)
-	movt r49, %high(cachespacetop)
-	add r63, r48, #320
+	;; ORIG_FN = address of function to copy
+        ;; ORIG_FN_SIZE = size of function to copy
+	ldrd ORIG_FN,[lr]
 
-	;; We store a table of used space, in a similar design to
-	;; | startaddr | endaddr | ref count | plt line|
-	;; |-----------+---------+-----------+---------|
-	;; |      0x80 |    0x81 |           |         |
-	;; Note we use r56-r59 as temporary registers throughout
-;;; # iter = 0
-;;; FIXME: Assign this to another register
-	mov r62, #0		; Iter counter
+	;; Set the limits of the cache space and table.
+        mov_label CACHE_TABLE_LOW, cachespacebot
+	add CACHE_TABLE_HIGH, CACHE_TABLE_LOW, #(CACHE_TABLE_SIZE * CACHE_TABLE_ENTRY_WIDTH)
+        mov_label CACHE_SPACE_HIGH, cachespacetop
+
+	;; Iter counter
+	mov ITER, #0
+
 .cachebegin:
-;;; row = CACHESPACEBOT
-	mov r54, r48		; Current row pointer
+
+#define ROW_POINTER r58
+#define ROW_1   r50
+#define START_1 r50
+#define END_1   r51
+
+#define REF_1   r52
+#define PLT_1   r53
+
+#define ROW_2   r54
+#define START_2 r54
+#define END_2   r55
+
+#define REF_2   r56
+#define PLT_2   r57
+
+	;; Current row pointer
+	mov ROW_POINTER, CACHE_TABLE_LOW
+
 	;; We want to check that we actually have a free table space
 	;; This is done by checking that the end entry has a start address
-	;; equal to cachespacetop
-;;; if (start[20] != CACHESPACETOP) goto endoftable
-	ldr r56, [r48, #76]	; final entry start addr (304>>2)
-	sub r56, r56, r49
+	;; equal to CACHE_SPACE_HIGH.
+
+        ;; Load the start address field of the last table entry.
+	ldr r56, [CACHE_TABLE_HIGH, #-(CACHE_TABLE_ENTRY_WIDTH>>2)]
+	sub r56, r56, CACHE_SPACE_HIGH
 	bne .endoftable
+
+        ;; [1] (see algorithm in the top comment)
 
 	;;  We don't use all the data *THIS* iteration, but doing a double
 	;;  load here means we don't have to do lots of little loads later
-;;; currentrow = *row++
-	ldrd r52, [r54], #2
+
+	;; currentrow = *row++
+	ldrd ROW_2, [ROW_POINTER], #2
 .checkloop:
 ;;; previousrow = currentrow
-	mov r50, r52		; move element across
-	mov r51, r53
+	mov START_1, START_2		; move element across
+	mov END_1, END_2
+
 ;;; currentrow = *row++
-	ldrd r52, [r54], #2	; load next entry
+	ldrd ROW_2, [ROW_POINTER], #2	; load next entry
+
 ;;; availsize = currentrow[start]-previousrow[end]
-	sub r55, r52, r51
+	sub r60, START_2, END_1
 ;;; if (availsize >= neededsize) goto copy
-	sub r56, r55, r47
+	sub r61, r60, ORIG_FN_SIZE
 	bgte .copy
+
 	; check if we are at end of table
 ;;; if (row < CACHESPACETOP+320) goto checkloop
-	sub r56, r54, #320	; 320 bytes, 20 loaded
-	sub r56, r56, r48
+	sub r60, ROW_POINTER, #(CACHE_TABLE_SIZE * CACHE_TABLE_ENTRY_WIDTH)
+	sub r60, r60, CACHE_TABLE_LOW
 	blt .checkloop
 
 .endoftable:
@@ -108,52 +171,51 @@ cacheman:
 
 .copy:
 	;; At this stage we have:
-	;; r46  = srcaddr
-	;; r51	= destdir
-	;; r47  = size
-	mov r56, r51	 	; current destaddr
+	;; END_1 = dest
+	mov r56, END_1	 	; current destaddr
 ;;; endaddr = srcdir+size
-	add r57, r46, r47	; endaddr + 1
-	mov r58, r46		; current srcdir
+	add r57, ORIG_FN, ORIG_FN_SIZE	; endaddr + 1
+	mov r59, ORIG_FN	; current srcdir
 .copyloop:
 ;;; if (current_srcdir >= endaddr) goto .copyloopend
-	sub r59, r58, r57
+	sub r60, r59, r57
 	bgte .copyloopend	; finished copying
 ;;; *currentdestdir++ = *currentsrcdir++
 ;;; ???: Can't do double load because functions may not be 8 byte aligned
-	ldr r60, [r58], #1
+	ldr r60, [r59], #1
 	str r60, [r56], #1
 	b .copyloop
 .copyloopend:
 	;; Store loaded memory table entry and sort
-	mov r54, r51
-	mov r55, r56
-;;; row = CACHESPACEBOT + 304
-	add r58, r48, #304		; row pointer for final entry
+	mov START_2, r51
+	mov END_2, r56
+;;; row = CACHE_TABLE_HIGH - CACHE_TABLE_ENTRY_WIDTH
+	sub ROW_POINTER, CACHE_TABLE_HIGH, #(CACHE_TABLE_ENTRY_WIDTH)		; row pointer for final entry
 ;;; *row = currentrow
-	strd r54, [r58]
+	strd ROW_2, [ROW_POINTER]
 ;;; set ref count to 1
-	mov r56, #1
+	mov REF_2, #1
 ;;; store plt entry
-        mov r57, lr
-        strd r56, [r58, #+1]
+        mov PLT_2, lr
+        strd REF_2, [r58, #+1]
 .copysortloop:
 ;;; previousrow = *(row-1)
-	ldrd r50, [r58, #-2]
-        ldrd r52, [r58, #-1]
+	ldrd ROW_1, [r58, #-2]
+        ldrd REF_1, [r58, #-1]
 ;;; if currentrow[start] > previousrow[start] goto editplt
-	sub r59, r54, r50
+	sub r60, START_2, START_1
 	bgte .editplt
 ;;; *row = previousrow; *(row-1) = currentrow
-	strd r50, [r58]
-        strd r52, [r58, #+1]
-	strd r54, [r58, #-2]
-        strd r56, [r58, #-1]
+	strd ROW_1, [r58]
+        strd REF_1, [r58, #+1]
+	strd ROW_2, [r58, #-2]
+        strd REF_2, [r58, #-1]
 ;;; *row--
-	sub r58, r58, #16
+	sub ROW_POINTER, ROW_POINTER, #(CACHE_TABLE_ENTRY_WIDTH)
 ;;; if (row != CACHESPACETOP) goto copysortloop
-	sub r59, r58, r48
+	sub r60, ROW_POINTER, CACHE_TABLE_LOW
 	bne .copysortloop
+
 .editplt:
 	mov r59, %low(countedcall)
 	movt r59, %high(countedcall)
@@ -172,11 +234,9 @@ cacheman:
 
         jalr r54
 
-.cachereturn:
 	;; Scan cachedata table for LR. We are called from the PLT.
-	mov r48, %low(cachespacebot)
-	movt r48, %high(cachespacebot)
-	add r55, r48, #24
+        mov_label CACHE_TABLE_LOW, cachespacebot
+	add r55, CACHE_TABLE_LOW, #(CACHE_TABLE_ENTRY_WIDTH + 8)
 
 	mov r17, %low(__cache_stack)
 	movt r17, %high(__cache_stack)
@@ -220,7 +280,7 @@ cacheman:
 ;;; (Using same register meanings as above)
 
 .unload:
-	add r51, r48, #16	; First table entry is second row
+	add r51, CACHE_TABLE_LOW, #(CACHE_TABLE_ENTRY_WIDTH)	; First table entry is second row
 .unloadloop:
 	;; Load table entry
 	ldrd r52, [r51], #2
@@ -255,7 +315,7 @@ cacheman:
     strd r58, [r50, #-2]
     strd r54, [r50, #-1]
 .unloadnoswap:
-    add r50, r50, #16
+    add r50, r50, #(CACHE_TABLE_ENTRY_WIDTH)
     b .unloadsort
 
 .unloadsortend:
@@ -319,9 +379,8 @@ countedcall:
         ldr r16, [r17]
 
 	;; Scan cachedata table for LR. We are called from the PLT.
-	mov r48, %low(cachespacebot)
-	movt r48, %high(cachespacebot)
-	add r55, r48, #24
+        mov_label CACHE_TABLE_LOW, cachespacebot
+	add r55, CACHE_TABLE_LOW, #(CACHE_TABLE_ENTRY_WIDTH + 8)
 
 	ldr lr, [r16, #-2]
 	ldr r53, [r16, #-1]
@@ -346,83 +405,8 @@ countedcall:
 	;; ???: Should this be elsewhere?
 	.balign 8
 	.section .cachedata,"awx"
-	.4byte cachespacebot+320
-	.4byte cachespacebot+320
+	.4byte cachespacebot+(CACHE_TABLE_SIZE * CACHE_TABLE_ENTRY_WIDTH)
+	.4byte cachespacebot+(CACHE_TABLE_SIZE * CACHE_TABLE_ENTRY_WIDTH)
 	.4byte 0
-	.4byte cachespacebot+320
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte cachespacetop
-	.4byte 0
-	.4byte cachespacetop
+	.4byte cachespacebot+(CACHE_TABLE_SIZE * CACHE_TABLE_ENTRY_WIDTH)
+        gen_cachedata CACHE_TABLE_SIZE - 1

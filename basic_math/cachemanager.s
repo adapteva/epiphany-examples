@@ -36,6 +36,17 @@
 	.global cacheman
 	.type cacheman, @function
 cacheman:
+	mov r17, %low(__cache_stack)
+	movt r17, %high(__cache_stack)
+        ldr r16, [r17]
+
+        ldr r50, [sp, #2]
+        add sp, sp, #8
+
+        str r50, [r16], #2
+        str lr, [r16, #-1]
+        str r16, [r17]
+
 	;; lr points to address to actual function (and size)
 	ldrd r46,[lr]
 	;; Load high and low of cachespace (and end of table)
@@ -89,7 +100,7 @@ cacheman:
 	;; At this stage we are out of table or space
 	;; If this is our second iteration through the system, we can't
 	;; load any code so fail
-	sub r56, r53, #1
+	sub r56, r62, #1
 	beq .cachefail
 	;; Set itercount and jump back
 	mov r62, #1
@@ -159,15 +170,22 @@ cacheman:
 ;;; *(lr-1) = diff
 	str r50, [lr, #-1]
 
-	str lr, [sp, #2]
         jalr r54
 
+.cachereturn:
 	;; Scan cachedata table for LR. We are called from the PLT.
 	mov r48, %low(cachespacebot)
 	movt r48, %high(cachespacebot)
 	add r55, r48, #24
 
-	ldr r53, [sp, #2]
+	mov r17, %low(__cache_stack)
+	movt r17, %high(__cache_stack)
+        ldr r16, [r17]
+
+	ldr lr, [r16, #-2]
+	ldr r53, [r16, #-1]
+        sub r16, r16, #8
+        str r16, [r17]
 
 .scanloop:
 	ldrd r50, [r55], #2
@@ -176,23 +194,26 @@ cacheman:
 
         sub r50, r50, #1
         str r50, [r55, #-4]
-
-	ldr lr, [sp, #4]
-        add sp, sp, #16
 	rts
 
-	/* ;; Restore original link register and stack */
-	/* ldr lr, [sp, #2] */
-	/* add sp, sp, #8 */
-	/* ;; branch to moved fn */
-	/* jr r54 */
-
 .cachefail:
+	ldr r50, [lr]
+        jalr r50
+
+	;; Scan cachedata table for LR. We are called from the PLT.
+	mov r17, %low(__cache_stack)
+	movt r17, %high(__cache_stack)
+        ldr r16, [r17]
+
+	ldr lr, [r16, #-2]
+        sub r16, r16, #8
+        str r16, [r17]
+        rts
 	;; If we are loading this, then we have failed to load the cache.
 	;; Currently we trap and set R3 to 'PIC1'
-	mov r3, 0x4331
-	movt r3, 0x5049
-	trap 3
+	/* mov r3, 0x4331 */
+	/* movt r3, 0x5049 */
+	/* trap 3 */
 
 ;;; UNLOADING STARTS HERE
 ;;; Note: don't clobber r46 (addr), r47 (size), r48 (top), r49 (bot), r62/63
@@ -265,6 +286,17 @@ cacheman:
 
         .global countedcall
 countedcall:
+	mov r17, %low(__cache_stack)
+	movt r17, %high(__cache_stack)
+        ldr r16, [r17]
+
+        ldr r50, [sp, #2]
+        add sp, sp, #8
+
+        str r50, [r16], #2
+        str lr, [r16, #-1]
+        str r16, [r17]
+
 	;; Scan cachedata table for LR. We are called from the PLT.
 	mov r48, %low(cachespacebot)
 	movt r48, %high(cachespacebot)
@@ -280,15 +312,21 @@ countedcall:
 
         ;; call function
         ldr r50, [r55, #-6]
-        str lr, [sp, #2]
         jalr r50
+
+	mov r17, %low(__cache_stack)
+	movt r17, %high(__cache_stack)
+        ldr r16, [r17]
 
 	;; Scan cachedata table for LR. We are called from the PLT.
 	mov r48, %low(cachespacebot)
 	movt r48, %high(cachespacebot)
 	add r55, r48, #24
 
-	ldr r53, [sp, #2]
+	ldr lr, [r16, #-2]
+	ldr r53, [r16, #-1]
+        sub r16, r16, #8
+        str r16, [r17]
 
 .countedcallscanloopagain:
 	ldrd r50, [r55], #2
@@ -297,13 +335,12 @@ countedcall:
 
         sub r50, r50, #1
         str r50, [r55, #-4]
-
-        ldr lr, [sp, #4]
-        add sp, sp, #16
 	rts
 	.size  cacheman, .-cacheman
 
-
+	.balign 8
+	.section .csp,"awx"
+        .4byte __cache_stack + 4
 
 	;; Starting Cache Entry Table
 	;; ???: Should this be elsewhere?

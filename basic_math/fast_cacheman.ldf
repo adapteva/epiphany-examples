@@ -178,22 +178,29 @@ SECTIONS
     KEEP (*(.init))
   } > INTERNAL_RAM =0
 
-/* software caching stuff */
+  /* software caching */
+
+  /* Space for the PLT table. All functions have their own entry in it.  */
   .plt  : {
     *(.plt)
     PROVIDE (_PROCEDURE_LINKAGE_TABLE_END = .);
   } > INTERNAL_RAM
+
+  /* Here lies the software manager.  */
   .cacheman	  : {
     *(.cacheman)
     PROVIDE (cachespacebot = .);
   } > INTERNAL_RAM
+
+  /* The software manager needs to keep its own table in cachedata.   */
   .cachedata : {
     *(.cachedata)
+    /* After the table, we allocate memory for storing functions.   */
     . = . + 0x4000;
     PROVIDE (cachespacetop = .);
   } > INTERNAL_RAM
-  .cached : { *(.cached) } > EXTERNAL_DRAM_0
-/* end software caching stuff */
+  /* end software caching */
+
   .text :
   {
     *(.text.unlikely .text.*_unlikely)
@@ -325,11 +332,16 @@ SECTIONS
   . = ALIGN(8);
   . = ALIGN(8);
   _end = .; PROVIDE (end = .);
+
+  /* The software cache needs its own stack which does upwards from here.
+     The memory at __cache_stack should point to the current address of the stack.  */
   .csp :
   {
     PROVIDE (__cache_stack = .);
   }> INTERNAL_RAM
+
   /* Stabs debugging sections.  */
+  /* FIXME: We should not need to discard these sections.  */
   /DISCARD/ 0 : { *(.stab) }
   /DISCARD/ 0 : { *(.stabstr) }
   /DISCARD/ 0 : { *(.stab.excl) }

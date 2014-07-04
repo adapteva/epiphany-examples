@@ -25,6 +25,161 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+/* Epiphany Cache Manager design
+
+   With the Cache Manager feature turned on, every single function call
+   redirects to a PROCEDURE LINKAGE TABLE. Each entry of this table corresponds
+   to the function begin called and is structured like this:
+
+   Current PLT Design:
+     * str lr, [sp], #-2 ;; Push LR to stack.
+     * bl cacheman       ;; Jump with Link to cachemanager
+     * startaddr         ;; This is the actual address of the function in external
+                         ;; memory.
+     * size              ;; And its size.
+
+   The beauty of this is, when cacheman is called, startaddr and size can be
+   accessed through the link register.
+
+   Tracking functions with a table
+   ===============================
+
+   The cache manager then uses an internal table to track copied functions and
+   memory space. If we consider the space allocated for storing new functions
+   between address START and END, the table will be as such:
+
+   | start address | end address | reference count | corresponding PLT entry |
+   |---------------+-------------+-----------------+-------------------------|
+   |         START |       START |               0 |                   START |
+   |     START + 0 |  START + 10 |               1 |                  0xbee0 |
+   |    START + 10 |  START + 34 |               0 |                  0xbec0 |
+   |    START + 34 |  START + 50 |               1 |                  0xbea0 |
+   |    START + 50 |  START + 60 |               0 |                  0xbe40 |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+   |           END |         END |               0 |                     END |
+
+   The (dummy) addresses stored in this table correspond to the recently copied
+   funcion. So in this example, we have 4 functions loaded into internal memory.
+   We use the END address as an initial value.
+
+   The reference count field tells you if the given function is part of the
+   calling stack. In other words, a function can only be unloaded if its
+   reference count is 0. And in practice, we increment it every time a function
+   is called and decrement it when it returns.
+
+   The corresponding PLT entry tells us where the PLT entry is so we can modify
+   it.
+
+   Overview of how the cachemanager works
+   ======================================
+
+   The cache manager is layout in 2 functions:
+
+     * cacheman:
+
+       This will be called by a function not currently copied into internal
+       memory. In order, it performs the following:
+
+         - [1] Check if there is enough space for the new function.
+               If yes, continue
+               If we have ran out of memory space:
+                 goto UNLOAD
+               If we have ran out of space in the table (limited to 20 entries):
+                 goto UNLOAD
+               If we have already tried unloading:
+                 goto FAIL
+         - Copy the new function into internal memory
+         - Create an entry for it in the table.
+         - Sort the table with a single bubblesort pass from HIGH to LOW.
+         - Edit the PLT entry so it calls countedcall instead of cacheman.
+         - Jump to the new function in internal memory.
+
+         UNLOAD:
+
+         - For each entry in the table:
+           - If the reference count is zero
+             - Set start and end fields to | END | END |
+             - Sort the table with a single bubblesort pass from LOW to HIGH.
+             - Edit the PLT entry so it calls cacheman again instead of
+               countedcall.
+             - Set the PLT field to | END |
+         - Unloading is done, jump back to the start and try loading again.
+
+         FAIL:
+
+         - Give up and call the function from external memory.
+
+     * countedcall:
+
+       This function is used to keep track of reference counting. It basically
+       wraps around all the functions that we have copied:
+
+       - Increment reference count
+       - Call the function
+       - Decrement reference count
+
+   CSP: Cache Stack Pointer
+   ========================
+
+   The cache manager uses its own stack, because it cannot mess with the
+   function's stack frame. We had to have this when we decided to implement
+   reference counting for functions.
+
+   |    |     |
+   |    V     |
+   |          | <- sp
+   |          |
+   ............
+   |          |<-\
+   |    ^     |  |
+   |    |     |  |
+   |   csp    |--/
+
+   Data is pushed on this stack everytime we call a function that we have
+   copied. And then data is poped when it returns. This allows us to wrap around
+   a function:
+
+   countedcall:
+
+     - push the return address on the cache manager stack
+     - push the PLT address on the cache manager stack
+     - iterate through the table to find the entry with the same PLT address
+     - increment the reference count and find the start address.
+
+     - call the function in internal memory
+
+     - pop the PLT address from the cache manager stack
+     - iterate through the table to find the entry with the same PLT address
+     - decrement the reference count
+     - pop the return address from the cache manager stack
+     - and return
+
+   | corresponding plt entry        |
+   | return address of the function |
+   |--------------------------------|
+   | corresponding plt entry        |
+   | return address of the function |
+   |--------------------------------|
+   | corresponding plt entry        |
+   | return address of the function |
+
+ */
+
+
 /* Reserved registers. DO NOT CLOBBER THEM*/
 
 #define ORIG_FN r46

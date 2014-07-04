@@ -126,11 +126,7 @@ SECTIONS
 	/* create offset with location counter                                    */
 	. = (ORIGIN(EXTERNAL_DRAM_0) + __PROG_SIZE_FOR_CORE_ * __CORE_NUM_);
 
-	NEW_LIB_RO           . :
-  {
-    lib_a-*.o(.text  .rodata)
-    *.o(libgloss_epiphany)
-  } > EXTERNAL_DRAM_0
+	NEW_LIB_RO           . : {lib_a-*.o(.text  .rodata)  *.o(libgloss_epiphany) } > EXTERNAL_DRAM_0
 	NEW_LIB_WR           . : {lib_a-*.o(.data)                                  } > EXTERNAL_DRAM_0
 	GNU_C_BUILTIN_LIB_RO . :
 	{
@@ -138,13 +134,6 @@ SECTIONS
 		*divsi3.o(.text  .rodata)   *udivsi3.o(.text .rodata)
 		*umodsi3.o(.text .rodata)  _*.o(.text  .rodata)
 	} > EXTERNAL_DRAM_0
-  ELIB_RO . : {
-    *e_coreid_get_coreid.o(.text  .rodata)
-    *e_ctimer_set.o(.text  .rodata)
-    *e_ctimer_get.o(.text  .rodata)
-    *e_ctimer_start.o(.text  .rodata)
-    *e_ctimer_stop.o(.text  .rodata)
-  } > EXTERNAL_DRAM_0
 
   /* Read-only sections, merged into text segment: */
 
@@ -189,22 +178,29 @@ SECTIONS
     KEEP (*(.init))
   } > INTERNAL_RAM =0
 
-/* software caching stuff */
+  /* software caching */
+
+  /* Space for the PLT table. All functions have their own entry in it.  */
   .plt  : {
     *(.plt)
     PROVIDE (_PROCEDURE_LINKAGE_TABLE_END = .);
   } > INTERNAL_RAM
+
+  /* Here lies the software manager.  */
   .cacheman	  : {
     *(.cacheman)
     PROVIDE (cachespacebot = .);
   } > INTERNAL_RAM
+
+  /* The software manager needs to keep its own table in cachedata.   */
   .cachedata : {
     *(.cachedata)
-    . = . + 0x1000;
+    /* After the table, we allocate memory for storing functions.   */
+    . = . + 0x4000;
     PROVIDE (cachespacetop = .);
   } > INTERNAL_RAM
-  .cached : { *(.cached) } > EXTERNAL_DRAM_0
-/* end software caching stuff */
+  /* end software caching */
+
   .text :
   {
     *(.text.unlikely .text.*_unlikely)
@@ -336,7 +332,16 @@ SECTIONS
   . = ALIGN(8);
   . = ALIGN(8);
   _end = .; PROVIDE (end = .);
+
+  /* The software cache needs its own stack which does upwards from here.
+     The memory at __cache_stack should point to the current address of the stack.  */
+  .csp :
+  {
+    PROVIDE (__cache_stack = .);
+  }> INTERNAL_RAM
+
   /* Stabs debugging sections.  */
+  /* FIXME: We should not need to discard these sections.  */
   /DISCARD/ 0 : { *(.stab) }
   /DISCARD/ 0 : { *(.stabstr) }
   /DISCARD/ 0 : { *(.stab.excl) }
@@ -374,7 +379,6 @@ SECTIONS
   .debug_ranges   0 : { *(.debug_ranges) }
   .gnu.attributes 0 : { KEEP (*(.gnu.attributes)) }
 
-  /**/
   PROVIDE (__stack_start_ = ORIGIN(INTERNAL_RAM) + LENGTH(INTERNAL_RAM) - 0x10);
   .stack __stack_start_ : { ___stack = .; *(.stack) }
   PROVIDE (___heap_start = ORIGIN(EXTERNAL_DRAM_1) + __HEAP_SIZE_FOR_CORE_ * __CORE_NUM_);

@@ -51,7 +51,7 @@ math_example: math_example.c
 
 
 ifeq ($(WITH_CACHE), yes)
-e_math_example: e_math_example.c cachemanager.s
+e_math_example: e_math_example.c cachemanager.S
 else
 e_math_example: e_math_example.c
 endif

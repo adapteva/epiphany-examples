@@ -4,7 +4,7 @@ set -e
 
 ESDK=${EPIPHANY_HOME}
 ELIBS=${ESDK}/tools/host/lib
-EINCS=${ESDK}/tools/host/include
+EINCS="-I ${ESDK}/tools/host/include -I ${ESDK}/tools/host/include/uapi"
 ELDF=${ESDK}/bsps/current/fast.ldf
 
 # Create the binaries directory
@@ -23,7 +23,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/dma_message_a.c -o bin/dma_message_a.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
+${CROSS_PREFIX}gcc src/dma_message_a.c -o bin/dma_message_a.elf ${EINCS} -L ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -O3 -T ${ELDF} src/e_dma_message_a.c -o bin/e_dma_message_a.elf -le-lib 

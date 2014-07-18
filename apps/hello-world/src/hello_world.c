@@ -11,7 +11,7 @@
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
@@ -47,6 +47,9 @@ int main(int argc, char *argv[])
 
 	srand(1);
 
+	e_set_loader_verbosity(H_D0);
+	e_set_host_verbosity(H_D0);
+
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
 	// get the actual system parameters.
@@ -56,7 +59,10 @@ int main(int argc, char *argv[])
 
 	// Allocate a buffer in shared external memory
 	// for message passing from eCore to host.
-	e_alloc(&emem, _BufOffset, _BufSize);
+	if (E_OK != e_alloc(&emem, _BufOffset, _BufSize) ) {
+		fprintf(stderr, "Failed to allocate shared memory\n");
+		return EXIT_FAILURE;
+	}
 
 	for (i=0; i<_SeqLen; i++)
 	{
@@ -74,12 +80,15 @@ int main(int argc, char *argv[])
 
 		// Load the device program onto the selected eCore
 		// and launch after loading.
-		e_load("e_hello_world.srec", &dev, 0, 0, E_TRUE);
+		if ( E_OK != e_load("e_hello_world.srec", &dev, 0, 0, E_TRUE) ) {
+			fprintf(stderr, "Failed to load e_hello_world.srec\n");
+			return EXIT_FAILURE;
+		}
 
 		// Wait for core program execution to finish, then
 		// read message from shared buffer.
 		usleep(10000);
-		e_read(&emem, 0, 0, 0x0, emsg, _BufSize);
+		e_read(&emem, 0, 0, 0, emsg, _BufSize);
 
 		// Print the message and close the workgroup.
 		fprintf(stderr, "\"%s\"\n", emsg);
@@ -93,4 +102,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-

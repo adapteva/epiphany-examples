@@ -4,7 +4,7 @@ set -e
 
 ESDK=${EPIPHANY_HOME}
 ELIBS=${ESDK}/tools/host/lib
-EINCS=${ESDK}/tools/host/include
+EINCS="-I ${ESDK}/tools/host/include -I ${ESDK}/tools/host/include/uapi"
 ELDF=${ESDK}/bsps/current/fast.ldf
 
 SCRIPT=$(readlink -f "$0")
@@ -27,7 +27,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/mesh_traffic.c -o bin/mesh_traffic.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
+${CROSS_PREFIX}gcc src/mesh_traffic.c -o bin/mesh_traffic.elf ${EINCS} -L ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -O0 -T ${ELDF} src/e_mesh_transmitter.c -o bin/e_mesh_transmitter.elf -le-lib

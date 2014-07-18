@@ -4,7 +4,7 @@ set -e
 
 ESDK=${EPIPHANY_HOME}
 ELIBS=${ESDK}/tools/host/lib
-EINCS=${ESDK}/tools/host/include
+EINCS="-I ${ESDK}/tools/host/include -I ${ESDK}/tools/host/include/uapi"
 ELDF=${ESDK}/bsps/current/internal.ldf
 
 
@@ -28,7 +28,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-mem-sync.c -o bin/e-mem-sync.elf -I ${EINCS} -L ${ELIBS} -le-hal
+${CROSS_PREFIX}gcc src/e-mem-sync.c -o bin/e-mem-sync.elf ${EINCS} -L ${ELIBS} -le-hal -lpthread
 
 
 

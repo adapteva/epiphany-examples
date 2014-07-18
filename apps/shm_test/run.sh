@@ -8,5 +8,5 @@ EHDF=${EPIPHANY_HDF}
 
 cd Debug
 
-./hello_world.elf
+./shm_test.elf
 

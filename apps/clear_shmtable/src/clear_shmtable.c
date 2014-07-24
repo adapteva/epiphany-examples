@@ -28,7 +28,6 @@
 #include <stdlib.h>
 
 #include <e-hal.h>
-#include <linux/epiphany.h>
 
 typedef struct region
 {

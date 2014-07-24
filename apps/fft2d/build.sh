@@ -53,7 +53,6 @@ ${CROSS_PREFIX}g++ \
 	-Drestrict= \
 	-I/usr/include \
 	-I./device/src \
-	-I ${ESDK}/tools/host/include/uapi \
 	-I ${EPIPHANY_HOME}/tools/host/include \
 	-L ${EPIPHANY_HOME}/tools/host/lib \
 	-falign-loops=8 \

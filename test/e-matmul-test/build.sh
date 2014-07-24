@@ -3,8 +3,6 @@
 set -e
 
 ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib
-EINCS=${ESDK}/tools/host/include
 ELDF=${ESDK}/bsps/current/internal.ldf
 
 SCRIPT=$(readlink -f "$0")

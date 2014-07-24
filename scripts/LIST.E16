@@ -3,6 +3,12 @@
 ##
 
 #####################
+#SHARED MEMORY TESTS
+#####################
+apps/shm_test/test.sh                 1
+
+
+#####################
 #ALIVE TESTS
 #####################
 test/e-reset/test.sh                  1

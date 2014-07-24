@@ -3,8 +3,8 @@
 set -e
 
 ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib
-EINCS="-I ${ESDK}/tools/host/include -I ${ESDK}/tools/host/include/uapi"
+ELIBS="-L ${ESDK}/tools/host/lib"
+EINCS="-I ${ESDK}/tools/host/include"
 ERM=../erm
 ERMI=${ERM}/src
 ELDF=${ESDK}/bsps/current/internal.ldf
@@ -29,7 +29,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/main.c ${ERM}/src/ermlib.c -o bin/main.elf -I ${ERMI} ${EINCS} -L ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_PREFIX}gcc src/main.c ${ERM}/src/ermlib.c -o bin/main.elf -I ${ERMI} ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -O0 -T ${ELDF} src/e_demo.c -o bin/e_demo.elf -le-lib

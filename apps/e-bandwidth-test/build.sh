@@ -3,8 +3,8 @@
 set -e
 
 ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib
-EINCS="-I ${ESDK}/tools/host/include -I ${ESDK}/tools/host/include/uapi"
+ELIBS="-L ${ESDK}/tools/host/lib"
+EINCS="-I ${ESDK}/tools/host/include"
 ELDF=${ESDK}/bsps/current/internal.ldf
 
 SCRIPT=$(readlink -f "$0")
@@ -27,7 +27,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} -L ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_PREFIX}gcc src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -O3  -T ${ELDF} src/e-bandwidth-test-device.c -o bin/e-bandwidth-test-device.elf -le-lib -lm -ffast-math

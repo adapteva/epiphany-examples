@@ -3,8 +3,8 @@
 set -e
 
 ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib
-EINCS="-I ${ESDK}/tools/host/include -I ${ESDK}/tools/host/include/uapi"
+ELIBS="-L ${ESDK}/tools/host/lib"
+EINCS="-I ${ESDK}/tools/host/include"
 ELDF=${ESDK}/bsps/current/internal.ldf
 
 # Create the binaries directory
@@ -23,7 +23,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/main.c -o bin/main.elf ${EINCS} -L ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_PREFIX}gcc src/main.c -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 OPT=0

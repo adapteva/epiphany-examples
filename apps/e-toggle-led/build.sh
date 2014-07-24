@@ -3,8 +3,8 @@
 set -e
 
 ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib
-EINCS="-I ${ESDK}/tools/host/include -I ${ESDK}/tools/host/include/uapi"
+ELIBS="-L ${ESDK}/tools/host/lib"
+EINCS="-I ${ESDK}/tools/host/include"
 ELDF=${ESDK}/bsps/current/internal.ldf
 
 
@@ -28,7 +28,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf ${EINCS} -L ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_PREFIX}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -T ${ELDF} src/device-e-toggle-led.c -o bin/device-e-toggle-led.elf -le-lib

@@ -13,9 +13,6 @@ echo "Building ../test/e-extmem-test"
 echo "Building ../test/e-mem-test"
 ../test/e-mem-test/build.sh
 
-echo "Building ../test/e-reset"
-../test/e-reset/build.sh
-
 echo "Building ../test/e-write-word"
 ../test/e-write-word/build.sh
 

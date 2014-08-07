@@ -34,10 +34,11 @@
 #include <errno.h>
 
 #include <e-hal.h>
+#include <a_trace.h>
 
 const unsigned ShmSize = 128;
 const char ShmName[] = "test_shm";
-const unsigned SeqLen = 20;
+const unsigned SeqLen = 10;
 const char HostMsg[] = "Host Initialized. You should not see this!";
 
 int main(int argc, char *argv[])
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t      mbuf;
-
+	int          retval = EXIT_SUCCESS; 
 	srand((unsigned int)time(NULL));
 
 	e_set_loader_verbosity(L_D0);
@@ -62,13 +63,15 @@ int main(int argc, char *argv[])
 
 	if ( E_OK != e_reset_system() ) {
 		fprintf(stderr, "Epiphany system reset failed\n");
-		return EXIT_FAILURE;
+		retval = EXIT_FAILURE;
+		goto err_out3;
 	}
 
 	fprintf(stderr, "Getting platform info\n");
 	if ( E_OK != e_get_platform_info(&platform) ) {
 		fprintf(stderr, "Failed to get Epiphany platform info\n");
-		return EXIT_FAILURE;
+		retval = EXIT_FAILURE;
+		goto err_out3;
 	}
 	fprintf(stderr, "Platform version: %s, HAL version 0x%08x\n",
 			platform.version, platform.hal_ver);
@@ -77,14 +80,16 @@ int main(int argc, char *argv[])
 	if ( E_OK != e_shm_alloc(&mbuf, "shm_1", 4096) ) {
 		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
 				strerror(errno));
-		return EXIT_FAILURE;
+		retval = EXIT_FAILURE;
+		goto err_out3;
 	}
 
 	// Allocate a few buffers that won't be touched. 
 	if ( E_OK != e_shm_alloc(&mbuf, "shm_2", 4096) ) {
 		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
 				strerror(errno));
-		return EXIT_FAILURE;
+		retval = EXIT_FAILURE;
+		goto err_out2;
 	}
 
 	// Allocate a buffer in shared external memory
@@ -92,12 +97,13 @@ int main(int argc, char *argv[])
 	if ( E_OK != e_shm_alloc(&mbuf, ShmName, ShmSize) ) {
 		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
 				strerror(errno));
-		return EXIT_FAILURE;
+		retval = EXIT_FAILURE;
+		goto err_out1;
 	}
 
 	// Scribble on memory from host side
 	e_write(&mbuf, 0, 0, 0, (const void*)HostMsg, sizeof(HostMsg));
-	
+
 	// Dump the shm table - we should see three valid regions
 	{
 		int i = 0;
@@ -108,9 +114,10 @@ int main(int argc, char *argv[])
 		if ( tbl ) {
 			for ( i = 0; i < MAX_SHM_REGIONS; ++i ) {
 				if ( tbl->regions[i].valid ) {
-					printf("region %d: name = %s, paddr = %p\n",
+					printf("region %d: name = %s, paddr = %p, length=%d\n",
 						   i, tbl->regions[i].shm_seg.name,
-						   tbl->regions[i].shm_seg.paddr);
+						   tbl->regions[i].shm_seg.paddr,
+						   tbl->regions[i].shm_seg.size);
 				}
 			}
 		}
@@ -138,7 +145,8 @@ int main(int argc, char *argv[])
 		// and launch after loading.
 		if ( E_OK != e_load("./e_shm_test.srec", &dev, 0, 0, E_TRUE) ) {
 			fprintf(stderr, "Failed to load e_shm_test.srec\n");
-			return EXIT_FAILURE;
+			retval = EXIT_FAILURE;
+			goto err_out;
 		}
 
 		// Wait for core program execution to finish, then
@@ -154,11 +162,15 @@ int main(int argc, char *argv[])
 
 	// Release the allocated buffer and finalize the
 	// e-platform connection.
+ err_out:
 	e_shm_release(ShmName);
+ err_out2:
 	e_shm_release("shm_2");
+ err_out1:
 	e_shm_release("shm_1");
+ err_out3:
 	e_finalize();
 
-	return 0;
+	return retval;
 }
 

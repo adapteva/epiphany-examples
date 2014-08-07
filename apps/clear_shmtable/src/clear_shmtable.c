@@ -98,8 +98,10 @@ int main(int argc, char *argv[])
     while ( rgn ) {
         region_t *tmp = NULL;
 
+		printf("Releasing segment: %s\n", rgn->segment->name);
+
         if ( E_OK != e_shm_release(rgn->segment->name) ) {
-            printf("Error releasing segment");
+            printf("Error releasing segment %s", rgn->segment->name);
         }
 
         ++rgncnt;

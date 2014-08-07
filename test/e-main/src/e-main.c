@@ -36,6 +36,7 @@ result.
 #include <stdio.h>
 #include <string.h>
 #include <e-hal.h>
+#include <e-loader.h>
 #include "common.h"
 
 void e_check_test(void *dev, unsigned row, unsigned col, int *status);

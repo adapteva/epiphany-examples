@@ -1,3 +1,20 @@
+2014-08-07  Ben Chaco  <bchaco@x3-c.com>
+
+	* apps/clear_shmtable/src/clear_shmtable.c:
+	Added clear_shmtable app
+	* apps/shm_test/build.sh:
+	* apps/shm_test/src/e_shm_test.c:
+	* apps/shm_test/src/shm_test.c:
+	* apps/shm_test/test.sh:
+	Updated shm_test to exercize the trace library. 
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c:
+	* test/e-main/src/e-main.c:
+	* test/e-mem-test/src/e-mem-test.c:
+	* test/e-test/src/e-test.c:
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c:
+	Added #include for e-loader.h which is no longer included from
+	the epiphany-hal.h wrapper header.
+
 2014-07-24  Ben Chaco  <bchaco@x3-c.com>
 
 	* apps/clear_shmtable/build.sh:

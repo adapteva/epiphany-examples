@@ -11,7 +11,9 @@ EXEPATH=$(dirname "$SCRIPT")
 
 export LD_LIBRARY_PATH=${ELIBS}
 
-$EXEPATH/Release/shm_test.elf > shm_test.log
+cd $EXEPATH/Debug
+./shm_test.elf > shm_test.log
+cd -
 
 if [ $? -ne 0 ] 
 then

@@ -24,10 +24,10 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/shm_test.c -o Debug/shm_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_PREFIX}gcc src/shm_test.c -g -O0 -o Debug/shm_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -DWRAP_SHMSEG=1 -T ${ELDF} src/e_shm_test.c -o Debug/e_shm_test.elf -le-lib
+e-gcc -T ${ELDF} src/e_shm_test.c -o Debug/e_shm_test.elf -le-lib
 
 # Convert ebinary to SREC file
 e-objcopy --srec-forceS3 --output-target srec Debug/e_shm_test.elf Debug/e_shm_test.srec

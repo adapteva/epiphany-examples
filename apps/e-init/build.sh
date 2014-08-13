@@ -3,8 +3,8 @@
 set -e
 
 ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib
-EINCS=${ESDK}/tools/host/include
+ELIBS="-L ${ESDK}/tools/host/lib"
+EINCS="-I ${ESDK}/tools/host/include"
 ELDF=${ESDK}/bsps/current/internal.ldf
 
 SCRIPT=$(readlink -f "$0")
@@ -27,6 +27,6 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-init.c -o bin/e-init.elf -I ${EINCS} -L ${ELIBS} -le-hal
+${CROSS_PREFIX}gcc src/e-init.c -o bin/e-init.elf ${EINCS} ${ELIBS} -le-hal -lpthread
 
 

@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 	// for message passing from eCore to host.
 	e_alloc(&emem, _BufOffset, _BufSize);	
 	
-    	// Open a workgroup
+    // Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 
 	// Load the device program onto all the eCores

@@ -13,9 +13,6 @@ echo "Building ../test/e-extmem-test"
 echo "Building ../test/e-mem-test"
 ../test/e-mem-test/build.sh
 
-echo "Building ../test/e-reset"
-../test/e-reset/build.sh
-
 echo "Building ../test/e-write-word"
 ../test/e-write-word/build.sh
 
@@ -64,6 +61,9 @@ echo "Building ../apps/e-dump-regs"
 
 echo "Building ../apps/e-toggle-led"
 ../apps/e-toggle-led/build.sh
+
+echo "Building ../apps/shm_test"
+../apps/shm_test/build.sh
 
 ###EMESH  
 echo "Building ../emesh/emesh_bandwidth_all2one"

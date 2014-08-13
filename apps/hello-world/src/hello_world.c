@@ -11,7 +11,7 @@
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
@@ -29,23 +29,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include <unistd.h>
 
 #include <e-hal.h>
 
-#define _BufSize   (128)
-#define _BufOffset (0x01000000)
-#define _SeqLen    (20)
+const unsigned ShmSize = 128;
+const char ShmName[] = "hello_shm"; 
+const unsigned SeqLen = 20;
 
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i;
 	e_platform_t platform;
 	e_epiphany_t dev;
-	e_mem_t emem;
-	char emsg[_BufSize];
+	e_mem_t   mbuf;
 
 	srand(1);
+
+	e_set_loader_verbosity(H_D0);
+	e_set_host_verbosity(H_D0);
 
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
@@ -56,10 +59,16 @@ int main(int argc, char *argv[])
 
 	// Allocate a buffer in shared external memory
 	// for message passing from eCore to host.
-	e_alloc(&emem, _BufOffset, _BufSize);
+	if ( E_OK != e_shm_alloc(&mbuf, ShmName, ShmSize) ) {
+		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
+				strerror(errno));
+		return EXIT_FAILURE;
+	}
 
-	for (i=0; i<_SeqLen; i++)
+	for (i=0; i<SeqLen; i++)
 	{
+		char buf[ShmSize];
+
 		// Draw a random core
 		row = rand() % platform.rows;
 		col = rand() % platform.cols;
@@ -74,23 +83,26 @@ int main(int argc, char *argv[])
 
 		// Load the device program onto the selected eCore
 		// and launch after loading.
-		e_load("e_hello_world.srec", &dev, 0, 0, E_TRUE);
+		if ( E_OK != e_load("e_hello_world.srec", &dev, 0, 0, E_TRUE) ) {
+			fprintf(stderr, "Failed to load e_hello_world.srec\n");
+			return EXIT_FAILURE;
+		}
 
 		// Wait for core program execution to finish, then
 		// read message from shared buffer.
 		usleep(10000);
-		e_read(&emem, 0, 0, 0x0, emsg, _BufSize);
+
+		e_read(&mbuf, 0, 0, 0, buf, ShmSize);
 
 		// Print the message and close the workgroup.
-		fprintf(stderr, "\"%s\"\n", emsg);
+		printf("\"%s\"\n", buf);
 		e_close(&dev);
 	}
 
 	// Release the allocated buffer and finalize the
 	// e-platform connection.
-	e_free(&emem);
+	e_shm_release(ShmName);
 	e_finalize();
 
 	return 0;
 }
-

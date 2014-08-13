@@ -6,7 +6,7 @@ ESDK=${EPIPHANY_HOME}
 ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
 EHDF=${EPIPHANY_HDF}
 
-cd Debug
+cd bin
 
 ./shm_test.elf
 

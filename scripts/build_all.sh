@@ -62,6 +62,9 @@ echo "Building ../apps/e-dump-regs"
 echo "Building ../apps/e-toggle-led"
 ../apps/e-toggle-led/build.sh
 
+echo "Building ../apps/shm_test"
+../apps/shm_test/build.sh
+
 ###EMESH  
 echo "Building ../emesh/emesh_bandwidth_all2one"
 ../emesh/emesh_bandwidth_all2one/build.sh

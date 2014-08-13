@@ -50,7 +50,6 @@ int main(int argc, char *argv[])
 	int          retval = EXIT_SUCCESS; 
 	srand((unsigned int)time(NULL));
 
-	e_set_loader_verbosity(L_D0);
 	e_set_host_verbosity(H_D0);
 
 	// initialize system, read platform params from

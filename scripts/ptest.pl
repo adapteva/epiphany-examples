@@ -5,6 +5,7 @@
 #system("screen -S demo -X stuff 'date\n'");
 #system("screen -S demo -X stuff 'ls -ltr\n'");
 
+
 ###Get Hostname/IP address###
 $Host=`hostname`;
 chomp($Host);
@@ -29,8 +30,8 @@ if($a=~ /(.*).*SN(.*).*SKU(.*)/){
 #exit
 
 ###POWER ON BOARD###
-print "2.) Boot the board WITHOUT the SD card inserted.\n";
-system("sleep 5");
+print "2.) Boot the board WITHOUT the SD card inserted, press enter:<enter>";
+$a = <STDIN>;
 ###FLASH THE BOARD###
 system("screen -s para -X stuff 'printenv\n'");
 system("screen -s para -X stuff 'setenv ethaddr $MACID\n'");
@@ -49,6 +50,11 @@ system("screen -S para -X stuff 'su linaro\n cd\n run\n'");
 print "5.) Did the test complete?(y/n):";
 $a = <STDIN>;
 chomp($a);
+while(!($a eq "y" | $a eq "n")){
+    print "5.) Did the test complete?(y/n):";
+    $a = <STDIN>;
+    chomp($a);
+}
 if($a eq "y"){   
 system("screen -S para -X stuff 'rcp -r $DIR $IP:Logs\n'");
 ###DISPLAY PASS/FAIL###

@@ -11,9 +11,6 @@ SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 cd $EXEPATH
 
-# Create the binaries directory
-mkdir -p bin/
-
 CROSS_PREFIX=
 case $(uname -p) in
 	arm*)
@@ -27,15 +24,6 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
-
-# Build DEVICE side program
-e-gcc -T ${ELDF} src/emain.c -o bin/emain.elf -le-lib
-
-
-
-
-# Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec
+${CROSS_PREFIX}gcc src/clear_shmtable.c -o Debug/clear_shmtable.elf ${EINCS} ${ELIBS} -le-hal -lpthread
 
 

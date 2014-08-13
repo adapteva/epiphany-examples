@@ -1,3 +1,87 @@
+2014-08-07  Ben Chaco  <bchaco@x3-c.com>
+
+	* apps/clear_shmtable/src/clear_shmtable.c:
+	Added clear_shmtable app
+	* apps/shm_test/build.sh:
+	* apps/shm_test/src/e_shm_test.c:
+	* apps/shm_test/src/shm_test.c:
+	* apps/shm_test/test.sh:
+	Updated shm_test to exercize the trace library. 
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c:
+	* test/e-main/src/e-main.c:
+	* test/e-mem-test/src/e-mem-test.c:
+	* test/e-test/src/e-test.c:
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c:
+	Added #include for e-loader.h which is no longer included from
+	the epiphany-hal.h wrapper header.
+
+2014-07-24  Ben Chaco  <bchaco@x3-c.com>
+
+	* apps/clear_shmtable/build.sh:
+	* apps/clear_shmtable/src/clear_shmtable.c:
+	* apps/dotproduct/build.sh:
+	* apps/e-bandwidth-test/build.sh:
+	* apps/e-dump-mem/build.sh:
+	* apps/e-dump-regs/build.sh:
+	* apps/e-fill-mem/build.sh:
+	* apps/e-init/build.sh:
+	* apps/e-mem-sync/build.sh:
+	* apps/e-toggle-led/build.sh:
+	* apps/erm/build.sh:
+	* apps/erm_example/build.sh:
+	* apps/fft2d/build.sh:
+	* apps/hello-world/build.sh:
+	* apps/hello-world/src/e_hello_world.c:
+	* apps/hello-world/src/hello_world.c:
+	* apps/shm_test/build.sh:
+	* apps/shm_test/src/e_shm_test.c:
+	* apps/shm_test/src/shm_test.c:
+	* archive/e-test/build.sh:
+	* cpu/arithmode/build.sh:
+	* cpu/assembly/build.sh:
+	* cpu/basic_math/build.sh:
+	* cpu/complex_numbers/build.sh:
+	* cpu/ctimer/build.sh:
+	* cpu/interrupt-demo/build.sh:
+	* cpu/interrupts/build.sh:
+	* cpu/mutex/build.sh:
+	* cpu/nested_interrupts/build.sh:
+	* cpu/register_test/build.sh:
+	* cpu/remote_call/build.sh:
+	* dma/dma_2d/build.sh:
+	* dma/dma_chain/build.sh:
+	* dma/dma_interrupt/build.sh:
+	* dma/dma_message_read/build.sh:
+	* dma/dma_message_write/build.sh:
+	* dma/dma_slave/build.sh:
+	* emesh/emesh_bandwidth_all2one/build.sh:
+	* emesh/emesh_bandwidth_bisection/build.sh:
+	* emesh/emesh_bandwidth_neighbour/build.sh:
+	* emesh/emesh_read_latency/build.sh:
+	* emesh/emesh_traffic/build.sh:
+	* io/link_lowpower_mode/build.sh:
+	* labs/clockgating_mode/build.sh:
+	* labs/hardware_barrier/build.sh:
+	* labs/hardware_loops/build.sh:
+	* labs/mem_protect/build.sh:
+	* scripts/LIST.E16:
+	* scripts/build_all.sh:
+	* test/e-extmem-test/build.sh:
+	* test/e-main/build.sh:
+	* test/e-matmul-test/build.sh:
+	* test/e-mem-test/build.sh:
+	* test/e-read-buf/build.sh:
+	* test/e-read-word/build.sh:
+	* test/e-regfile-test/build.sh:
+	* test/e-reset/build.sh:
+	* test/e-test/build.sh:
+	* test/e-write-buf/build.sh:
+	* test/e-write-word/build.sh:
+	Updates for Epiphany Shared Memory API. Link libpthread. Changed
+	ELIBS and EINCS in scripts to allow easilly adding new include or
+	library paths. Added apps/shm_test and updated apps/hello-world to
+	use the shared memory API.
+
 2014-06-12  Ben Chaco  <bchaco@x3-c.com>
 
 	* apps/dotproduct/build.sh:

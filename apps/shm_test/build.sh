@@ -7,8 +7,9 @@ ELIBS="-L ${ESDK}/tools/host/lib"
 EINCS="-I ${ESDK}/tools/host/include"
 ELDF=${ESDK}/bsps/current/fast.ldf
 
-# Create the binaries directory
-mkdir -p bin/
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
+cd $EXEPATH
 
 CROSS_PREFIX=
 case $(uname -p) in
@@ -22,15 +23,14 @@ case $(uname -p) in
 		;;
 esac
 
+mkdir ./bin
+
 # Build HOST side application
-${CROSS_PREFIX}gcc src/interrupt_test.c -o bin/interrupt_test.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_PREFIX}gcc src/shm_test.c -g -O0 -o bin/shm_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_nested_test.c -o bin/e_nested_test.elf -le-lib 
-
+e-gcc -T ${ELDF} src/e_shm_test.c -o bin/e_shm_test.elf -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_nested_test.elf bin/e_nested_test.srec
-
-
+e-objcopy --srec-forceS3 --output-target srec bin/e_shm_test.elf bin/e_shm_test.srec
 

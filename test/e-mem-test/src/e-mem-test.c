@@ -25,6 +25,7 @@ along with this program, see the file COPYING. If not, see
 #include <unistd.h>
 
 #include <e-hal.h>
+#include <e-loader.h>
 
 #define RAM_SIZE     (0x8000)
 #define WORD_SIZE    (1)

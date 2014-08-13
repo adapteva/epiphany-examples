@@ -24,7 +24,8 @@ along with this program, see the file COPYING. If not, see
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include "e-hal.h"
+#include <e-hal.h>
+#include <e-loader.h>
 
 #define _BUF_SZ (8*1024)
 #define eMHz 600

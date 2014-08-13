@@ -22,6 +22,7 @@ along with this program, see the file COPYING. If not, see
 #include <stdio.h>
 #include <string.h>
 #include <e-hal.h>
+#include <e-loader.h>
 
 void e_check_test(void *dev, unsigned row, unsigned col, int *status);
 void usage();

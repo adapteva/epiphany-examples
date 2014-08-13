@@ -11,7 +11,7 @@ EXEPATH=$(dirname "$SCRIPT")
 
 export LD_LIBRARY_PATH=${ELIBS}
 
-cd $EXEPATH/Debug
+cd $EXEPATH/bin
 ./shm_test.elf > shm_test.log
 cd -
 

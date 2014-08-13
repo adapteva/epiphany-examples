@@ -23,7 +23,9 @@ case $(uname -p) in
 		;;
 esac
 
-mkdir ./bin
+if [ ! -d ./bin ]; then
+	mkdir ./bin
+fi
 
 # Build HOST side application
 ${CROSS_PREFIX}gcc src/shm_test.c -g -O0 -o bin/shm_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread

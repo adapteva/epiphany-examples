@@ -26,7 +26,7 @@ esac
 ${CROSS_PREFIX}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -T ${ELDF} -O3 src/emain.c src/hwloop.s src/sfloop.s -o bin/emain.elf -le-lib 
+e-gcc -T ${ELDF} -O3 src/emain.c src/hwloop.s src/sfloop.s -o bin/emain.elf -le-lib
 
 
 

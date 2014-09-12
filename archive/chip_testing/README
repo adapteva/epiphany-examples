@@ -1,6 +1,6 @@
 ###################
 This directory contains a number of simple tests that are meant to be
-run throught the debugger. The examples run correctly on the EMEK3 
+run throught the debugger. The examples run correctly on the EMEK3
 platform but need some porting work for the Parallella platform
 
 
@@ -32,7 +32,7 @@ platform but need some porting work for the Parallella platform
 5.) To run a regression suite:
     run_suite.pl -l TEST.LIST -d chip0
 
-    
+
 
 
 

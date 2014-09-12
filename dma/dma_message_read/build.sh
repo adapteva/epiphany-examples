@@ -26,7 +26,7 @@ esac
 ${CROSS_PREFIX}gcc src/dma_message_a.c -o bin/dma_message_a.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_dma_message_a.c -o bin/e_dma_message_a.elf -le-lib 
+e-gcc -O3 -T ${ELDF} src/e_dma_message_a.c -o bin/e_dma_message_a.elf -le-lib
 
 
 # Convert ebinary to SREC file

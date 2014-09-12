@@ -26,7 +26,7 @@ along with this program, see the file COPYING. If not, see
 int main(void)
 {
   unsigned time, time_c, time_p;
-  
+
   unsigned i,j;
   unsigned volatile *mailbox,*buffer;
   unsigned volatile tmp;
@@ -34,7 +34,7 @@ int main(void)
 
   mailbox[0]=0;
   mailbox[1]=0;
-  for(i=0;i<2;i++){	
+  for(i=0;i<2;i++){
     //Writing to local memory vs neighbor core
     if(i<1){
       buffer = (unsigned *) 0x7000;
@@ -43,64 +43,64 @@ int main(void)
       buffer = (unsigned *) 0x80907000;
     }
     // Set the ctimer
-    e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;		 
-    
+    e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
+
     // Start the ctimer
     time_p = e_ctimer_start(E_CTIMER_0, 0x1);
-    
+
     for(j=0;j<10;j++){
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678; 
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
       *buffer= 0x12345678;
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
       *buffer= 0x12345678;
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
-      *buffer= 0x12345678;      
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
+      *buffer= 0x12345678;
     }
-    
+
     // Get the time
     time_c = e_ctimer_get(E_CTIMER_0);
-    time = time_p - time_c;		
-    
+    time = time_p - time_c;
+
     // Output the result in mail box
     mailbox[i] = time;
   }
-  
+
   return 0;
 }

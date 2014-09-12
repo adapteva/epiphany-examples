@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
   unsigned int data;
   int row0,col0,rows,cols;
   int i,j;
- 
+
   if(argc < 2){
     usage();
     return EXIT_FAILURE;
@@ -57,16 +57,16 @@ int main(int argc, char *argv[]){
   printf("CORE  CONFIG      STATUS      PC          CTIMER0     CTIMER1     DMA0STATUS  DMA1STATUS  DEBUG   IRET    IMASK    ILAT    IPEND\n");
   printf("--------------------------------------------------------------------------------------------------------------------------------------------\n");
   for (i=row0; i<rows; i++) {
-    for (j=col0; j<cols; j++) {     
+    for (j=col0; j<cols; j++) {
       printf("%02d%02d  ", i,j);
-      
-      e_read(&dev, i, j, 0xf0400, &data, sizeof(unsigned));//config 
+
+      e_read(&dev, i, j, 0xf0400, &data, sizeof(unsigned));//config
       printf("0x%08x  ",data);
 
-      e_read(&dev, i, j, 0xf0404, &data, sizeof(unsigned));//status 
+      e_read(&dev, i, j, 0xf0404, &data, sizeof(unsigned));//status
       printf("0x%08x  ",data);
 
-      e_read(&dev, i, j, 0xf0408, &data, sizeof(unsigned));//pc 
+      e_read(&dev, i, j, 0xf0408, &data, sizeof(unsigned));//pc
       printf("0x%08x  ",data);
 
       e_read(&dev, i, j, 0xf0438, &data, sizeof(unsigned));//ctimer0
@@ -84,16 +84,16 @@ int main(int argc, char *argv[]){
       e_read(&dev, i, j, 0xf040C, &data, sizeof(unsigned));//debug
       printf("0x%04x  ",data);
 
-      e_read(&dev, i, j, 0xf0420, &data, sizeof(unsigned));//iret 
+      e_read(&dev, i, j, 0xf0420, &data, sizeof(unsigned));//iret
       printf("0x%04x  ",data);
 
-      e_read(&dev, i, j, 0xf0424, &data, sizeof(unsigned));//imask 
+      e_read(&dev, i, j, 0xf0424, &data, sizeof(unsigned));//imask
       printf("0x%04x  ",data);
 
       e_read(&dev, i, j, 0xf0428, &data, sizeof(unsigned));//ilat
       printf("0x%04x  ",data);
 
-      e_read(&dev, i, j, 0xf0434, &data, sizeof(unsigned));//ipend 
+      e_read(&dev, i, j, 0xf0434, &data, sizeof(unsigned));//ipend
       printf("0x%04x  ",data);
       printf("\n");
     }
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]){
   //Close
   e_close(&dev);
   e_finalize();
-  
+
   return EXIT_SUCCESS;
 }
 

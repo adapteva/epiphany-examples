@@ -12,7 +12,7 @@ export LD_LIBRARY_PATH=${ELIBS}
 
 $EXEPATH/bin/e-main.elf $EXEPATH/bin/e-task.srec > e-main.log
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else

@@ -12,7 +12,7 @@ EXEPATH=$(dirname "$SCRIPT")
 export LD_LIBRARY_PATH=${ELIBS}
 $EXEPATH/bin/e-test.elf $EROW0 $ECOL0 $EROWS $ECOLS 0  >> e-test.log
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$1 FAILED"
 else

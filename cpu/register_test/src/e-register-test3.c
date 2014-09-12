@@ -23,7 +23,7 @@ along with this program, see the file COPYING. If not, see
 // This is the DEVICE side of the register example.
 // This is the program for cores to clear the system
 // registers and then set system registers and then clear
-// system registers. 
+// system registers.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,8 +45,8 @@ int main(void)
 	unsigned int reg;
 	unsigned int p_value;
 	unsigned int flag3, flag4, flag5;
-	unsigned int temp;		
-	unsigned int k;	
+	unsigned int temp;
+	unsigned int k;
 	unsigned *pass;
 	pass = (unsigned *)7000;
 	po= (unsigned *) 0x600c;
@@ -58,19 +58,19 @@ int main(void)
 		pass[0] = (unsigned)0x00000000;
 		while(po[0] == (unsigned) 0x00000000)
 		{};
-		
+
 		sprintf(outbuf,"");
-		// Store the previous value of the register	
+		// Store the previous value of the register
 		p_value = e_reg_read(*po);
 		// Disable interrupts
 
-		e_irq_global_mask(E_TRUE);	
+		e_irq_global_mask(E_TRUE);
 
 		//For register EILAT
 			// Clear the EILAT
 			e_reg_write(E_REG_ILATCL, (unsigned)0xffffffff);
 			temp = e_reg_read(*po);
-			if (temp == (unsigned)0x00000000) 
+			if (temp == (unsigned)0x00000000)
 			{
 				flag3=1;
 			}
@@ -80,7 +80,7 @@ int main(void)
 				sprintf(outbuf,"We get 0x%08x instead of 0x%08x, ILAT\n", temp, 0x00000000);
 				global_index[0] = global_index[0] + 1;
 			}
-			
+
 			// Set the EILAT
 			e_reg_write(E_REG_ILATST, (unsigned)0xffffffff);
 			temp = 	e_reg_read(*po);
@@ -93,9 +93,9 @@ int main(void)
 				sprintf(outbuf + strlen(outbuf),"We get 0x%08x instead of 0x%08x, ILAT\n", temp, 0x000003ff);
 				global_index[0] = global_index[0] + 1;
 			}
-			
+
 			// Clear the EILAT
-			
+
 			e_reg_write(E_REG_ILATCL, (unsigned)0xffffffff);
 			temp = e_reg_read(*po);
 			if (temp == (unsigned)0x00000000)
@@ -106,12 +106,12 @@ int main(void)
 				sprintf(outbuf + strlen(outbuf),"We get 0x%08x instead of 0x%08x, ILAT\n", temp, 0x00000000);
 				global_index[0] = global_index[0] + 1;
 			}
-			
+
 			if ((flag3 == 1) && (flag4 == 1) && (flag5 == 1))
 			{
 				pass[0] = 0xdeadbeef;
 			}
-			
+
 			// Set the register to the previous value
 			e_reg_write(*po, p_value);
 			po[0] = (unsigned) 0x00000000;
@@ -122,4 +122,4 @@ int main(void)
 
 			return EXIT_SUCCESS;
 }
-			
+

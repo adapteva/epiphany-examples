@@ -29,7 +29,7 @@ along with this program, see the file COPYING. If not, see
 int main(int argc, char *argv[]){
 
   unsigned int read_buffer[RAM_SIZE/4];
-  e_epiphany_t dev; 
+  e_epiphany_t dev;
   int k;
 
   //Open
@@ -41,6 +41,6 @@ int main(int argc, char *argv[]){
     printf("0x%08x   0x%08x\n",k*4,read_buffer[k]);
   }
   e_close(&dev);
-  e_finalize();  
+  e_finalize();
   return 0;
 }

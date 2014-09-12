@@ -21,9 +21,9 @@
 
 // This is the device side of the Hardware Barrier example project.
 // The host may load this program to any eCore. When launched, the
-// core run a fir function and records numbers of cycles spend on 
-// different events. After that, the core goes into "idle" and been 
-// awaked by ctimer_1. A success/error message is sent to the host 
+// core run a fir function and records numbers of cycles spend on
+// different events. After that, the core goes into "idle" and been
+// awaked by ctimer_1. A success/error message is sent to the host
 // according to the result.
 //
 // Aug-2013, XM.
@@ -56,14 +56,14 @@ unsigned idle_test();
 void init_data(float *a);
 
 unsigned *result;
-e_ctimer_config_t event_list[] = 
+e_ctimer_config_t event_list[] =
 	{
-		E_CTIMER_CLK, E_CTIMER_IDLE, E_CTIMER_IALU_INST, E_CTIMER_FPU_INST,	E_CTIMER_DUAL_INST, 
+		E_CTIMER_CLK, E_CTIMER_IDLE, E_CTIMER_IALU_INST, E_CTIMER_FPU_INST,	E_CTIMER_DUAL_INST,
 		E_CTIMER_E1_STALLS, E_CTIMER_RA_STALLS,	E_CTIMER_EXT_FETCH_STALLS, E_CTIMER_EXT_LOAD_STALLS
 	};
 
 
-int main(void) 
+int main(void)
 {
 	int t;
 
@@ -76,14 +76,14 @@ int main(void)
 	//start counting events
 	for (t=0;t<9;t++)
 		result[t] = fir(inp_data, out_o, t);
-		
+
 	//enable the interruption
 	e_irq_global_mask(E_FALSE);
 	e_irq_mask(E_TIMER1_INT,E_FALSE);
 
 	//call the idle function
 	result[9] = idle_test();
-	
+
 	return EXIT_SUCCESS;
 }
 
@@ -92,7 +92,7 @@ int main(void)
 
 
 
-unsigned fir(float *a, float *b, unsigned t) 
+unsigned fir(float *a, float *b, unsigned t)
 {
 	int wrp; // pointer to the delay line's current position.
 	int rdp; // pointer to the I/O data's current position.
@@ -152,7 +152,7 @@ unsigned fir(float *a, float *b, unsigned t)
 			b[rdp+wrp+7] = fir[7];
 		}
 	}
-	
+
 	time_e = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
 	time = time_s - time_e;
@@ -165,12 +165,12 @@ unsigned idle_test()
 {
 	unsigned time, time_s, time_e;
 	unsigned *ivt;
-	
+
 	//set the ctimer1 interrupt handler
 	ivt = (unsigned *) 0x10;
 	*ivt = 0x1d2;
 
-	//set ctimer1 to generate the interrupt 
+	//set ctimer1 to generate the interrupt
 	//to awake core from idle
 	e_ctimer_set(E_CTIMER_1, 100000);
 	e_ctimer_start(E_CTIMER_1, E_CTIMER_CLK);

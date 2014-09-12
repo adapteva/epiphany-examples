@@ -139,8 +139,8 @@ int main(int argc, char *argv[])
 				fprintf(stderr, "\ntest14: Mem_Protect passed!\n\n\n");
 			else
 				fprintf(stderr, "\ntest14: Mem_Protect Failed!\t\t\t\tFault = %d!\n\n\n", fault);
-		}	
-	}	
+		}
+	}
 
 	e_close(&dev);
 	e_free(&emem);

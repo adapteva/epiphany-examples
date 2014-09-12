@@ -21,9 +21,9 @@
 
 // This is the device side of the Hardware Barrier example project.
 // The host may load this program to any eCore. When launched, the
-// core do a simple matrix multiplication. The calculation is performed 
-// with three different versions: compiled by complier with level 3 
-// optimization, with hardware_loop, without hardware_loop. A 
+// core do a simple matrix multiplication. The calculation is performed
+// with three different versions: compiled by complier with level 3
+// optimization, with hardware_loop, without hardware_loop. A
 // success/error message is sent to the host according to the result.
 //
 // Aug-2013, XM.
@@ -86,7 +86,7 @@ int main(void) {
 	time[1] = time_s - time_e;
 
 	time_s = e_ctimer_start(E_CTIMER_0, ctype);
-	
+
 	hwloop(2048);
 	time_e = e_ctimer_stop(E_CTIMER_0);
 	time[1] = (time_s - time_e) - time[1];
@@ -105,7 +105,7 @@ int main(void) {
 	time_e = e_ctimer_stop(E_CTIMER_0);
 	time[2] = (time_s - time_e) - time[2];
 
-	
+
 
 	return EXIT_SUCCESS;
 }
@@ -126,7 +126,7 @@ int comloop() {
 	sum = 0;
 	for(_i=0;_i<1024;_i++)
 	{
-		sum += A[_i]*B[_i]; 
+		sum += A[_i]*B[_i];
 	}
 
 	return sum;

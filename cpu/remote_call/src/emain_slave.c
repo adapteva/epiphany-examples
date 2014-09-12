@@ -20,8 +20,8 @@
 */
 
 // This is the device side of the Hardware Barrier example project.
-// The host may load this program to any eCore. When launched, the 
-// core attatches its interrupts handler with fibonacci functions. 
+// The host may load this program to any eCore. When launched, the
+// core attatches its interrupts handler with fibonacci functions.
 // A success/error message is sent to the host according to the result.
 //
 // Aug-2013, XM.
@@ -50,10 +50,10 @@ unsigned fibonacci();
 unsigned *result;
 
 
-int main(void) 
+int main(void)
 {
 	unsigned i;
-	
+
 	*signal = start;
 
 	//attach the isr handlers
@@ -76,7 +76,7 @@ int main(void)
 	{
 		result[i] = 0x0;
 	}
-	
+
 	//wait for the finished signal from master
 	while(*signal != finish) ;
 
@@ -97,7 +97,7 @@ unsigned fibonacci()
 		a = b;
 		b = c;
 	}
-	
+
 	return b;
 }
 

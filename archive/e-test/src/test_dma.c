@@ -34,7 +34,7 @@ unsigned  dma_wr_data[N]  __attribute__ ((section (".data_bank3")));//result mat
 int main(int argc, char *argv[]){
   int      i,j,k;
   unsigned int offset;
-  unsigned coreID,row,col; 
+  unsigned coreID,row,col;
 
   unsigned *addr;
   unsigned *dummy;
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
   dma_wr_descr[4]=&dma_rd_data;//source addresss
   dma_wr_descr[5]=0x00000000;//destination address
 
-  
+
 
   //Test Init
   coreID=e_test_init();
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
       offset=START+(i<<26)+(j<<20)+BANK2+(row*ROWS+col)*BUF_SIZE;
 #ifdef VERBOSE
 	    printf("offset=%x, id=%x, i=%d, j=%d, row=%d, col=%d\n",offset,coreID,i,j,row,col);
-#endif   
+#endif
       dummy = (unsigned *) (offset + BUF_SIZE-WORD_SIZE);
       if(1){
 	if(!(offset==coreID)){
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
 	  //}
 
 	  //Memory Ordering Sync (to get around RAW races)
-	  e_write_ack(dummy);  
+	  e_write_ack(dummy);
 	  //Verify PAT0
 	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	    addr=(unsigned *) (offset+k);
@@ -92,7 +92,7 @@ int main(int argc, char *argv[]){
 	    (*(addr))= ( PAT1 | k );
 	  }
 	  //Memory Ordering Sync (to get around RAW races)
-	  e_write_ack(dummy);  
+	  e_write_ack(dummy);
 	  //Verify PAT0
 	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	    addr=(unsigned *) (offset+k);
@@ -100,13 +100,13 @@ int main(int argc, char *argv[]){
 	    if(result!= ( PAT1  | k )){
 	      status=0;
 #ifdef VERBOSE
-	      printf("FAIL: core=(%d,%d) addr=(0x%x) result=0x%x\n",i,j,k,result); 
+	      printf("FAIL: core=(%d,%d) addr=(0x%x) result=0x%x\n",i,j,k,result);
 #endif
 	    }
 	  }
 	}
       }
-    }  
+    }
   }
   //Finish Test
   return e_test_finish(status);

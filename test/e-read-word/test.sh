@@ -13,7 +13,7 @@ export LD_LIBRARY_PATH=${ELIBS}
 
 $EXEPATH/bin/e-read-word.elf > e-read-word.log
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else

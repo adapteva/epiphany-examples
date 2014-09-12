@@ -46,7 +46,7 @@ void matmac(volatile float * restrict a, volatile float * restrict b, volatile f
 		for (j=0; j<NN; j++)
 			for (k=0; k<NN; k++)
 				c[i*NN+j] += a[i*NN+k] * b[k*NN+j];
-	
+
 	return;
 }
 
@@ -127,7 +127,7 @@ void matadd(volatile float * restrict a, volatile float * restrict b, volatile f
 	for (i=0; i<NN; i++)
 		for (j=0; j<NN; j++)
 			c[i*NN+j] = a[i*NN+j] + b[i*NN+j];
-	
+
 	return;
 }
 
@@ -144,7 +144,7 @@ void matmul(volatile float * restrict a, volatile float * restrict b, volatile f
 			for (k=0; k<NN; k++)
 				c[i*NN+j] += a[i*NN+k] * b[k*NN+j];
 		}
-	
+
 	return;
 }
 
@@ -156,7 +156,7 @@ void matsub(volatile float * restrict a, volatile float * restrict b, volatile f
 	for (i=0; i<NN; i++)
 		for (j=0; j<NN; j++)
 			c[i*NN+j] = a[i*NN+j] - b[i*NN+j];
-	
+
 	return;
 }
 

@@ -20,7 +20,7 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the HOST side of the mesh traffic example.
-// In this test, we program the config register to count 
+// In this test, we program the config register to count
 // different mesh events.
 
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 	unsigned time[16][2];
 	time[0][0]=0;
 	time[0][1]=0;
-	
+
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
 	// get the actual system parameters.
@@ -50,8 +50,8 @@ int main(int argc, char *argv[])
 
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
-	
-	// Load device program		
+
+	// Load device program
 	e_load("e_loadstore.srec",&dev, 0, 0, E_TRUE);
 
 	//Waiting for finish
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	e_read(&dev, 0, 0, (0x6004), &time[0][1], sizeof(real));
 
 	//Print Results
-	float ratio= 100*((float)time[0][1]/(float)time[0][0]-1.0f);	
+	float ratio= 100*((float)time[0][1]/(float)time[0][0]-1.0f);
 	printf("Local  STR loop cycles=%d\n", time[0][0]);
 	printf("Remote STR loop cycles=%d\n", time[0][1]);
 	printf("Performance hit       =%f%%\n", ratio);
@@ -72,4 +72,4 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-	
+

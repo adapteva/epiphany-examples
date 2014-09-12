@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
   e_epiphany_t dev;
   e_mem_t emem;
   char emsg[_BufSize];
-  
+
 
   unsigned int row, col;
   unsigned int data, led_state;
@@ -58,11 +58,11 @@ int main(int argc, char *argv[])
   e_init(NULL);
   e_reset_system();
   e_get_platform_info(&platform);
-  
+
   // Allocate a buffer in shared external memory
   // for message passing from eCore to host.
-  e_alloc(&emem, 0x0, 128);	
-  
+  e_alloc(&emem, 0x0, 128);
+
   // Open a workgroup
   e_open(&dev, 0, 0, platform.rows, platform.cols);
 
@@ -71,14 +71,14 @@ int main(int argc, char *argv[])
 
   //Running "tooggle LED program" from core (0,0)
   e_load("device-e-toggle-led.srec", &dev, 0, 0, E_TRUE);
-  
+
   // Close the workgroup
   e_close(&dev);
-  
+
   // Release the allocated buffer and finalize the
   e_free(&emem);
   e_finalize();
-  
+
   return 0;
 }
 void usage(){
@@ -88,4 +88,4 @@ void usage(){
   printf(" 0 = LED Offf\n");
 }
 
- 
+

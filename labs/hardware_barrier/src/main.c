@@ -23,8 +23,8 @@
 //
 // This program runs on the linux host and invokes the emain.c program.
 // The program activits the entire board and have them do the counting
-// simultaneously. The hardware barrier is inserted in each counting to 
-// syncronize the counting. The result of counting is printed on the 
+// simultaneously. The hardware barrier is inserted in each counting to
+// syncronize the counting. The result of counting is printed on the
 // terminal. A success/error message is printed on the terminal according
 // to the performance of the counting.
 //
@@ -78,13 +78,13 @@ int main(int argc, char *argv[])
 		//read the results and print them on the terminal
 		usleep(100000);
 		e_read(&emem, 0, 0, 0x0, &result, ncores*sizeof(int));
-		
+
 		for (j=0; j<ncores; j++)
 		{
 			if (result[j] != result[0])
 				fault++;
 		}
-		
+
 		printf("[%3d] ", i);
 		for (j=0;j<ncores;j++)
 			printf("%04x ", result[j]);

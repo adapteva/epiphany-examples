@@ -30,7 +30,7 @@ along with this program, see the file COPYING. If not, see
 
 int main(int argc, char *argv[]){
 
-  e_epiphany_t dev; 
+  e_epiphany_t dev;
   unsigned int write_buffer[N];
   int i;
 
@@ -41,9 +41,9 @@ int main(int argc, char *argv[]){
   //Open
   e_init(NULL);
   e_reset_system();
-  e_open(&dev, 0, 0, 1, 1);  
+  e_open(&dev, 0, 0, 1, 1);
   e_write(&dev, 0, 0, 0, &write_buffer, N*sizeof(int));
   e_close(&dev);
-  e_finalize();  
+  e_finalize();
   return 0;
 }

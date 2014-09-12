@@ -19,7 +19,7 @@
   <http://www.gnu.org/licenses/>.
 */
 
-// This program clears all existing shared memory regions from the 
+// This program clears all existing shared memory regions from the
 // Epiphany SHM Table.
 
 #include <stdio.h>
@@ -44,7 +44,7 @@ static int add_region(region_t *element)
     if ( !element ) {
         return -1;
     }
-    
+
     if ( !rgn_list ) {
         rgn_list = element;
     } else {
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Epiphany system reset failed\n");
         return EXIT_FAILURE;
     }
-    
+
     tbl = e_shm_get_shmtable();
 
     if ( tbl ) {
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 
     rgncnt = 0;
 
-    region_t *rgn = rgn_list; 
+    region_t *rgn = rgn_list;
     while ( rgn ) {
         region_t *tmp = NULL;
 

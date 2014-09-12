@@ -114,7 +114,7 @@ MEMORY
 	CORE_0x25_0x0d_INTERNAL_RAM : ORIGIN = 0x94500000 + LENGTH(IVT_RAM), LENGTH = 32K - LENGTH(IVT_RAM)
 	CORE_0x25_0x0e_INTERNAL_RAM : ORIGIN = 0x94600000 + LENGTH(IVT_RAM), LENGTH = 32K - LENGTH(IVT_RAM)
 	CORE_0x25_0x0f_INTERNAL_RAM : ORIGIN = 0x94700000 + LENGTH(IVT_RAM), LENGTH = 32K - LENGTH(IVT_RAM)
-                                                
+
 	CORE_0x26_0x08_INTERNAL_RAM : ORIGIN = 0x98000000 + LENGTH(IVT_RAM), LENGTH = 32K - LENGTH(IVT_RAM)
 	CORE_0x26_0x09_INTERNAL_RAM : ORIGIN = 0x98100000 + LENGTH(IVT_RAM), LENGTH = 32K - LENGTH(IVT_RAM)
 	CORE_0x26_0x0a_INTERNAL_RAM : ORIGIN = 0x98200000 + LENGTH(IVT_RAM), LENGTH = 32K - LENGTH(IVT_RAM)
@@ -134,7 +134,7 @@ MEMORY
 }
 
 /* Custom sections -- absolute objects placement */
-SECTIONS 
+SECTIONS
 {
    .core_data_section 0x7000 : {*.o(core_data_section)}
 }
@@ -158,7 +158,7 @@ SECTIONS
 	.data_bank0 . : {*.o(.data_bank0)} > BANK0_SRAM
 	. = ADDR(.data_bank0) + SIZEOF(.data_bank0);
 	.text_bank0 . : {*.o(.text_bank0)} > BANK0_SRAM
-	
+
 	.data_bank1   : {*.o(.data_bank1)} > BANK1_SRAM
 	.text_bank1   : {*.o(.text_bank1)} > BANK1_SRAM
 

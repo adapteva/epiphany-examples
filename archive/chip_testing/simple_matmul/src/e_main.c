@@ -45,10 +45,10 @@ int main(){
   unsigned col  = 0;
 
   const char *test_name = "simple_matmul";
-  
+
   //Test Init
   e_test_init(&row, &col);
-  
+
   //Fill input matrices with a constant
   for (i=0; i<N; i++){
     for (j=0; j<N; j++){
@@ -74,7 +74,7 @@ int main(){
   //Compare to expected result
   if(sum!=4096.0f){
     fail=1;
-    printf("FAIL: core=(%d,%d) expected=4096.0000 result=%f\n",row,col,sum); 
+    printf("FAIL: core=(%d,%d) expected=4096.0000 result=%f\n",row,col,sum);
   }
   return e_test_finish(test_name,fail,row,col);
 }

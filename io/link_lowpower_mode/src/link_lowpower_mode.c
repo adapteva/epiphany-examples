@@ -50,17 +50,17 @@ int main(int argc, char *argv[])
 
 	// Allocate a buffer in shared external memory
 	// for message passing from eCore to host.
-	e_alloc(&emem, _BufOffset, _BufSize);	
-	
+	e_alloc(&emem, _BufOffset, _BufSize);
+
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 
-	//Turn off the LVDS Links from the a core program 
+	//Turn off the LVDS Links from the a core program
 	e_load("e-lowpower-mode.srec", &dev, 0, 0, E_TRUE);
-	
+
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Release the allocated buffer and finalize the
 	e_free(&emem);
 	e_finalize();
@@ -68,4 +68,4 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
- 
+

@@ -20,7 +20,7 @@
 */
 
 
-#ifndef __MATMUL_H__ 
+#ifndef __MATMUL_H__
 #define __MATMUL_H__
 
 #include <stdint.h>
@@ -59,7 +59,7 @@ typedef struct {
 	void  *bank_C;    // C Ping Pong Bank local space pointers
 	void  *tgt_A[2];  // A target Bank for matrix rotate in global space
 	void  *tgt_B[2];  // B target Bank for matrix rotate in global space
-	
+
 	int    pingpong;  // Ping-Pong bank select indicator
 } core_t;
 
@@ -72,9 +72,9 @@ typedef struct {
 
 
 typedef struct {
-	float  A[_Smtx * _Smtx]; // Global A matrix 
-	float  B[_Smtx * _Smtx]; // Global B matrix 
-	float  C[_Smtx * _Smtx]; // Global C matrix 
+	float  A[_Smtx * _Smtx]; // Global A matrix
+	float  B[_Smtx * _Smtx]; // Global B matrix
+	float  C[_Smtx * _Smtx]; // Global C matrix
 	mbox_t core;
 } shared_buf_t;
 

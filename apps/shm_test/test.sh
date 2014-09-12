@@ -15,7 +15,7 @@ cd $EXEPATH/bin
 ./shm_test.elf > shm_test.log
 cd -
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else

@@ -47,17 +47,17 @@ int main(int argc, char *argv[]){
   unsigned cols    = 4;
   int      fail    = 0;
   int      verbose = 1;
-  unsigned start   = 0x82400000;  
+  unsigned start   = 0x82400000;
   unsigned offset  = start;
 
   unsigned coreID;
   char *addr;
-    
+
   unsigned int data_in,result,expected;
   unsigned int high_pattern = 0xff;
   unsigned int low_pattern  = 0x00;
-  
-  
+
+
   //Test Init
   e_test_init(&row, &col);
   coreID = e_sysreg_read(E_COREID);
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }
@@ -91,11 +91,11 @@ int main(int argc, char *argv[]){
 	  data_in=high_pattern;
 	  (*(addr))=data_in;
 	  //R1
-	  expected=high_pattern;	  
+	  expected=high_pattern;
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]){
 	  data_in=high_pattern;
 	  (*(addr))=data_in;
 	}
-	//M2: UP{r1,w0,w1}		
+	//M2: UP{r1,w0,w1}
 	for(k=0;k<(ram_size);k=k+word_size){
 	  addr=(char *) (offset+k);
 	  //R1
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]){
 	  if(result!=expected){
 	    if(verbose>0){
 	      printf("FAIL-PAT-M2: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
-	    } 
+	    }
 	    fail=1;
 	  }
 	  //W0
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M3: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 		
+	      printf("FAIL-PAT-M3: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]){
 	  //W0
 	  data_in=low_pattern;
 	  (*(addr))=data_in;
-	  
+
 	}
 	//M4:DOWN{R0,W1,W0}
 	for(k=0;k<(ram_size);k=k+word_size){
@@ -165,7 +165,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M4: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M4: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M5: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M5: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M5: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M5: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }
@@ -209,7 +209,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M6: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M6: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }
@@ -221,7 +221,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 	    if(verbose>0){
-	      printf("FAIL-PAT-M6: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M6: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 	    }
 	    fail=1;
 	  }

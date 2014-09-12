@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2013 Adapteva, Inc.
 Contributed by Andreas Olofsson <support@adapteva.com>
-               
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -25,7 +25,7 @@ local memory.
 for (i=0; i<N; i++) {
 	 c += a[i] * b[i];
     }
-  
+
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,12 +36,12 @@ int main(void)
 {
   unsigned *a, *b, *c, *d;
   int i;
-  
+
   a    = (unsigned *) 0x2000;//Address of a matrix (transfered here by host)
   b    = (unsigned *) 0x4000;//Address of b matrix (transfered here by host)
   c    = (unsigned *) 0x6000;//Result
   d    = (unsigned *) 0x7000;//Done
-  
+
   //Clear Sum
   (*(c))=0x0;
 

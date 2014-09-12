@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t      mbuf;
-	int          retval = EXIT_SUCCESS; 
+	int          retval = EXIT_SUCCESS;
 	srand((unsigned int)time(NULL));
 
 	e_set_host_verbosity(H_D0);
@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
 	}
 	fprintf(stderr, "Platform version: %s, HAL version 0x%08x\n",
 			platform.version, platform.hal_ver);
-	
-	// Allocate a few buffers that won't be touched. 
+
+	// Allocate a few buffers that won't be touched.
 	if ( E_OK != e_shm_alloc(&mbuf, "shm_1", 4096) ) {
 		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
 				strerror(errno));
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 		goto err_out3;
 	}
 
-	// Allocate a few buffers that won't be touched. 
+	// Allocate a few buffers that won't be touched.
 	if ( E_OK != e_shm_alloc(&mbuf, "shm_2", 4096) ) {
 		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
 				strerror(errno));

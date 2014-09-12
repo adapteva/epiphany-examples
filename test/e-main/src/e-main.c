@@ -20,16 +20,16 @@ along with this program, see the file COPYING. If not, see
 
 /*
 
-The purpose of the program is to demonstrate simple parallel programming 
-example for the Parallella demonstrating how to do fork-join 
-parallel processing using the Epiphany library. Similar type programs can be 
+The purpose of the program is to demonstrate simple parallel programming
+example for the Parallella demonstrating how to do fork-join
+parallel processing using the Epiphany library. Similar type programs can be
 constructed with OpenCL, OpenMP, and many other parallel programming frameworks.
 
 
 The main.c program distributes N tasks to N Epiphany cores in parallel and
-aggregates the result after all cores have completed to produce the final 
+aggregates the result after all cores have completed to produce the final
 result.
-   
+
 */
 
 #include <stdlib.h>
@@ -53,9 +53,9 @@ int main(int argc, char *argv[]){
   strcpy(elfFile, argv[1]);
 
   //Initalize Epiphany device
-  e_init(NULL);                      
+  e_init(NULL);
   e_reset_system();
-  e_get_platform_info(&platform);                          
+  e_get_platform_info(&platform);
   e_open(&dev, 0, 0, 1, 1); //open core 0,0
 
 
@@ -63,25 +63,25 @@ int main(int argc, char *argv[]){
   e_load_group(elfFile, &dev, 0, 0, 1, 1, E_TRUE);
   e_check_test(&dev, 0, 0, &status);
 
-  
+
   //Close down Epiphany device
   e_close(&dev);
   e_finalize();
-  
+
   //self check
   if(status){
     return EXIT_SUCCESS;
   }
   else{
     return EXIT_FAILURE;
-  }   
+  }
 
 }
 /**********************************************************************/
-void e_check_test( void *dev, 
-		   unsigned row, 
-		   unsigned col, 
-		   int *status 
+void e_check_test( void *dev,
+		   unsigned row,
+		   unsigned col,
+		   int *status
 		  ){
 
   unsigned int result;
@@ -101,7 +101,7 @@ void e_check_test( void *dev,
     }
     else{
       if(wait){
-	usleep(1000000);      
+	usleep(1000000);
 	printf("...waiting for core (%d,%d)\n",row,col);
 	wait=0;
       }
@@ -111,5 +111,5 @@ void e_check_test( void *dev,
 	break;
       }
     }
-  }		  
+  }
 }

@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2013 Adapteva, Inc.
 Contributed by Andreas Olofsson <support@adapteva.com>
-               
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -22,6 +22,6 @@ int main(void)
 {
   int volatile a,b,c;
   c = a * b;
-  return c;  
+  return c;
 }
 

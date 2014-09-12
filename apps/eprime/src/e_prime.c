@@ -36,7 +36,7 @@ int main(void)
 {
 	e_coreid_t id = e_get_coreid();
 	unsigned row, col;
-	
+
 	unsigned long number;
 
 	// Get the row, column coordinates of this core
@@ -71,4 +71,4 @@ int main(void)
 	}
 
 	return EXIT_SUCCESS;
-} 
+}

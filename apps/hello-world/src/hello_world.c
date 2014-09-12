@@ -35,7 +35,7 @@
 #include <e-hal.h>
 
 const unsigned ShmSize = 128;
-const char ShmName[] = "hello_shm"; 
+const char ShmName[] = "hello_shm";
 const unsigned SeqLen = 20;
 
 int main(int argc, char *argv[])

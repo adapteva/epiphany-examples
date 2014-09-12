@@ -20,7 +20,7 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the DEVICE side of other cores except core(0,0)
-// They start at the same time and try to grab the key to 
+// They start at the same time and try to grab the key to
 // add 1 to the counter.
 
 #include <stdio.h>
@@ -42,16 +42,16 @@ int main(void)
 
 	// Wait to get the key
 	e_mutex_lock(0, 0, mutex_p);
-	
+
 	// After get the key, add 1 to the counter
 	counter = *((unsigned *) 0x80806000);
-	
+
 	counter = counter + 1;
-	
+
 	*((unsigned *) 0x80806000) = counter;
-	
+
 	// Release the key
 	e_mutex_unlock(0, 0, mutex_p);
-	
+
 	return 0;
 }

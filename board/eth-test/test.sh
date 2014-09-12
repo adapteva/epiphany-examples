@@ -31,7 +31,7 @@ if grep "icmp_seq=" $LOGFILE >& /dev/null
 	then
 	:
 #sudo ethtool eth0 | grep "Link detected: yes" > $LOGFILE
-#if grep "Link detected: yes" $LOGFILE >& /dev/null 
+#if grep "Link detected: yes" $LOGFILE >& /dev/null
 #   then
 #    :
 else

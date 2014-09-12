@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 	// Get the platform information
 	e_get_platform_info(&platform);
 
-	// Create a workgroup using all of the cores	
+	// Create a workgroup using all of the cores
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 	e_reset_group(&dev);
 
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 				uint64_t current;
 				uint64_t sq;
 				uint64_t primes;
-		
+
 				// Get the number of primality tests performed by this core
 				if(e_read(&dev, row, col, 0x7000, &count, sizeof(uint64_t)) != sizeof(uint64_t))
 					fprintf(stderr, "Failed to read\n");

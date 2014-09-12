@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
 
 	// Allocate a buffer in shared external memory
 	// for message passing from eCore to host.
-	e_alloc(&emem, _BufOffset, _BufSize);	
-	
+	e_alloc(&emem, _BufOffset, _BufSize);
+
     // Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 
@@ -66,11 +66,11 @@ int main(int argc, char *argv[])
 	// To get the verified values
 	//e_load_group("e_math_test.srec", &dev, 0, 0, platform.rows,  platform.cols, E_FALSE);
 
-	// To test 
+	// To test
 	e_load_group("e_math_test1.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
-	
+
 	for (i=0; i<platform.rows ; i++)
-	{	
+	{
 		for (j=0; j<platform.cols; j++)
 		{
 
@@ -81,11 +81,11 @@ int main(int argc, char *argv[])
 				//fprintf(stderr,"%3d: Message from eCore 0x%03x (%2d,%2d) : \n",(i*platform.cols+j),coreid,row,col);
 				e_start(&dev, i, j);
 				usleep(100000);
-			
+
 				// Wait for core program execution to finish
 				// Read message from shared buffer
-			
-			
+
+
 				e_read(&emem, 0, 0, 0x0, emsg, _BufSize);
 				e_read(&dev, i, j, 0x6000, &flag, sizeof(flag));
 
@@ -100,12 +100,12 @@ int main(int argc, char *argv[])
 				if(i==0 & j==0){
 				  fprintf(stderr, "%s\n", emsg);
 				}
-		} 
+		}
 	}
 
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Release the allocated buffer and finalize the
 	// e-platform connection.
 	e_free(&emem);

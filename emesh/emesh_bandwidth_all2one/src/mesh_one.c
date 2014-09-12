@@ -20,7 +20,7 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the HOST side of the e_mesh bandwidth example
-// In this test, the host selects one core to be the target 
+// In this test, the host selects one core to be the target
 // core and make all other cores write to this core. Then
 // use the C_TIMER_0 register to measure the time of transfering
 
@@ -48,20 +48,20 @@ int main(int argc, char *argv[])
   master_col = mas_col;
   float result;
   srand(1);
-  
-  
+
+
   // initialize system, read platform params from
   // default HDF. Then, reset the platform and
   e_init(NULL);
   e_reset_system();
   e_get_platform_info(&platform);
-  
+
   // Open a workgroup
   e_open(&dev, 0, 0, platform.rows, platform.cols);
-  
+
   // Load the device program onto target core
   e_load("bin/e_mesh_one.srec", &dev, mas_row, mas_col, E_TRUE);
-  
+
   // Let other cores know the core id of the target core
   for(i=0; i<platform.rows; i++){
     for(j=0; j<platform.cols; j++){
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
       e_write(&dev, i, j, 0x6004, &master_col, sizeof(master_col));
     }
   }
-  
+
   // Load the device program onto all cores except for target core
   for (i=0; i<platform.rows; i++){
     for(j=0; j<platform.cols; j++){
@@ -78,31 +78,31 @@ int main(int argc, char *argv[])
       }
     }
   }
-  
+
   usleep(10000);
-  
+
   // Sent the signal to start transfer
-  
+
   e_write(&dev, mas_row, mas_col, 0x6100, &signal, sizeof(signal));
-  
+
   // Wait for cores to run
   usleep(1000000);
-  
+
   // Read message from target core
   e_read(&dev, mas_row, mas_col, 0x5000, &time, sizeof(time));
 
   // Close the workgroup
-  e_close(&dev); 
+  e_close(&dev);
   e_finalize();
-  
+
   // Calculate the bandwidth
   result = (120*585938)/(time);
-  
-  printf("The bandwidth of all-to-one on-chip communication is %.2fMB/s!\n", result);		  
+
+  printf("The bandwidth of all-to-one on-chip communication is %.2fMB/s!\n", result);
   if(result > 1000){
-    return EXIT_SUCCESS;    
+    return EXIT_SUCCESS;
   }
   else{
-    return EXIT_FAILURE;    
+    return EXIT_FAILURE;
   }
 }

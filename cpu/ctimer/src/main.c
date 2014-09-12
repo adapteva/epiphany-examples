@@ -22,10 +22,10 @@
 // This is the host side of the ctimer example project.
 //
 // This program runs on the linux host and invokes the emain.c program.
-// The program activits cores on the board one by one, sets the core to 
+// The program activits cores on the board one by one, sets the core to
 // run a fir function and records numbers of cycles spend on different
-// events. After that, the core goes into "idle" and been awaked by 
-// ctimer_1. A success/error message is printed on the terminal according 
+// events. After that, the core goes into "idle" and been awaked by
+// ctimer_1. A success/error message is printed on the terminal according
 // to the results.
 //
 // Aug-2013, XM.
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 	rows = platform.rows;
 	cols = platform.cols;
 	e_open(&dev, 0, 0, rows, cols);
-	
+
 	//load the device program on the board
 	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
 
@@ -100,8 +100,8 @@ int main(int argc, char *argv[])
 			e_read(&emem, 0, 0, 0x0, &result, sizeof(unsigned)*10);
 
 			check();
-		}	
-	}	
+		}
+	}
 
 	e_close(&dev);
 	e_free(&emem);
@@ -114,9 +114,9 @@ int main(int argc, char *argv[])
 void check()
 {
 	int t, fault;
-	
+
 	fault = 0;
-	
+
 	for (t=0; t<10; t++)
 	{
 		if ((result[t]>expect[t]*1.05) || (result[t]<expect[t]*0.95))
@@ -131,7 +131,7 @@ void check()
 		fprintf(stderr, "\ntest02 CTimer passed!\n\n");
 	else
 		fprintf(stderr, "\ntest02 CTimer failed! Number of faults is %d!\n\n", fault);
-	
+
 	return;
 }
 

@@ -21,9 +21,9 @@ along with this program, see the file COPYING. If not, see
 
 // This is the HOST side of the DMA slave mode example.
 // The program initializes the Epiphany system,
-// selects an eCore to be transmitter and another to be 
-//the receiver and then loads and launches the device 
-//program on that eCore. It then reads the mailbox in 
+// selects an eCore to be transmitter and another to be
+//the receiver and then loads and launches the device
+//program on that eCore. It then reads the mailbox in
 //transmitter core for the core's output message.
 
 #include <stdlib.h>
@@ -58,18 +58,18 @@ int main(int argc, char *argv[])
 
 	// Allocate a buffer in shared external memory
 	// for message passing from eCore to host.
-	//e_alloc(&emem, _BufOffset, _BufSize);	
-	
+	//e_alloc(&emem, _BufOffset, _BufSize);
+
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
-	
-	
+
+
 	// Load the device program onto receiver core (1,1) and transmitter core (2,1)
 	e_load("e_dma_slave_test.srec", &dev, r_row, r_col, E_FALSE);
 	e_load("e_dma_slave_test1.srec", &dev, t_row, t_col, E_FALSE);
 
 	// Start the receiver core
-	
+
 	row=r_row;
 	col=r_col;
 	coreid = (row + platform.row) * 64 + col + platform.col;
@@ -77,22 +77,22 @@ int main(int argc, char *argv[])
 	// Start device
 	e_start(&dev, r_row, r_col);
 	usleep(10000);
-	
+
 	// Tell transmitter the coordinate of receiver core
 	e_write(&dev, t_row, t_col, 0x6500, &row, sizeof(row));
 	e_write(&dev, t_row, t_col, 0x6504, &col, sizeof(col));
-	
+
 	usleep(1000);
-	
+
 	// Start the transmitter core
 	e_start(&dev, t_row, t_col);
-	
+
 	// Wait for core program execution to finish
 	usleep(300000);
-	
-	// Read message from the mailbox in transmitter core		
+
+	// Read message from the mailbox in transmitter core
 	e_read(&dev, t_row, t_col, 0x6100, &flag, sizeof(flag));
-			
+
 	// Check if the result is right and print the message.
 	if(flag==(unsigned)0xffffffff)
 	{
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Finalize the
 	// e-platform connection.
 	e_finalize();

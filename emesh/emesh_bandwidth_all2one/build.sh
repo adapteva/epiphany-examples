@@ -30,10 +30,10 @@ esac
 ${CROSS_PREFIX}gcc src/mesh_one.c -o bin/mesh_one.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O0 -T ${ELDF} src/e_mesh_one.c -o bin/e_mesh_one.elf -le-lib 
+e-gcc -O0 -T ${ELDF} src/e_mesh_one.c -o bin/e_mesh_one.elf -le-lib
 e-gcc -O0 -T ${ELDF} src/e_mesh_one1.c -o bin/e_mesh_one1.elf -le-lib
 
-    
+
 # Convert ebinary to SREC file
 e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_one.elf bin/e_mesh_one.srec
 e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_one1.elf bin/e_mesh_one1.srec

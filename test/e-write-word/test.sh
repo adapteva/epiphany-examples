@@ -12,7 +12,7 @@ EXEPATH=$(dirname "$SCRIPT")
 export LD_LIBRARY_PATH=${ELIBS}
 $EXEPATH/bin/e-write-word.elf > e-write-word.log
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else

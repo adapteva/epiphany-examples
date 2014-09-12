@@ -31,7 +31,7 @@ along with this program, see the file COPYING. If not, see
 
 unsigned checkbuffer(unsigned *po, unsigned a, unsigned num);
 
-	
+
 int main(void)
 {
 	unsigned k,i,j;
@@ -46,7 +46,7 @@ int main(void)
 	n_col = (unsigned *) 0x00006004;
 	tran = 128;
 	p = 0x0000;
-	
+
 	// Get the core id of the neighbour core
 	e_neighbor_id(E_NEXT_CORE, E_ROW_WRAP, n_row, n_col);
 
@@ -69,7 +69,7 @@ int main(void)
 	// Test for word size
  	// Initialize the source and destination buffer
 	for (i=0; i<tran; i++)
-	{ 
+	{
 		src[i] = 0xaaaaaaaa;
 		dst[i] = 0x00000000;
 		src1[i] = 0xbbbbbbbb;
@@ -77,7 +77,7 @@ int main(void)
 		src2[i] = 0xcccccccc;
 		dst2[i] = 0x00000000;
 	}
-	
+
 
 	// Prepare for the descriptor for dma chain
 
@@ -85,26 +85,26 @@ int main(void)
 	0x0004,0x0004,
 	0x0080,0x0001,
 	0x0000,0x0000,
-	(void *)src2,(void *)dst2, &dma_desc[2]);	
+	(void *)src2,(void *)dst2, &dma_desc[2]);
 
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_WORD|E_DMA_CHAIN),&dma_desc[2],
 	0x0004,0x0004,
 	0x0080,0x0001,
 	0x0000,0x0000,
 	(void *)src1,(void *)dst1, &dma_desc[1]);
-	
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_WORD|E_DMA_CHAIN), &dma_desc[1],
 	0x0004, 0x0004,
 	0x0080, 0x0001,
 	0x0000 , 0x0000,
 	(void *)src,(void *)dst, &dma_desc[0]);
-	
+
 	// Start transaction
 	e_dma_start(&dma_desc[0], E_DMA_0);
-		
-	// Wait 
-	e_dma_wait(E_DMA_0);	
-	
+
+	// Wait
+	e_dma_wait(E_DMA_0);
+
 	// Check the destination buffer value
 	index[0] = checkbuffer(dst,  (unsigned)0xaaaaaaaa, tran);
 	index[1] = checkbuffer(dst1, (unsigned)0xbbbbbbbb, tran);
@@ -121,7 +121,7 @@ int main(void)
 	// Test for double word size
  	// Initialize the source and destination buffer
 	for (i=0; i<tran; i++)
-	{ 
+	{
 		src[i] = 0xaaaaaaaa;
 		dst[i] = 0x00000000;
 		src1[i] = 0xbbbbbbbb;
@@ -129,7 +129,7 @@ int main(void)
 		src2[i] = 0xcccccccc;
 		dst2[i] = 0x00000000;
 	}
-	
+
 
 	// Prepare for the descriptor for dma chain
 
@@ -137,25 +137,25 @@ int main(void)
 	0x0008,0x0008,
 	0x0040,0x0001,
 	0x0000,0x0000,
-	(void *)src2,(void *)dst2, &dma_desc[2]);	
+	(void *)src2,(void *)dst2, &dma_desc[2]);
 
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_DWORD|E_DMA_CHAIN),&dma_desc[2],
 	0x0008,0x0008,
 	0x0040,0x0001,
 	0x0000,0x0000,
 	(void *)src1,(void *)dst1, &dma_desc[1]);
-	
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_DWORD|E_DMA_CHAIN), &dma_desc[1],
 	0x0008, 0x0008,
 	0x0040, 0x0001,
 	0x0000 , 0x0000,
 	(void *)src,(void *)dst, &dma_desc[0]);
-	
+
 	// Start transaction
 	e_dma_start(&dma_desc[0], E_DMA_0);
-	
-	// Wait 
-	e_dma_wait(E_DMA_0);	
+
+	// Wait
+	e_dma_wait(E_DMA_0);
 
 	// Check the destination buffer value
 	index[0] = checkbuffer(dst,  (unsigned)0xaaaaaaaa, tran);
@@ -173,7 +173,7 @@ int main(void)
 	// Test for half word size
  	// Initialize the source and destination buffer
 	for (i=0; i<tran; i++)
-	{ 
+	{
 		src[i] = 0xaaaaaaaa;
 		dst[i] = 0x00000000;
 		src1[i] = 0xbbbbbbbb;
@@ -181,7 +181,7 @@ int main(void)
 		src2[i] = 0xcccccccc;
 		dst2[i] = 0x00000000;
 	}
-	
+
 
 	// Prepare for the descriptor for dma chain
 
@@ -189,26 +189,26 @@ int main(void)
 	0x0002,0x0002,
 	0x0100,0x0001,
 	0x0000,0x0000,
-	(void *)src2,(void *)dst2, &dma_desc[2]);	
+	(void *)src2,(void *)dst2, &dma_desc[2]);
 
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_HWORD|E_DMA_CHAIN),&dma_desc[2],
 	0x0002,0x0002,
 	0x0100,0x0001,
 	0x0000,0x0000,
 	(void *)src1,(void *)dst1, &dma_desc[1]);
-	
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_HWORD|E_DMA_CHAIN), &dma_desc[1],
 	0x0002, 0x0002,
 	0x0100, 0x0001,
 	0x0000 , 0x0000,
 	(void *)src,(void *)dst, &dma_desc[0]);
-	
+
 	// Start transaction
 	e_dma_start(&dma_desc[0], E_DMA_0);
 
-	// Wait 
-	e_dma_wait(E_DMA_0);	
-	
+	// Wait
+	e_dma_wait(E_DMA_0);
+
 	// Check the destination buffer value
 	index[0] = checkbuffer(dst,  (unsigned)0xaaaaaaaa, tran);
 	index[1] = checkbuffer(dst1, (unsigned)0xbbbbbbbb, tran);
@@ -225,7 +225,7 @@ int main(void)
 	// Test for byte size
  	// Initialize the source and destination buffer
 	for (i=0; i<tran; i++)
-	{ 
+	{
 		src[i] = 0xaaaaaaaa;
 		dst[i] = 0x00000000;
 		src1[i] = 0xbbbbbbbb;
@@ -233,7 +233,7 @@ int main(void)
 		src2[i] = 0xcccccccc;
 		dst2[i] = 0x00000000;
 	}
-	
+
 
 	// Prepare for the descriptor for dma chain
 
@@ -241,26 +241,26 @@ int main(void)
 	0x0001,0x0001,
 	0x0200,0x0001,
 	0x0000,0x0000,
-	(void *)src2,(void *)dst2, &dma_desc[2]);	
+	(void *)src2,(void *)dst2, &dma_desc[2]);
 
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_BYTE|E_DMA_CHAIN),&dma_desc[2],
 	0x0001,0x0001,
 	0x0200,0x0001,
 	0x0000,0x0000,
 	(void *)src1,(void *)dst1, &dma_desc[1]);
-	
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_BYTE|E_DMA_CHAIN), &dma_desc[1],
 	0x0001, 0x0001,
 	0x0200, 0x0001,
 	0x0000 , 0x0000,
 	(void *)src,(void *)dst, &dma_desc[0]);
-	
+
 	// Start transaction
 	e_dma_start(&dma_desc[0], E_DMA_0);
 
-	// Wait 
-	e_dma_wait(E_DMA_0);	
-	
+	// Wait
+	e_dma_wait(E_DMA_0);
+
 	// Check the destination buffer value
 	index[0] = checkbuffer(dst,  (unsigned)0xaaaaaaaa, tran);
 	index[1] = checkbuffer(dst1, (unsigned)0xbbbbbbbb, tran);
@@ -287,6 +287,6 @@ unsigned checkbuffer(unsigned *po, unsigned a, unsigned num)
 		{
 			flag = 1;
 		}
-	}	
+	}
 	return flag;
 }

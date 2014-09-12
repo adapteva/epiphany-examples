@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
   unsigned col = 0;
 
   unsigned int offset = 0x4000;
-  
+
   int fail    = 0;
   int verbose = 1;
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]){
   //e_sysreg_write(E_CONFIG, (unsigned) 0x5000);
   //(*(addr))                   =0x00004000;
   //e_sysreg_write(E_CONFIG, (unsigned) 0x0000);
-  
+
   //Testing link loopback
   for(i=0; i<LINKS; i++){
     for(k=0; k<buffer_size; k=k+sizeof(int)){
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]){
       if(result != PAT0){
 	fail = 1;
 	if(verbose > 0){
-	  printf("FAIL-PAT0: core=(%d,%d) addr=(%p) result=0x%x\n",row,col,addr,result); 
+	  printf("FAIL-PAT0: core=(%d,%d) addr=(%p) result=0x%x\n",row,col,addr,result);
 	}
       }
       /*PAT1*/
@@ -110,8 +110,8 @@ int main(int argc, char *argv[]){
       result = (*(local_addr));
       if(result != PAT1){
 	fail = 1;
-	if(verbose > 0){	    
-	  printf("FAIL-PAT1: core=(%d,%d) addr=(%p) result=0x%x\n",row,col,addr,result); 
+	if(verbose > 0){
+	  printf("FAIL-PAT1: core=(%d,%d) addr=(%p) result=0x%x\n",row,col,addr,result);
 	}
       }
     }

@@ -1,10 +1,10 @@
 #include <stdlib.h>
 
 unsigned e_test_init(){
- 
+
   int *pass = (int*)0x24;      //use user interrupt entry for now
   *pass   = 0x00000000;        //initialize as "started"
-  
+
   //Resetting mask register
   __asm__ __volatile__ ("MOVTS IMASK, %0" : : "r" (0x0));
 
@@ -15,7 +15,7 @@ unsigned e_test_init(){
   return (coreid_in_reg);
 }
 
-int e_test_finish(int status){ 
+int e_test_finish(int status){
 
   int *pass = (int*)0x24;    //overwrite the sync ivt entry on exit
   if(status==1){

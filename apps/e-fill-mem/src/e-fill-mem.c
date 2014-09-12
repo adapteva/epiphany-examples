@@ -66,14 +66,14 @@ int main(int argc, char *argv[]){
 
   //write in buffer to each Epiphany core
   for (i=row0; i<(row0+rows); i++) {
-    for (j=col0; j<(col0+cols); j++) {           
+    for (j=col0; j<(col0+cols); j++) {
       e_write(&dev, i, j, 0x0, &write_buffer, words*sizeof(int));
     }
   }
   //Close
   e_close(&dev);
   e_finalize();
-  
+
   if(status){
     return EXIT_SUCCESS;
   }

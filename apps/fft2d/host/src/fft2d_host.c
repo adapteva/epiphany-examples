@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 	FILE *fo;
 //	FILE *fi;
 	int  result;
-	
+
 
 	pEpiphany = &Epiphany;
 	pDRAM     = &DRAM;
@@ -400,7 +400,7 @@ int main(int argc, char *argv[])
 	  return EXIT_FAILURE;
 	}
 }
-	
+
 // Call (invoke) the fft2d() function
 int fft2d_go(e_mem_t *pDRAM)
 {
@@ -421,7 +421,7 @@ int fft2d_go(e_mem_t *pDRAM)
 	while (Mailbox.core.go != 0)
 		e_read(pDRAM, 0, 0, addr, (void *) (&Mailbox.core.go), sz);
 
-	
+
 	// Signal cores to start crunching
 	Mailbox.core.go = 1;
 	addr = offsetof(shared_buf_t, core.go);

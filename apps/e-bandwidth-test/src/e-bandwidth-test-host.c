@@ -65,12 +65,12 @@ FILE *fd;
 int main(int argc, char *argv[])
 {
   int result, fail;
-  
+
   fd = stderr;
-  
+
   pEpiphany = &Epiphany;
   pERAM     = &ERAM;
-  
+
   e_set_host_verbosity(H_D0);
 
   if ( E_OK != e_init(NULL) ) {
@@ -89,24 +89,24 @@ int main(int argc, char *argv[])
       exit(1);
   }
   e_set_host_verbosity(H_D0);
-  
+
   if (E_OK != e_open(pEpiphany, 0, 0, e_platform.rows, e_platform.cols))
   {
       fprintf(stderr, "\nERROR: Can't establish connection to Epiphany device!\n\n");
       exit(1);
   }
-  
-  
+
+
   fail = 0;
-  
-  
-  
+
+
+
   //////////////////////////////
   // Test Host-Device throughput
   SRAM_speed();
   ERAM_speed();
   DRAM_speed();
-  
+
   /////////////////////////////
   // Test eCore-ERAM throughput
   result = EPI_speed();
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
   e_close(pEpiphany);
   e_free(pERAM);
   e_finalize();
-  
+
   /////////////////////////////
   //For now, always pass
   return EXIT_SUCCESS;
@@ -130,13 +130,13 @@ timeval_t timer[2];
 char    sbuf[SRAM_BUF_SZ];
 int SRAM_speed(){
   double tdiff, rate;
-  
+
   gettimeofday(&timer[0], NULL);
   e_write(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
   gettimeofday(&timer[1], NULL);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
   rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
-  
+
   printf("ARM Host    --> eCore(0,0) write spead       = %7.2f MB/s\n", rate);
 
   gettimeofday(&timer[0], NULL);
@@ -144,7 +144,7 @@ int SRAM_speed(){
   gettimeofday(&timer[1], NULL);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
   rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
-  
+
   printf("ARM Host    --> eCore(0,0) read spead        = %7.2f MB/s\n", rate);
   return 0;
 }
@@ -156,21 +156,21 @@ char    ebuf[ERAM_BUF_SZ];
 __suseconds_t d;
 int ERAM_speed(){
   double tdiff, rate;
-  
+
   gettimeofday(&timer[0], NULL);
   e_write(pERAM, 0, 0, (off_t) 0, ebuf, ERAM_BUF_SZ);
   gettimeofday(&timer[1], NULL);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
   rate  = (double) ERAM_BUF_SZ_MB / tdiff;
-  
+
   printf("ARM Host    --> ERAM write speed             = %7.2f MB/s\n", rate);
-  
+
   gettimeofday(&timer[0], NULL);
   e_read(pERAM, 0, 0, (off_t) 0, ebuf, ERAM_BUF_SZ);
   gettimeofday(&timer[1], NULL);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
   rate  = (double) ERAM_BUF_SZ_MB / tdiff;
-  
+
   printf("ARM Host    <-- ERAM read speed              = %7.2f MB/s\n", rate);
   return 0;
 }
@@ -188,7 +188,7 @@ int DRAM_speed(){
   gettimeofday(&timer[1], NULL);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
   rate  = (double) DRAM_BUF_SZ_MB / tdiff;
-  
+
   printf("ARM Host    <-> DRAM: Copy speed             = %7.2f MB/s\n", rate);
   //printf("eCore (0,0) --> eCore(1,0) write speed (DMA) = %7.2f MB/s\n", rate);
   return 0;
@@ -212,21 +212,21 @@ int EPI_speed(){
   e_read(pEpiphany, row, col, 0x7000, &clocks, sizeof(clocks));
   rate = (double) _BUF_SZ / (double) clocks * (eMHz * 1000000) / (1024*1024);
   printf("eCore (0,0) --> eCore(1,0) write speed (DMA) = %7.2f MB/s\n", rate);
-  
+
   e_read(pEpiphany, row, col, 0x7004, &clocks, sizeof(clocks));
   rate = (double) _BUF_SZ / (double) clocks * (eMHz * 1000000) / (1024*1024);
   printf("eCore (0,0) <-- eCore(1,0) read speed (DMA)  = %7.2f MB/s\n", rate);
-  
+
   e_read(pEpiphany, row, col, 0x7008, &clocks, sizeof(clocks));
   rate = (double) _BUF_SZ / (double) clocks * (eMHz * 1000000) / (1024*1024);
   printf("eCore (0,0) --> ERAM write speed (DMA)       = %7.2f MB/s\n", rate);
-  
+
   e_read(pEpiphany, row, col, 0x700c, &clocks, sizeof(clocks));
   rate = (double) _BUF_SZ / (double) clocks * (eMHz * 1000000) / (1024*1024);
   printf("eCore (0,0) <-- ERAM read speed (DMA)        = %7.2f MB/s\n", rate);
-  
+
   e_read(pEpiphany, row, col, 0x7010, &result, sizeof(result));
-  
+
   return result;
 }
 

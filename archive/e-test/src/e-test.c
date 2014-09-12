@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
   if (argc < 2){
     usage();
     exit(1);
-  }  
+  }
   else{
     stage = atoi(argv[1]);
   }
@@ -73,8 +73,8 @@ int main(int argc, char *argv[]){
   //1. Read/Write Test from Host
   //##############################
   if(stage==0 || stage==1 ){
-    my_reset_system();    
-    printf("Running host read/write test for all cores\n");  
+    my_reset_system();
+    printf("Running host read/write test for all cores\n");
 
     //Create write values
     for(k=0;k<RAM_SIZE/4;k++){
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]){
       write_aa_buffer[k]=0xaaaaaaaa;
     }
     for (i=0; i<rows; i++) {
-      for (j=0; j<cols; j++) {   
+      for (j=0; j<cols; j++) {
 	//Write 555 buffer
 	e_write(&dev, i, j, 0x0, &write_55_buffer, RAM_SIZE);
 	//Read back one word at a time to overcome 64-core row 1-3 issue
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]){
 
     e_load_group("bin/test_memory_simple.srec", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<platform.rows; i++) {
-      for (j=0; j<platform.cols; j++) {           
+      for (j=0; j<platform.cols; j++) {
 	e_check_test(&dev, i, j, &status);
       }
     }
@@ -145,21 +145,21 @@ int main(int argc, char *argv[]){
   //##############################
   if(stage==0 || stage==4 ){
     my_reset_system();
-    printf("Running march-C memory test for all cores\n");  
+    printf("Running march-C memory test for all cores\n");
     //Running test, all in parallel
     for (i=0; i<rows; i=i+4) {
-      for (j=0; j<cols; j=j+4) {   
-	e_load_group("bin/test_memory_march.srec", &dev, i, j, 1, 1, E_TRUE); 
+      for (j=0; j<cols; j=j+4) {
+	e_load_group("bin/test_memory_march.srec", &dev, i, j, 1, 1, E_TRUE);
       }
     }
     //Checking results one by one
     for (i=0; i<rows; i=i+4){
-      for (j=0; j<cols; j=j+4){   
-	e_check_test(&dev, i, j, &status);  
+      for (j=0; j<cols; j=j+4){
+	e_check_test(&dev, i, j, &status);
       }
     }
   }
- 
+
 
   //##############################
   //5. Simple Per Core Matmul Test
@@ -170,7 +170,7 @@ int main(int argc, char *argv[]){
 
     e_load_group("bin/test_matmul.srec", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<platform.rows; i++) {
-      for (j=0; j<platform.cols; j++) {           
+      for (j=0; j<platform.cols; j++) {
 	e_check_test(&dev, i, j, &status);
       }
     }
@@ -185,22 +185,22 @@ int main(int argc, char *argv[]){
 
     e_load_group("bin/test_emesh.srec", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<rows; i++) {
-      for (j=0; j<cols; j++) {           
+      for (j=0; j<cols; j++) {
 	e_check_test(&dev, i, j, &status);
       }
     }
   }
- 
+
  //#################################
   //7. DRAM Read/Write Test from Core
   //#################################
   if(stage==0 || stage==7 ){
     my_reset_system();
     printf("Running DRAM read/write test for all cores\n");
-    
+
     //Testing row 0
      for (i=0; i<1; i++) {
-	for (j=0; j<cols; j++) {      
+	for (j=0; j<cols; j++) {
 	  e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
 	  e_check_test(&dev, i, j, &status);
 	}
@@ -211,15 +211,15 @@ int main(int argc, char *argv[]){
     }
     else{
       for (i=1; i<3; i++) {
-	for (j=0; j<cols; j++) {           
+	for (j=0; j<cols; j++) {
 	  e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
 	  e_check_test(&dev, i, j, &status);
 	}
       }
     }
-    //Row 3-4 (or 3-7)            
+    //Row 3-4 (or 3-7)
     for (i=3; i<rows; i++) {
-      for (j=0; j<cols; j++) {           
+      for (j=0; j<cols; j++) {
 	e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
 	e_check_test(&dev, i, j, &status);
       }
@@ -251,7 +251,7 @@ int main(int argc, char *argv[]){
   else{
     printf("BAD: CHIP FAILED!!!!\n");
   }
-  printf("-------------------------------------------------------\n");    
+  printf("-------------------------------------------------------\n");
 
   //Close
   e_close(&dev);
@@ -277,7 +277,7 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status){
     }
     else{
       if(wait){
-	usleep(1000000);      
+	usleep(1000000);
 	printf("...waiting for core (%d,%d)\n",row,col);
 	wait=0;
       }
@@ -287,7 +287,7 @@ void e_check_test(void *dev, unsigned row, unsigned col, int *status){
 	break;
       }
     }
-  }		  
+  }
 }
 //////////////////////////////////////////////////////////////////////////
 int my_reset_system()
@@ -299,9 +299,9 @@ int my_reset_system()
   e_get_platform_info(&platform);
   ee_write_esys(E_SYS_RESET, 0);
   usleep(200000);
-  
+
   //Change elink clock divider (temporary workaround due to FPGA timing issue)
-  
+
   unsigned int data,col;
 
   e_open(&dev, 0, 0, platform.rows, platform.cols);
@@ -326,7 +326,7 @@ int my_reset_system()
 //////////////////////////////////////////////////////////////////////////
 void usage(){
   printf("Usage: e-init <stage>\n");
-  printf("<stage>:\n");  
+  printf("<stage>:\n");
   printf(" 0 = run all tests\n");
   printf(" 1 = host read/write test\n");
   printf(" 2 = elink test from core 0,0\n");

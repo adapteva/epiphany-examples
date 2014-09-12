@@ -23,7 +23,7 @@ along with this program, see the file COPYING. If not, see
 // The program initializes the Epiphany system,
 // selects an eCore to sending data to neighbour core
 // by using dma. After start, the core goes into idle.
-// After transfering in interrupt mode, the core will 
+// After transfering in interrupt mode, the core will
 // wake up and come into the interrupt.
 
 #include <stdlib.h>
@@ -52,31 +52,31 @@ int main(int argc, char *argv[])
 
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
-	
-	
+
+
 	// Load the device program onto core (0,0)
 	e_load_group("e_dma_int_test.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
 	// Launch to each core
 	for (i=0; i<platform.rows; i++)
-	{	
+	{
 		for(j=0; j<platform.cols; j++)
 		{
 			row=i;
 			col=j;
 			coreid = (row + platform.row) * 64 + col + platform.col;
 			fprintf(stderr,"%3d: Message from eCore 0x%03x (%2d,%2d) : \n",(row*platform.cols+col),coreid,row,col);
-			
+
 			// Start device
 			e_start(&dev, i, j);
-			
+
 			// Wait for core program execution to finish
 			usleep(500000);
-			
-			// Read message from shared buffer	
+
+			// Read message from shared buffer
 			e_read(&dev, i, j, 0x2250, &flag, sizeof(flag));
 			e_read(&dev, i, j, 0x3000, &flag1, sizeof(flag1));
-			
+
 			// Print the message and close the workgroup.
 			if((flag==(unsigned)0xdeadbeef)&&(flag1==(unsigned)0xdeadbeef))
 			{
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Finalize the
 	// e-platform connection.
 	e_finalize();

@@ -20,15 +20,15 @@
 */
 // This is the host side of the Remote Call example project.
 //
-// This program runs on the linux host and invokes the emain_master.c 
+// This program runs on the linux host and invokes the emain_master.c
 // and emain_slave.c program. The program activits the entire board and
 // choose on core as the master to remote call all other 15 cores. The
 // slaves cores attatch their interrupts handler with fibonacci functions.
-// The master remote generats interruptions on slaves, then check if the 
-// slaves return expected results. A success/error message is printed on 
+// The master remote generats interruptions on slaves, then check if the
+// slaves return expected results. A success/error message is printed on
 // the terminal according to the results.
 //
-// This isn't a complete version. the program now can only run for one 
+// This isn't a complete version. the program now can only run for one
 // iteration, it failed to run for the second iteration.
 //
 // Aug-2013, XM.
@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 			// initialize system, read platform params from
 			// default HDF. Then, reset the platform and
 			// get the actual system parameters.
-			e_init(NULL);		
+			e_init(NULL);
 			e_reset_system();
 			e_get_platform_info(&platform);
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 			cols = platform.cols;
 			e_open(&dev, 0, 0, rows, cols);
 
-	
+
 	//start the test
 	for (i=0;i<1;i++)
 	{
@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 
 
 			usleep(300000);
-	
+
 			//check the result
 			fault = 0x0;
 			e_read(&dev, i, j, 0x5000, &result[0], 16*sizeof(int));
@@ -107,19 +107,19 @@ int main(int argc, char *argv[])
 					}
 				}
 			}
-	
+
 			if (fault == 0)
 				fprintf(stderr, "\ntest Remote Call passed!\n\n");
 			else
 				fprintf(stderr, "\ntest Remote Call failed! Number of faults is %d!\n\n", fault);
 
-		
+
 		}
 	}
 
 			e_close(&dev);
 			e_free(&emem);
-			e_finalize();	
+			e_finalize();
 
 
 	return 0;

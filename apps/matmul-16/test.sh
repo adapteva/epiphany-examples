@@ -16,7 +16,7 @@ cd $EXEPATH/host/Release
 export LD_LIBRARY_PATH=${ELIBS}
 ./matmul.elf $@ ../../device/Release/e_matmul.srec > $LOG
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED!!!!"
 else

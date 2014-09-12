@@ -13,7 +13,7 @@ e-reset
 export LD_LIBRARY_PATH=${ELIBS}
 $EXEPATH/bin/e-dump-mem.elf $EROW0 $ECOL0 $EROWS $ECOLS > e-dump-mem.log
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else

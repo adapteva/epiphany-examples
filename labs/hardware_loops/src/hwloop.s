@@ -33,19 +33,19 @@ _hwloop:
 	movt	r1,  _B
 	mov	  r44, 0x0	;sum = 0
 	mov   r45, 0x0	;document time
-	
+
 .balignw 8,0x000001a2;
 
-lstart:	 
+lstart:
 	ldr.l   r46, [r0], +0x1
 	ldr.l   r48, [r1], +0x1
-	
+
 	ldr.l   r47, [r0], +0x1
 	ldr.l   r49, [r1], +0x1
 	fmul.l  r50,  r46,  r48
 	fmul.l  r51,  r47,  r49
-	
-	
+
+
 .balignw 8,0x000001a2;
 	fadd.l  r44,  r50,  r44
 lend:
@@ -55,7 +55,7 @@ lend:
 	gie
 
 	mov 	r0, r44		;save the result into r0
-	 
+
 	rts; return
 
 

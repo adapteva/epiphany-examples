@@ -26,7 +26,7 @@ esac
 ${CROSS_PREFIX}gcc src/interrupt_test.c -o bin/interrupt_test.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_nested_test.c -o bin/e_nested_test.elf -le-lib 
+e-gcc -O3 -T ${ELDF} src/e_nested_test.c -o bin/e_nested_test.elf -le-lib
 
 
 # Convert ebinary to SREC file

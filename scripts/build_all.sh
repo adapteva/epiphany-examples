@@ -16,7 +16,7 @@ echo "Building ../test/e-mem-test"
 echo "Building ../test/e-write-word"
 ../test/e-write-word/build.sh
 
-echo "Building ../test/e-main" 
+echo "Building ../test/e-main"
 ../test/e-main/build.sh
 
 echo "Building ../test/e-read-buf"
@@ -35,7 +35,7 @@ echo "Building ../test/e-write-buf"
 echo "Building ../apps/dotproduct"
 ../apps/dotproduct/build.sh
 
-echo "Building ../apps/e-fill-mem" 
+echo "Building ../apps/e-fill-mem"
 ../apps/e-fill-mem/build.sh
 
 echo "Building ../apps/matmul-64"
@@ -65,7 +65,7 @@ echo "Building ../apps/e-toggle-led"
 echo "Building ../apps/shm_test"
 ../apps/shm_test/build.sh
 
-###EMESH  
+###EMESH
 echo "Building ../emesh/emesh_bandwidth_all2one"
 ../emesh/emesh_bandwidth_all2one/build.sh
 

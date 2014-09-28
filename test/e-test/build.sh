@@ -27,4 +27,4 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-test.c -o bin/e-test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_PREFIX}gcc src/e-test.c -o bin/e-test.elf ${EINCS} ${ELIBS} -le-hal -lpthread

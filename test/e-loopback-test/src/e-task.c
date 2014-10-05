@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
   int status   = 1;
 
   unsigned int offset = 0x4000;
-  
+
   int fail    = 0;
   int verbose = 1;
 
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
   e_reg_write(E_REG_CONFIG, (unsigned) 0x1000);
   (*(addr)) = 0x00004000;                      //enable loopback mode
   e_reg_write(E_REG_CONFIG, (unsigned) 0x0000);
-    
+
   //Testing link loopback
   for(i=0; i<LINKS; i++){
     for(k=0; k<N; k=k+sizeof(int)){

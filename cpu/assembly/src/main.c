@@ -23,7 +23,7 @@
 //
 // This program runs on the linux host and invokes the emain.c program.
 // The program activits cores on the board one by one to run varies
-// assembly command. A success/error message is printed on the terminal 
+// assembly command. A success/error message is printed on the terminal
 // according to the results.
 //
 // Aug-2013, XM.
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 	cols = platform.cols;
 	e_open(&dev, 0, 0, rows, cols);
 
-	
+
 	//load the device program on the board
 	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
 
@@ -84,16 +84,16 @@ int main(int argc, char *argv[])
 			//print the message
 			e_read(&emem, 0, 0, 0x0, emsg, _BufSize);
 			fprintf(stderr, "%s\n", emsg);
-			
-		}	
-	}	
+
+		}
+	}
 
 
 	e_close(&dev);
 	e_free(&emem);
 	e_finalize();
 
-	
+
 
 	return 0;
 }

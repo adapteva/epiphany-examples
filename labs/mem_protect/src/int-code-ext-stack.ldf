@@ -148,7 +148,7 @@ SECTIONS
 	ivt_dma1                0x1c : {*.o(ivt_entry_dma1)}               > IVT_RAM
 	ivt_wand                0x20 : {*.o(ivt_entry_wand)}               > IVT_RAM
 	ivt_user                0x24 : {*.o(ivt_entry_user)}               > IVT_RAM
-	
+
 	workgroup_config        0x28 : {*.o(workgroup_cfg)}                > WORKGROUP_RAM /* 28 2c 30 34 38 3c 40 44 48 (4c) */
 	external_mem_config     0x50 : {*.o(ext_mem_cfg)}                  > WORKGROUP_RAM /* 50 54 */
 
@@ -159,7 +159,7 @@ SECTIONS
 	.data_bank0 . : {*.o(.data_bank0)} > BANK0_SRAM
 	. = ADDR(.data_bank0) + SIZEOF(.data_bank0);
 	.text_bank0 . : {*.o(.text_bank0)} > BANK0_SRAM
-	
+
 	.data_bank1   : {*.o(.data_bank1)} > BANK1_SRAM
 	.text_bank1   : {*.o(.text_bank1)} > BANK1_SRAM
 

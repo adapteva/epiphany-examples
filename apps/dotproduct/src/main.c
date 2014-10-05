@@ -20,16 +20,16 @@ along with this program, see the file COPYING. If not, see
 
 /*
 
-The purpose of the program is to demonstrate simple parallel programming 
-example for the Parallella demonstrating how to do fork-join 
-parallel processing using the Epiphany library. Similar type programs can be 
+The purpose of the program is to demonstrate simple parallel programming
+example for the Parallella demonstrating how to do fork-join
+parallel processing using the Epiphany library. Similar type programs can be
 constructed with OpenCL, OpenMP, and many other parallel programming frameworks.
 
 
 The main.c program distributes N tasks to N Epiphany cores in parallel and
-aggregates the result after all cores have completed to produce the final 
+aggregates the result after all cores have completed to produce the final
 result.
-   
+
 */
 
 #include <stdlib.h>
@@ -53,17 +53,17 @@ int main(int argc, char *argv[]){
   printf("........\n");
 
   //Initalize Epiphany device
-  e_init(NULL);                      
+  e_init(NULL);
   e_reset_system();                                      //reset Epiphany
-  e_get_platform_info(&platform);                          
+  e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols); //open all cores
 
-  //Initialize a/b input vectors on host side  
+  //Initialize a/b input vectors on host side
   for (i=0; i<N; i++){
     a[i] = 1;
-    b[i] = 1;	  
+    b[i] = 1;
   }
-    
+
   //1. Copy data (N/CORE points) from host to Epiphany local memory
   //2. Clear the "done" flag for every core
   for (i=0; i<platform.rows; i++){
@@ -76,9 +76,9 @@ int main(int argc, char *argv[]){
   }
   //Load program to cores and run
   e_load_group("e_task.srec", &dev, 0, 0, platform.rows, platform.cols, E_TRUE);
-  
+
   //Check if all cores are done
-  while(1){    
+  while(1){
     all_done=0;
     for (i=0; i<platform.rows; i++){
       for (j=0; j<platform.cols;j++){

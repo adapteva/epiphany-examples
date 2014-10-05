@@ -13,7 +13,7 @@ $EXEPATH/bin/e-bandwidth-test-host.elf > e-bandwidth-test.log
 
 #> dotproduct.log
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else

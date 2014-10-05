@@ -32,7 +32,7 @@
 #include "e_lib.h"
 
 int main(void) {
-	const char		  ShmName[] = "hello_shm"; 
+	const char		  ShmName[] = "hello_shm";
 	const char        Msg[] = "Hello World from core 0x%03x!";
 	char              buf[256] = { 0 };
 	e_coreid_t		  coreid;

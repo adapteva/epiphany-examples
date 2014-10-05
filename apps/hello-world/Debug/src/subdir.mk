@@ -2,15 +2,15 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-# Add inputs and outputs from these tool invocations to the build variables 
+# Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
-../src/e_hello_world.c 
+../src/e_hello_world.c
 
 OBJS += \
-./src/e_hello_world.o 
+./src/e_hello_world.o
 
 C_DEPS += \
-./src/e_hello_world.d 
+./src/e_hello_world.d
 
 
 # Each subdirectory must supply rules for building sources it contributes

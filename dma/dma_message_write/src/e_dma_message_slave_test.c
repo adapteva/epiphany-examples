@@ -20,7 +20,7 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the DEVICE side of the DMA message example.
-// This is the receiver which will go into an interrupt 
+// This is the receiver which will go into an interrupt
 // after dma transfer.
 
 
@@ -48,10 +48,10 @@ int main(void)
 
 	// Clear the IMASK
 	e_irq_mask(E_MESSAGE_INT, E_FALSE);
-	
+
 	// Enable the global interrupt
 	e_irq_global_mask(E_FALSE);
-	
+
 	// Making slave_core into idle and wait for the finishing transfer interrupt
 	__asm__ __volatile__("idle");
 
@@ -60,10 +60,10 @@ int main(void)
 
 	// Set the IMASK
 	e_irq_mask(E_MESSAGE_INT, E_TRUE);
-	
+
 	// Disable the global interrupt
 	e_irq_global_mask(E_TRUE);
-	
+
 	return 0;
 }
 
@@ -71,7 +71,7 @@ void __attribute__((interrupt)) int_isr(int signum)
 {
 	mailbox[0] = 0xdeadbeef;
 	return;
-}	
+}
 
-	
-	 
+
+

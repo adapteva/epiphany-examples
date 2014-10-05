@@ -22,7 +22,7 @@
 // This is the host side of the Hardware Barrier example project.
 //
 // This program runs on the linux host and invokes the emain.c program.
-// The program activits the entire board. Each core reads from all the 
+// The program activits the entire board. Each core reads from all the
 // other fifteen cores and records the number of cycles spend for the
 // read. A success/error message is printed on the terminal according
 // to the comparison between the result and the expecting result.
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
 	//load the device program on the board
 	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
-	
+
 
 	for (i=0;i<rows;i++)
 	{
@@ -91,20 +91,20 @@ int main(int argc, char *argv[])
 
 
 			if (fault == 0x0)
-				fprintf(stderr, "\ntest emesh_read_latency passed!\n\n");	
+				fprintf(stderr, "\ntest emesh_read_latency passed!\n\n");
 			else
 			{
 				fprintf(stderr, "\ntest emesh_read_latency failed!\n");
 			}
 
-		}	
-	}	
+		}
+	}
 
 	e_close(&dev);
 	e_free(&emem);
 	e_finalize();
 
-	
+
 
 	return 0;
 }

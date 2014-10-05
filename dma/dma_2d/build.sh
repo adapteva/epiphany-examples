@@ -26,7 +26,7 @@ esac
 ${CROSS_PREFIX}gcc src/dma_2d_test.c -o bin/dma_2d_test.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_dma_2d_test.c -o bin/e_dma_2d_test.elf -le-lib 
+e-gcc -O3 -T ${ELDF} src/e_dma_2d_test.c -o bin/e_dma_2d_test.elf -le-lib
 
 # Convert ebinary to SREC file
 e-objcopy --srec-forceS3 --output-target srec bin/e_dma_2d_test.elf bin/e_dma_2d_test.srec

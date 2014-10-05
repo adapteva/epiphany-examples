@@ -243,7 +243,7 @@ void matsub(volatile float * restrict a, volatile float * restrict b, volatile f
 	for (i=0; i<NN; i++)
 		for (j=0; j<NN; j++)
 			c[i*NN+j] = a[i*NN+j] - b[i*NN+j];
-	
+
 	return;
 }
 

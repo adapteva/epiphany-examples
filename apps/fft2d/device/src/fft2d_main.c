@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 #endif // _USE_DRAM_
 
 		dstate(5);
-		
+
 		// Calculate. During this time, the host polls the
 		// Core 0's mailbox, waiting for a falling
 		// edge indicating the end of the calculation.

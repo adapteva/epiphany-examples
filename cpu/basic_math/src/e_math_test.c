@@ -49,7 +49,7 @@ int main(void)
 	float volatile bf;
 	float volatile cf;
 	float volatile df;
-	float ref;	
+	float ref;
 	unsigned int temp;
 
 	float volatile in_sin;
@@ -60,7 +60,7 @@ int main(void)
 	float re_f0, re_f1, re_f2, re_f3, re_f4, re_f5;
 
 	af = 3.5f;
-	bf = 2.8f;	
+	bf = 2.8f;
 	cf = 8.0f;
 	df = 3.0f;
 	in_sin = (float) pi;
@@ -88,13 +88,13 @@ int main(void)
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
 	time_p = e_ctimer_get(E_CTIMER_0);
-		
+
 		ref = bf + af ;
 
-	
+
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if (!((ref > 6.299f)&&(ref < 6.301f)))
@@ -104,19 +104,19 @@ int main(void)
 	{
 		sprintf(outbuf , "\nE_CTIMER0: The clock cycle of addition is %d.\n", temp);
 	}
-	
+
 	// Subtraction
 	// E_CTIMER0
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
 	time_p = e_ctimer_get(E_CTIMER_0);
-		
+
 		ref =  af - bf;
 
-	
+
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( !((ref > 0.699f)&&(ref < 0.701f)))
@@ -132,12 +132,12 @@ int main(void)
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
 	time_p = e_ctimer_get(E_CTIMER_0);
-		
+
 		ref = af * bf;
-	
+
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 
@@ -154,12 +154,12 @@ int main(void)
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
 	time_p = e_ctimer_get(E_CTIMER_0);
-	
+
 		ref = ( af / bf);
-	
+
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if (!((ref > 1.2499f)&&(ref < 1.2501f)))
@@ -175,13 +175,13 @@ int main(void)
 	e_ctimer_set(E_CTIMER_0,  E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
 	time_p = e_ctimer_get(E_CTIMER_0);
-	
+
 		ref = fmodf(cf,df);
 
-	
+
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if (!((ref > 1.99f)&&(ref < 2.01f)))
@@ -191,41 +191,41 @@ int main(void)
 	{
 		sprintf(outbuf+strlen(outbuf) , "\nE_CTIMER0: The clock cycle of mod is %d.\n", temp);
 	}
-	
+
 	// Sin
 	// E_CTIMER0
 	e_ctimer_set(E_CTIMER_0,  E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f0 = sinf(in_sin);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( (re_f0 > 0.499) && (re_f0 < 0.501) )
 	{
-		sprintf(outbuf+strlen(outbuf) , "\nE_CTIMER0: The clock cycle of sin is %d.\n", temp);		
+		sprintf(outbuf+strlen(outbuf) , "\nE_CTIMER0: The clock cycle of sin is %d.\n", temp);
 	}else
 	{
 		sprintf(outbuf+strlen(outbuf), "\n Sin is wrong!\n");
 	}
-	
+
 	// Cos
 	// E_CTIMER0
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f1 = cosf(in_cos);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
-	
+
 	if (  (re_f1 > 0.499) && (re_f1 < 0.501))
 	{
 		sprintf(outbuf+strlen(outbuf) , "\nE_CTIMER0: The clock cycle of cos is %d.\n", temp);
@@ -233,43 +233,43 @@ int main(void)
 	{
 		sprintf(outbuf+strlen(outbuf), "\n Cos is wrong!\n");
 	}
-	
+
 
 	// Sqrt
 	e_ctimer_set(E_CTIMER_0,  E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f2 = sqrtf(in_sqt);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( (re_f2 > 0.499) && (re_f2 < 0.501) )
 	{
-		sprintf(outbuf+strlen(outbuf) , "\nE_CTIMER0: The clock cycle of sqrt is %d.\n", temp);		
+		sprintf(outbuf+strlen(outbuf) , "\nE_CTIMER0: The clock cycle of sqrt is %d.\n", temp);
 	}else
 	{
 		sprintf(outbuf+strlen(outbuf), "\n Sqrt is wrong!\n");
 	}
-	
+
 	// Ceil
 	e_ctimer_set(E_CTIMER_0,  E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f3 = ceilf(in_ceil);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( (re_f3 > 2.99) && (re_f3 < 3.01) )
 	{
-		sprintf(outbuf+strlen(outbuf) , "\nE_CTIMER0: The clock cycle of ceil is %d.\n", temp);		
+		sprintf(outbuf+strlen(outbuf) , "\nE_CTIMER0: The clock cycle of ceil is %d.\n", temp);
 	}else
 	{
 		sprintf(outbuf+strlen(outbuf), "\n Ceil is wrong!\n");
@@ -278,13 +278,13 @@ int main(void)
 	// Floor
 	e_ctimer_set(E_CTIMER_0,  E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f5 = floorf(in_ceil);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( (re_f5 > 1.99f) && (re_f5 < 2.01f)  )
@@ -294,18 +294,18 @@ int main(void)
 	{
 		sprintf(outbuf+strlen(outbuf), "\n Floor is wrong!\n");
 	}
-	
+
 
 	// Log10
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f4 = log10f(df);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( (re_f4 > 0.477f) && (re_f4 < 0.478f) )
@@ -319,13 +319,13 @@ int main(void)
 	// Ln
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f4 = logf(in_log);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( (re_f4 > 4.6f) && (re_f4 < 4.61f) )
@@ -335,17 +335,17 @@ int main(void)
 	{
 		sprintf(outbuf+strlen(outbuf), "\n Ln is wrong!\n");
 	}
-	
+
 	// Power
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f4 = powf(cf,df);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( (re_f4 > 511.99f) && (re_f4 < 512.01f) )
@@ -355,17 +355,17 @@ int main(void)
 	{
 		sprintf(outbuf+strlen(outbuf), "\n Power is wrong!\n");
 	}
-	
+
 	// Ldexp
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX) ;
 	e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
-	time_p = e_ctimer_get(E_CTIMER_0);	
-		 
+	time_p = e_ctimer_get(E_CTIMER_0);
+
 	re_f4 = ldexpf(cf,df);
 
 	time_c = e_ctimer_get(E_CTIMER_0);
 	e_ctimer_stop(E_CTIMER_0);
-			
+
 	temp = time_p - time_c - time_compare;
 
 	if ( (re_f4 > 63.99f) && (re_f4 < 64.01f) )

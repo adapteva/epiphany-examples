@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 {
 	unsigned rowSize, colSize;
 	unsigned mode;
-	
+
 	if (argc < 2)
 		mode = w_monitor;
 	else
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 		default:
 			break;
 	}
-	
+
 	return 0;
 }
 
@@ -79,21 +79,21 @@ int erm_init(unsigned *rowSize, unsigned *colSize)
 	char *filename_0 = "/home/linaro/epiphany.status";
 	char *filename_1 = "/home/linaro/ecore.status";
 	char *filename_2 = "/home/linaro/emesh.status";
-		
-	
+
+
 	// set up the board
 	e_init(NULL);
 	e_reset_system();
 	e_get_platform_info(&platform);
-	
+
 	// open workgroup
 	*rowSize = platform.rows;
 	*colSize = platform.cols;
 	e_open(&dev, 0, 0, *rowSize, *colSize);
-	
+
 	// set up epiphany.status file
 	file = fopen(filename_0, "w+");
-	
+
 	for (i=0; i<*rowSize; i++)
 	{
 		for (j=0; j<*colSize; j++)
@@ -106,7 +106,7 @@ int erm_init(unsigned *rowSize, unsigned *colSize)
 
 	// set up ecore.status file
 	file = fopen(filename_1, "w+");
-	
+
 	for (i=0; i<*rowSize; i++)
 	{
 		for (j=0; j<*colSize; j++)
@@ -119,7 +119,7 @@ int erm_init(unsigned *rowSize, unsigned *colSize)
 
 	// set up emesh.status file
 	file = fopen(filename_2, "w+");
-	
+
 	for (i=0; i<*rowSize; i++)
 	{
 		for (j=0; j<*colSize; j++)
@@ -128,7 +128,7 @@ int erm_init(unsigned *rowSize, unsigned *colSize)
 		}
 	}
 	fclose(file);
-	
+
 	return 0;
 }
 
@@ -139,7 +139,7 @@ int erm_monitor(unsigned rowSize, unsigned colSize)
 	unsigned emesh_record[rowSize*colSize];
 	unsigned i, j;
 	unsigned mod;
-	
+
 	// initialize ecore_record, emesh_record and ctiemr1
 	for (i=0; i<rowSize; i++)
 	{
@@ -150,8 +150,8 @@ int erm_monitor(unsigned rowSize, unsigned colSize)
 			set_timer(i, j);
 		}
 	}
-	
-	
+
+
 	i = 0x0;
 	mod = 0x0;
 	while (1)
@@ -159,7 +159,7 @@ int erm_monitor(unsigned rowSize, unsigned colSize)
 		// update the ecore_record and emesh_record
 		update_record(rowSize, colSize, &ecore_record[0], &emesh_record[0], &mod);
 		usleep(800); // sample every 8 ms
-		
+
 		// update status files
 		i++;
 		if (i >= 128) // around every 1 sec update files once
@@ -177,15 +177,15 @@ int erm_monitor(unsigned rowSize, unsigned colSize)
 int set_timer(unsigned row, unsigned col)
 {
 	unsigned maxtime, starttimer, emesh;
-	
+
 	maxtime    = 0xffffffff;
 	starttimer = 0x00000f00; // set ctimer1 to count emesh event
 	emesh      = 0x000000e0; // set emesh to count access cycles
-	
+
 	e_write(&dev, row, col, 0xf043c, &maxtime   , sizeof(maxtime));    // set ctimer1
 	e_write(&dev, row, col, 0xf0700, &emesh     , sizeof(emesh));      // set emesh event
 	e_write(&dev, row, col, 0xf0400, &starttimer, sizeof(starttimer)); // start ctimer
-	
+
 	return 0;
 }
 
@@ -194,8 +194,8 @@ int update_record(unsigned rows, unsigned cols, unsigned *ecore, unsigned *emesh
 {
 	unsigned i, j, emesh_value, maxtime, crt_mod;
 	unsigned state[rows*cols];
-	
-	
+
+
 	maxtime = 0xffffffff;
 	crt_mod = 0x000000a0 + (((*mod)%5)<<4);
 	(*mod)++;
@@ -207,16 +207,16 @@ int update_record(unsigned rows, unsigned cols, unsigned *ecore, unsigned *emesh
 		{
 			e_read(&dev, i, j, 0xf0404, &state[i*cols+j], sizeof(unsigned)); //-----read status register
 			e_read(&dev, i, j, 0xf043c, &emesh_value    , sizeof(unsigned)); //-----read counting value from ctimer1
-			
-			
+
+
 			state[i*cols+j]  = state[i*cols+j]&0x00000001; // check if the core is actived
 			ecore[i*cols+j] += state[i*cols+j];
 			emesh[i*cols+j] += (maxtime - emesh_value);
-			
+
 			e_write(&dev, i, j, 0xf0700, &crt_mod, sizeof(maxtime));
 			e_write(&dev, i, j, 0xf043c, &maxtime, sizeof(maxtime));  //----reset the counting value in ctiemr1 to maxtime
 		}
-	}	
+	}
 
 	return 0;
 }
@@ -228,17 +228,17 @@ int update_file(unsigned rows, unsigned cols, unsigned *ecore, unsigned *emesh)
 	char *filename_1 = "/home/linaro/ecore.status";
 	char *filename_2 = "/home/linaro/emesh.status";
 	unsigned i, j;
-	
-	
+
+
 //-----insert a test-------show the result of epiphany.status and ecore.status
 	char *filename_0 = "/home/linaro/epiphany.status";
 	unsigned work[rows*cols], idle[rows*cols];
 	char line[100];
 	unsigned r, c;
-	
+
 	while ((file = fopen(filename_0, "r+")) == NULL) {;}
 
-	
+
 	for (i=0; i<rows; i++)
 	{
 		for (j=0; j<cols; j++)
@@ -249,14 +249,14 @@ int update_file(unsigned rows, unsigned cols, unsigned *ecore, unsigned *emesh)
 	}
 	fclose(file);
 	fprintf(stderr, "\n\nCurrent status is:\t(row, col, busy, ecore, emesh)\n");
-// end of test	
-	
+// end of test
 
-	
+
+
 	//----update ecore.status file
 	while ((file = fopen(filename_1, "r+")) == NULL) {;}
 
-	
+
 	for (i=0; i<rows; i++)
 	{
 		for (j=0; j<cols; j++)
@@ -265,13 +265,13 @@ int update_file(unsigned rows, unsigned cols, unsigned *ecore, unsigned *emesh)
 			ecore[i*cols+j] = ecore[i*cols+j]>>2;
 			if (ecore[i*cols+j]>31)
 				ecore[i*cols+j] = 31;
-			
+
 			fseek(file, (((i)*cols + (j))*13 + 10), SEEK_SET);
 			fprintf(file, "%02d\n", ecore[i*cols+j]);
-			
+
 //---insert a test----
 			idle[i*cols+j] = ecore[i*cols+j];
-						
+
 			ecore[i*cols+j] = 0x0; // clear the ecore
 		}
 	}
@@ -281,7 +281,7 @@ int update_file(unsigned rows, unsigned cols, unsigned *ecore, unsigned *emesh)
 
 	//----update emesh.status file
 	while ((file = fopen(filename_2, "r+")) == NULL) {;}
-	
+
 	for (i=0; i<rows; i++)
 	{
 		for (j=0; j<cols; j++)
@@ -291,14 +291,14 @@ int update_file(unsigned rows, unsigned cols, unsigned *ecore, unsigned *emesh)
 			emesh[i*cols+j] = emesh[i*cols+j]>>18;
 			if (emesh[i*cols+j]>31)
 				emesh[i*cols+j] = 31;
-				
+
 			fseek(file, (((i)*cols + (j))*13 + 10), SEEK_SET);
 			fprintf(file, "%02d\n", emesh[i*cols+j]);
 //---insert a test-----//
 			fprintf(stderr, "\t%d %d %d %02d %02d\n", i, j, work[i*cols+j], idle[i*cols+j], emesh[i*cols+j]);
-			
+
 			emesh[i*cols+j] = 0x0; // clear the emesh
-			
+
 		}
 	}
 	fclose(file);

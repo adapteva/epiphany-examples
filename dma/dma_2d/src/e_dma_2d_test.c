@@ -31,7 +31,7 @@ along with this program, see the file COPYING. If not, see
 
 unsigned checkbuffer(unsigned *po, unsigned a, unsigned num);
 
-	
+
 int main(void)
 {
 	unsigned k,i,j;
@@ -47,7 +47,7 @@ int main(void)
 	n_col = (unsigned *)0x00006404;
 	tran = 128;
 	p = 0x0000;
-	
+
 	// Get the core id of neighbour core
 	e_neighbor_id(E_NEXT_CORE, E_ROW_WRAP, n_row, n_col);
 
@@ -70,7 +70,7 @@ int main(void)
 	// Test for word size
  	// Initialize the source and destination buffer
 	for (i=0; i<tran; i++)
-	{ 
+	{
 		src[i]  = 0xaaaaaaaa;
 		src1[i] = 0xbbbbbbbb;
 		src2[i] = 0xcccccccc;
@@ -80,22 +80,22 @@ int main(void)
 	{
 		dst[i] = 0x00000000;
 	}
-	
 
-	// Prepare for the descriptor for 2d dma 
-	
+
+	// Prepare for the descriptor for 2d dma
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_WORD), 0x0000,
 	0x0004, 0x0004,
 	0x0080, 0x0003,
 	0x0104 , 0x0304,
 	(void *)src,(void *)dst, &dma_desc[0]);
-	
+
 	// Start transaction
 	e_dma_start(&dma_desc[0], E_DMA_0);
-	
+
 	// Wait
-	e_dma_wait(E_DMA_0);		
-	
+	e_dma_wait(E_DMA_0);
+
 	// Check the destination buffer value
 	index[0] = checkbuffer(dst,  (unsigned)0xaaaaaaaa, tran);
 	index[1] = checkbuffer(dst1, (unsigned)0xbbbbbbbb, tran);
@@ -112,7 +112,7 @@ int main(void)
 	// Test for doubleword size
  	// Initialize the source and destination buffer
 	for (i=0; i<tran; i++)
-	{ 
+	{
 		src[i]  = 0xaaaaaaaa;
 		src1[i] = 0xbbbbbbbb;
 		src2[i] = 0xcccccccc;
@@ -122,22 +122,22 @@ int main(void)
 	{
 		dst[i] = 0x00000000;
 	}
-	
-	
 
-	// Prepare for the descriptor for 2d dma 
-	
+
+
+	// Prepare for the descriptor for 2d dma
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_DWORD), 0x0000,
 	0x0008, 0x0008,
 	0x0040, 0x0003,
 	0x0108 , 0x0308,
 	(void *)src,(void *)dst, &dma_desc[0]);
-	
+
 	// Start transaction
 	e_dma_start(&dma_desc[0], E_DMA_0);
-	
-	// Wait 
-	e_dma_wait(E_DMA_0);	
+
+	// Wait
+	e_dma_wait(E_DMA_0);
 
 	// Check the destination buffer value
 	index[0] = checkbuffer(dst,  (unsigned)0xaaaaaaaa, tran);
@@ -155,7 +155,7 @@ int main(void)
 	// Test for half size
  	// Initialize the source and destination buffer
 	for (i=0; i<tran; i++)
-	{ 
+	{
 		src[i]  = 0xaaaaaaaa;
 		src1[i] = 0xbbbbbbbb;
 		src2[i] = 0xcccccccc;
@@ -165,22 +165,22 @@ int main(void)
 	{
 		dst[i] = 0x00000000;
 	}
-	
-	
 
-	// Prepare for the descriptor for 2d dma 
-	
+
+
+	// Prepare for the descriptor for 2d dma
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_HWORD), 0x0000,
 	0x0002, 0x0002,
 	0x0100, 0x0003,
 	0x0102 , 0x0302,
 	(void *)src,(void *)dst, &dma_desc[0]);
-	
+
 	// Start transaction
 	e_dma_start(&dma_desc[0], E_DMA_0);
-	
-	// Wait 
-	e_dma_wait(E_DMA_0);		
+
+	// Wait
+	e_dma_wait(E_DMA_0);
 
 	// Check the destination buffer value
 	index[0] = checkbuffer(dst,  (unsigned)0xaaaaaaaa, tran);
@@ -198,7 +198,7 @@ int main(void)
 	// Test for byte size
  	// Initialize the source and destination buffer
 	for (i=0; i<tran; i++)
-	{ 
+	{
 		src[i]  = 0xaaaaaaaa;
 		src1[i] = 0xbbbbbbbb;
 		src2[i] = 0xcccccccc;
@@ -208,22 +208,22 @@ int main(void)
 	{
 		dst[i] = 0x00000000;
 	}
-	
 
-	// Prepare for the descriptor for 2d dma 
-	
+
+	// Prepare for the descriptor for 2d dma
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_MASTER|E_DMA_BYTE), 0x0000,
 	0x0001, 0x0001,
 	0x0200, 0x0003,
 	0x0101 , 0x0301,
 	(void *)src,(void *)dst, &dma_desc[0]);
-	
+
 	// Start transaction
 	e_dma_start(&dma_desc[0], E_DMA_0);
-	
-	// Wait 
-	e_dma_wait(E_DMA_0);	
-	
+
+	// Wait
+	e_dma_wait(E_DMA_0);
+
 	// Check the destination buffer value
 	index[0] = checkbuffer(dst,  (unsigned)0xaaaaaaaa, tran);
 	index[1] = checkbuffer(dst1, (unsigned)0xbbbbbbbb, tran);
@@ -250,6 +250,6 @@ unsigned checkbuffer(unsigned *po, unsigned a, unsigned num)
 		{
 			flag = 1;
 		}
-	}	
+	}
 	return flag;
 }

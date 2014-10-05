@@ -19,7 +19,7 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the DEVICE side. By setting the specific bit of ILAT register
-// to 1 will make the core go into the interrupt. Also attaching interrupt 
+// to 1 will make the core go into the interrupt. Also attaching interrupt
 // handler, in the interrupt handler, make this interrupt be interrupted by
 // both interrupt with higher priority and lower priority.
 
@@ -74,21 +74,21 @@ int main(void)
 	strcpy (event[5], "E_DMA0_INT");
 	strcpy (event[6], "E_DMA1_INT");
 	strcpy (event[7], "E_USER_INT");
-	
+
 		// Clear the outbuffer
 		sprintf(outbuf,"");
-		
+
 		// Test the E_SW_EXCEPTION interrupt
 
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[0], inter_higher0_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[0], event[1]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[0], event[1]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[0], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -96,33 +96,33 @@ int main(void)
 			e_irq_attach(name_irq[1], inter_lower0_isr);
 
 			// Clear the IMASK of a lower priority interrupt
-			e_irq_mask(name_irq[1], E_FALSE);		
+			e_irq_mask(name_irq[1], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[0]);
 
 			// See if it returns to main after interrupt
-			sprintf(outbuf + strlen(outbuf), "I return to the main!\n\n");			
-	
+			sprintf(outbuf + strlen(outbuf), "I return to the main!\n\n");
+
 			// Clear the ILAT and the Set the IMASK
 			e_reg_write(E_REG_ILATCL, st[0]);
 			e_reg_write(E_REG_ILATCL, st[1]);
 			e_irq_mask(name_irq[0], E_TRUE);
 			e_irq_mask(name_irq[1], E_TRUE);
-			e_irq_global_mask(E_TRUE);	
+			e_irq_global_mask(E_TRUE);
 
 
 		// Test the E_USER_INT interrupt
-		
+
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[7], inter_lower1_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[7], event[6]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[7], event[6]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[7], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -130,7 +130,7 @@ int main(void)
 			e_irq_attach(name_irq[6], inter_higher1_isr);
 
 			// Clear the IMASK of a higher priority interrupt
-			e_irq_mask(name_irq[6], E_FALSE);		
+			e_irq_mask(name_irq[6], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[7]);
@@ -143,21 +143,21 @@ int main(void)
 			e_reg_write(E_REG_ILATCL, st[6]);
 			e_irq_mask(name_irq[7], E_TRUE);
 			e_irq_mask(name_irq[6], E_TRUE);
-			e_irq_global_mask(E_TRUE);	
+			e_irq_global_mask(E_TRUE);
 
 		// Test the E_MEM_FAULT
-			
-			// Interrupted by E_SW_EXPECTION			
+
+			// Interrupted by E_SW_EXPECTION
 
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[1], inter_lower2_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[1], event[0]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[1], event[0]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[1], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -165,7 +165,7 @@ int main(void)
 			e_irq_attach(name_irq[0], inter_higher2_isr);
 
 			// Clear the IMASK of a higher priority interrupt
-			e_irq_mask(name_irq[0], E_FALSE);		
+			e_irq_mask(name_irq[0], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[1]);
@@ -181,16 +181,16 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 			// Interrupted by the E_TIMER0_INT
-			
+
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[1], inter_higher3_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[1], event[2]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[1], event[2]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[1], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -198,7 +198,7 @@ int main(void)
 			e_irq_attach(name_irq[2], inter_lower3_isr);
 
 			// Clear the IMASK of a lower priority interrupt
-			e_irq_mask(name_irq[2], E_FALSE);		
+			e_irq_mask(name_irq[2], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[1]);
@@ -212,20 +212,20 @@ int main(void)
 			e_irq_mask(name_irq[1], E_TRUE);
 			e_irq_mask(name_irq[2], E_TRUE);
 			e_irq_global_mask(E_TRUE);
-	
+
 		// Test the E_TIMER0_INT
-			
-			// Interrupted by E_MEM_FAULT			
+
+			// Interrupted by E_MEM_FAULT
 
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[2], inter_lower4_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[2], event[1]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[2], event[1]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[2], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -233,7 +233,7 @@ int main(void)
 			e_irq_attach(name_irq[1], inter_higher4_isr);
 
 			// Clear the IMASK of a higher priority interrupt
-			e_irq_mask(name_irq[1], E_FALSE);		
+			e_irq_mask(name_irq[1], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[2]);
@@ -249,16 +249,16 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 			// Interrupted by the E_TIMER1_INT
-			
+
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[2], inter_higher5_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[2], event[3]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[2], event[3]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[2], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -266,7 +266,7 @@ int main(void)
 			e_irq_attach(name_irq[3], inter_lower5_isr);
 
 			// Clear the IMASK of a lower priority interrupt
-			e_irq_mask(name_irq[3], E_FALSE);		
+			e_irq_mask(name_irq[3], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[2]);
@@ -282,18 +282,18 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 		// Test the E_TIMER1_INT
-			
-			// Interrupted by E_TIMER0_INT			
+
+			// Interrupted by E_TIMER0_INT
 
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[3], inter_lower6_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[3], event[2]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[3], event[2]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[3], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -301,7 +301,7 @@ int main(void)
 			e_irq_attach(name_irq[2], inter_higher6_isr);
 
 			// Clear the IMASK of a higher priority interrupt
-			e_irq_mask(name_irq[2], E_FALSE);		
+			e_irq_mask(name_irq[2], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[3]);
@@ -317,16 +317,16 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 			// Interrupted by the E_MESSAGE_INT
-			
+
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[3], inter_higher7_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[3], event[4]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[3], event[4]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[3], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -334,7 +334,7 @@ int main(void)
 			e_irq_attach(name_irq[4], inter_lower7_isr);
 
 			// Clear the IMASK of a lower priority interrupt
-			e_irq_mask(name_irq[4], E_FALSE);		
+			e_irq_mask(name_irq[4], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[3]);
@@ -350,18 +350,18 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 		// Test the E_MESSAGE_INT
-			
-			// Interrupted by E_TIMER1_INT			
+
+			// Interrupted by E_TIMER1_INT
 
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[4], inter_lower8_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[4], event[3]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[4], event[3]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[4], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -369,7 +369,7 @@ int main(void)
 			e_irq_attach(name_irq[3], inter_higher8_isr);
 
 			// Clear the IMASK of a higher priority interrupt
-			e_irq_mask(name_irq[3], E_FALSE);		
+			e_irq_mask(name_irq[3], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[4]);
@@ -385,16 +385,16 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 			// Interrupted by the E_DMA0_INT
-			
+
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[4], inter_higher9_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[4], event[5]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[4], event[5]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[4], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -402,7 +402,7 @@ int main(void)
 			e_irq_attach(name_irq[5], inter_lower9_isr);
 
 			// Clear the IMASK of a lower priority interrupt
-			e_irq_mask(name_irq[5], E_FALSE);		
+			e_irq_mask(name_irq[5], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[4]);
@@ -418,18 +418,18 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 		// Test the E_DMA0_INT
-			
-			// Interrupted by E_MESSAGE_INT			
+
+			// Interrupted by E_MESSAGE_INT
 
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[5], inter_lower10_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[5], event[4]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[5], event[4]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[5], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -437,7 +437,7 @@ int main(void)
 			e_irq_attach(name_irq[4], inter_higher10_isr);
 
 			// Clear the IMASK of a higher priority interrupt
-			e_irq_mask(name_irq[4], E_FALSE);		
+			e_irq_mask(name_irq[4], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[5]);
@@ -453,16 +453,16 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 			// Interrupted by the E_DMA0_INT
-			
+
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[5], inter_higher11_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[5], event[6]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[5], event[6]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[5], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -470,7 +470,7 @@ int main(void)
 			e_irq_attach(name_irq[6], inter_lower11_isr);
 
 			// Clear the IMASK of a lower priority interrupt
-			e_irq_mask(name_irq[6], E_FALSE);		
+			e_irq_mask(name_irq[6], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[5]);
@@ -486,18 +486,18 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 		// Test the E_DMA1_INT
-			
-			// Interrupted by E_DMA0_INT			
+
+			// Interrupted by E_DMA0_INT
 
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[6], inter_lower12_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[6], event[5]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[6], event[5]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[6], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -505,11 +505,11 @@ int main(void)
 			e_irq_attach(name_irq[5], inter_higher12_isr);
 
 			// Clear the IMASK of a higher priority interrupt
-			e_irq_mask(name_irq[5], E_FALSE);		
+			e_irq_mask(name_irq[5], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[6]);
-			
+
 			// See if it returns to main after interrupt
 			sprintf(outbuf + strlen(outbuf), "I return to the main!\n\n");
 
@@ -521,16 +521,16 @@ int main(void)
 			e_irq_global_mask(E_TRUE);
 
 			// Interrupted by the E_USER_INT
-			
+
 			// Attach the ISR with this interrupt
 			e_irq_attach(name_irq[6], inter_higher13_isr);
 
 			// print out the name of the interrupt
-			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[6], event[7]);	
+			sprintf(outbuf + strlen(outbuf), "%s is interrupted by %s: \n", event[6], event[7]);
 
 			// Clear the IMASK
 			e_irq_mask(name_irq[6], E_FALSE);
-	
+
 			// Enable the global interrupt
 			e_irq_global_mask(E_FALSE);
 
@@ -538,7 +538,7 @@ int main(void)
 			e_irq_attach(name_irq[7], inter_lower13_isr);
 
 			// Clear the IMASK of a lower priority interrupt
-			e_irq_mask(name_irq[7], E_FALSE);		
+			e_irq_mask(name_irq[7], E_FALSE);
 
 			// Set the ILAT
 			e_reg_write(E_REG_ILATST, st[6]);
@@ -561,7 +561,7 @@ void __attribute__((interrupt)) inter_higher0_isr(int signum)
 	e_reg_write(E_REG_ILATST, 0x00000004);
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_SW_EXPECTION with higher priority!\n");
 	return;
-}	
+}
 
 void __attribute__((interrupt)) inter_lower0_isr(int signum)
 {
@@ -575,7 +575,7 @@ void __attribute__((interrupt)) inter_higher1_isr(int signum)
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_DMA1_INT with higher priority!\n");
 
 	return;
-}	
+}
 
 void __attribute__((interrupt)) inter_lower1_isr(int signum)
 {
@@ -583,7 +583,7 @@ void __attribute__((interrupt)) inter_lower1_isr(int signum)
 	e_reg_write(E_REG_ILATST, 0x00000080);
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_USER_INT with lower priority!\n\n");
 	return;
-}	
+}
 
 void __attribute__((interrupt)) inter_higher2_isr(int signum)
 {
@@ -603,7 +603,7 @@ void __attribute__((interrupt)) inter_higher3_isr(int signum)
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000008);
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_MEM_FAULT with higher priority!\n");
-	return;	
+	return;
 }
 
 void __attribute__((interrupt)) inter_lower3_isr(int signum)
@@ -630,7 +630,7 @@ void __attribute__((interrupt)) inter_higher5_isr(int signum)
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000010);
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_TIMER0_INT with higher priority!\n");
-	return;	
+	return;
 }
 
 void __attribute__((interrupt)) inter_lower5_isr(int signum)
@@ -657,7 +657,7 @@ void __attribute__((interrupt)) inter_higher7_isr(int signum)
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000020);
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_TIMER1_INT with higher priority!\n");
-	return;	
+	return;
 }
 
 void __attribute__((interrupt)) inter_lower7_isr(int signum)
@@ -684,7 +684,7 @@ void __attribute__((interrupt)) inter_higher9_isr(int signum)
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000040);
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_MESSAGE_INT with higher priority!\n");
-	return;	
+	return;
 }
 
 void __attribute__((interrupt)) inter_lower9_isr(int signum)
@@ -711,7 +711,7 @@ void __attribute__((interrupt)) inter_higher11_isr(int signum)
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000080);
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_DMA0_INT with higher priority!\n");
-	return;	
+	return;
 }
 
 void __attribute__((interrupt)) inter_lower11_isr(int signum)
@@ -738,7 +738,7 @@ void __attribute__((interrupt)) inter_higher13_isr(int signum)
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000200);
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_DMA1_INT with higher priority!\n");
-	return;	
+	return;
 }
 
 void __attribute__((interrupt)) inter_lower13_isr(int signum)

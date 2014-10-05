@@ -13,7 +13,7 @@ cd $EXEPATH
 export LD_LIBRARY_PATH=${ELIBS}
 $EXEPATH/bin/mesh_one.elf > $LOG
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else

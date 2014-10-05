@@ -20,7 +20,7 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the HOST side of the mesh traffic example.
-// In this test, we program the config register to count 
+// In this test, we program the config register to count
 // different mesh events.
 
 
@@ -45,18 +45,18 @@ int main(int argc, char *argv[])
 	row = mas_row;
 	col = mas_col;
 	signal = 0xdeadbeef;
-	
+
 	// For dma copy, define the number of desired transaction
 	desired = 0x3c00;
-	
+
 	// Initialize flag
 	for(i=0; i<platform.rows*platform.cols; i++)
 	{
 		flag[i] = 0;
 	}
-	
+
 	srand(1);
-	
+
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
 	// get the actual system parameters.
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
-	
+
 	// Let other cores know the core id of the specific core
 	for(i=0; i<platform.rows; i++)
 	{
@@ -76,15 +76,15 @@ int main(int argc, char *argv[])
 			{
 				e_write(&dev, i, j, 0x5000, &row, sizeof(row));
 				e_write(&dev, i, j, 0x5004, &col, sizeof(col));
-			}		
+			}
 		}
 	}
-	
+
 	// Load device program onto the receiver
-		
+
 	e_load("e_mesh_receiver.srec",&dev, mas_row, mas_col, E_TRUE);
-	
-	
+
+
 	// Load device program onto the transmitter
 	for (i=0; i<(platform.rows); i++)
 	{
@@ -96,16 +96,16 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-		
+
 	// Wait for all cores to initialize
-	
+
 	usleep(1000);
-	
+
 	for(q=0; q<13; q++)
 	{
 		// Select the mesh event
-		mode = q;	
-		
+		mode = q;
+
 		// Tell each core the mesh event
 		for (i=0; i<(platform.rows); i++)
 		{
@@ -114,16 +114,16 @@ int main(int argc, char *argv[])
 				e_write(&dev, i, j, 0x5400, &mode, sizeof(mode));
 			}
 		}
-	
+
 		usleep(10000);
-		
+
 		// Send the start signal to receiver core
 		e_write(&dev, mas_row, mas_col, 0x5100, &signal, sizeof(signal));
-		
+
 		usleep(500000);
-		
+
 	 }
-	 
+
 	 // Read from mailbox of all the cores
 	 for(i=0; i<platform.rows; i++)
 	 {
@@ -135,16 +135,16 @@ int main(int argc, char *argv[])
 	 		}
 		}
 	 }
-	 
+
 	// Test if the results make sense
 	real = time[mas_row*platform.cols+mas_col][8]+time[mas_row*platform.cols+mas_col][9]+
 		  time[mas_row*platform.cols+mas_col][10]+time[mas_row*platform.cols+mas_col][11]-
 		  time[(mas_row-1)*platform.cols+mas_col][0]-time[(mas_row)*platform.cols+mas_col-1][0]-
 		  time[(mas_row)*platform.cols+mas_col+1][0]-time[(mas_row+1)*platform.cols+mas_col][0];
-		  
+
 	if ((real < (unsigned)desired * 1.1) && (real > (unsigned)desired * 0.1))
 	{
-		fprintf(stderr, "PASS for verification!\n");	
+		fprintf(stderr, "PASS for verification!\n");
 	}else
 	{
 		fprintf(stderr, "FAIL for verification!\n");
@@ -152,10 +152,10 @@ int main(int argc, char *argv[])
 
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Finalize the e-platform connection.
 	e_finalize();
 
 	return 0;
 }
-	
+

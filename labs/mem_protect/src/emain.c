@@ -21,9 +21,9 @@
 
 // This is the device side of the Hardware Barrier example project.
 // The host may load this program to any eCore. When launched, the
-// core sets the mem protect registers, and tries to write to those 
-// protected pages. The mpf_isr handler returns an address showing 
-// which address location failed. A success/error message is sent 
+// core sets the mem protect registers, and tries to write to those
+// protected pages. The mpf_isr handler returns an address showing
+// which address location failed. A success/error message is sent
 // to the host according to the result.
 //
 // Aug-2013, XM.
@@ -91,10 +91,10 @@ int main(void)
 	{
 		//tell the host that write_failure is expected here
 		mailbox[3] = write_failed;
-		
+
 		mailbox[2] = i;
 		mem_write(i);
-		e_wait(E_CTIMER_0, delay); 
+		e_wait(E_CTIMER_0, delay);
 		while (mailbox[0] != clear) { e_wait(E_CTIMER_0, delay); }
 	}
 
@@ -105,10 +105,10 @@ int main(void)
 	{
 		//tell the host that write_succeed is expected here
 		mailbox[3] = write_success;
-		
+
 		mailbox[2] = i;
 		mem_write(i);
-		e_wait(E_CTIMER_0, delay); 
+		e_wait(E_CTIMER_0, delay);
 		while (mailbox[0] != clear) { e_wait(E_CTIMER_0, delay); }
 	}
 
@@ -116,7 +116,7 @@ int main(void)
 	mailbox[2] = i;
 	mailbox[0] = finished;
 	e_reg_write(E_REG_MEMPROTECT, 0);
-	
+
 	return EXIT_SUCCESS;
 }
 

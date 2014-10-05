@@ -20,9 +20,9 @@
 */
 
 // This is the device side of the Hardware Barrier example project.
-// The host may load this program to any eCore. When launched, the 
-// core reads from all the other fifteen cores and records the number 
-// of cycles spend for the read. A success/error message is sent to 
+// The host may load this program to any eCore. When launched, the
+// core reads from all the other fifteen cores and records the number
+// of cycles spend for the read. A success/error message is sent to
 // the host according to the result.
 //
 // Aug-2013, XM.
@@ -48,9 +48,9 @@ int main(void) {
 	unsigned *target;
 	unsigned ctimer;
 	int i, j, k;
-	unsigned value;	
-	
-	
+	unsigned value;
+
+
 	unsigned row, col;
 
 	row = e_group_config.core_row;
@@ -60,20 +60,20 @@ int main(void) {
 	value = 0xdead;
 
 	for (i=0;i<4;i++)
-	{	
+	{
 		for (j=0;j<4;j++)
-		{	
+		{
 
 			target = (unsigned *)e_get_global_address(i, j, (void *)targetbase);
-			
+
 			//initialize the target
 			for (k=0;k<10;k++)
 			{
 				target[0] = 0xdeadbeef;
 				localbox[0] = 0x0;
 			}
-	
-	
+
+
 			//record the offset
 			e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX);
 			e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
@@ -83,7 +83,7 @@ int main(void) {
 			time = time_s - time_e;
 
 
-			//record the ctimer	
+			//record the ctimer
 			e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX);
 			e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
 			__asm__ __volatile__("ldr %0, [%1]":"=r"(time_s):"r"(ctimer):);
@@ -101,17 +101,17 @@ int main(void) {
 
 			__asm__ __volatile__("ldr %0, [%1]":"=r"(time_e):"r"(ctimer):);
 			e_ctimer_stop(E_CTIMER_0);
-			
+
 			time = time_s - time_e - time;
 			expect = ((abs(row - i) + abs(col - j)) * 3 + 18)*10;
-			
+
 			//update the mailbox
 			mailbox[(i*4+j)] = time;
 			mailbox[(i*4+j+16)] = expect;
-			
+
 		}
 	}
-	
+
 	return EXIT_SUCCESS;
 }
 

@@ -4,29 +4,29 @@
 test/e-reset/test.sh 1
 test/e-write-word/test.sh 1
 test/e-read-word/test.sh 1
-test/e-write-buf/test.sh 1 
+test/e-write-buf/test.sh 1
 test/e-read-buf/test.sh 1
 test/e-main/test.sh 1
-							
+
 #####################
 #MEMORY TEST
-#####################		
+#####################
 test/e-mem-test/e-mem-test all
 
 #####################
 #EXHAUSTIVE TESTS
-#####################							       
+#####################
 test/e-matmul-test/test.sh all
 
 #####################
 #EMESH
 #####################
-emesh/emesh_bandwidth_all2one/test.sh 1	
+emesh/emesh_bandwidth_all2one/test.sh 1
 
 #####################
 #APPS
 #####################
-apps/e-dump-regs/test.sh all	
+apps/e-dump-regs/test.sh all
 apps/e-fill-mem/test.sh all
 apps/e-dump-mem/test.sh all
 apps/matmul-64/test.sh 1

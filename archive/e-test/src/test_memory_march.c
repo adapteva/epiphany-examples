@@ -37,11 +37,11 @@ int main(int argc, char *argv[]){
   unsigned offset;
   unsigned coreID;
   char *addr;
-    
+
   unsigned int data_in,result,expected;
   unsigned int high_pattern = 0xff;
   unsigned int low_pattern  = 0x00;
-  
+
   //Test Init
   coreID=e_test_init();
   //Testing all cores
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	    printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 #endif
 	    status=0;
 	  }
@@ -73,11 +73,11 @@ int main(int argc, char *argv[]){
 	  data_in=high_pattern;
 	  (*(addr))=data_in;
 	  //R1
-	  expected=high_pattern;	  
+	  expected=high_pattern;
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	    printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 #endif
 	    status=0;
 	  }
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	      printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M1: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 #endif
 	      status=0;
 	  }
@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
 	  data_in=high_pattern;
 	  (*(addr))=data_in;
 	}
-	//M2: UP{r1,w0,w1}		
+	//M2: UP{r1,w0,w1}
 	for(k=0;k<(RAM_SIZE);k=k+WORD_SIZE){
 	  addr=(char *) (offset+k);
 	  //R1
@@ -124,8 +124,8 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	    printf("FAIL-PAT-M3: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 	
-#endif	
+	    printf("FAIL-PAT-M3: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
+#endif
 	    status=0;
 	  }
 	  //W0
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]){
 	  //W0
 	  data_in=low_pattern;
 	  (*(addr))=data_in;
-	  
+
 	}
 	//M4:DOWN{R0,W1,W0}
 	for(k=0;k<(RAM_SIZE);k=k+WORD_SIZE){
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	    printf("FAIL-PAT-M4: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M4: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 #endif
 	    status=0;
 	  }
@@ -166,7 +166,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	      printf("FAIL-PAT-M5: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M5: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 #endif
 	    status=0;
 	  }
@@ -178,7 +178,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	      printf("FAIL-PAT-M5: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M5: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 #endif
 	    status=0;
 	  }
@@ -191,7 +191,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	      printf("FAIL-PAT-M6: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M6: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 #endif
 	    status=0;
 	  }
@@ -203,7 +203,7 @@ int main(int argc, char *argv[]){
 	  result=(*(addr));
 	  if(result!=expected){
 #ifdef VERBOSE
-	      printf("FAIL-PAT-M6: addr=%p expected=0x%x result=0x%x\n",addr,expected,result); 
+	      printf("FAIL-PAT-M6: addr=%p expected=0x%x result=0x%x\n",addr,expected,result);
 #endif
 	    status=0;
 	  }

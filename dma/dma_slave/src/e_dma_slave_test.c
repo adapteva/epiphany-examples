@@ -21,7 +21,7 @@ along with this program, see the file COPYING. If not, see
 
 // This is the DEVICE side of the DMA slave mode example.
 // The host may load this program to any eCore. In this program
-// the transmitter will send data to the receiver core under dma 
+// the transmitter will send data to the receiver core under dma
 // slave mode. This is the program for the recevier core.
 
 #include <stdio.h>
@@ -46,31 +46,31 @@ int main(void)
 
 	// Initialize the buffer in receiver core
 	for (i=0; i<tran*5; i++)
-	{ 
+	{
 		dst[i]  = 0x00000000;
 	}
-	
+
 	mst[0] = 0x00000000;
-	
+
 	// Initialize the auto dma register in receiver core
 	e_reg_write(E_REG_DMA0AUTODMA0, 0x00000000);
 
-	// Prepare for the descriptor slave dma 
-	
+	// Prepare for the descriptor slave dma
+
 	e_dma_set_desc(E_DMA_0,(E_DMA_ENABLE|E_DMA_WORD), 0x0000,
 	0x0000, 0x0004,
 	0x0400, 0x0001,
 	0x0000, 0x0000,
 	0x0000,(void *)dst, &dma_desc);
-	
+
 	// Wait for the signal to start dma transfering
-	
+
 	while(*mst == 0x00000000){};
-	
+
 	e_dma_start(&dma_desc, E_DMA_0);
-	
+
 	e_dma_wait(E_DMA_0);
-	
+
 	return 0;
 }
 

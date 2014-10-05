@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
   if (argc < 5){
     usage();
     status=0;
-  }  
+  }
   else{
     row0    = atoi(argv[1]);
     col0    = atoi(argv[2]);
@@ -50,27 +50,27 @@ int main(int argc, char *argv[]){
     strcpy(elfFile, argv[6]);
 
     //Initalize Epiphany device
-    e_init(NULL);                      
+    e_init(NULL);
     e_reset_system();
-    e_get_platform_info(&platform);                          
+    e_get_platform_info(&platform);
     //e_set_loader_verbosity(L_D3);
     e_open(&dev, 0, 0, platform.rows, platform.cols); //open all cores
-    
+
     //Load program one at a time, checking one a time
     if(para){
       printf("Running in parallel\n");
       for (i=row0; i<(row0+rows); i++) {
-	for (j=col0; j<(col0+cols); j++) {   
+	for (j=col0; j<(col0+cols); j++) {
 	  e_load_group(elfFile, &dev, i, j, 1, 1, E_TRUE);
 	}
-      }    
-    }  
+      }
+    }
     else{
       e_load_group(elfFile, &dev, row0, col0, (row0+rows), (col0+cols), E_TRUE);
     }
     //Checking the test
     for (i=row0; i<(row0+rows); i++) {
-      for (j=col0; j<(col0+cols); j++) {   
+      for (j=col0; j<(col0+cols); j++) {
 	e_check_test(&dev, i, j, &status);
       }
     }
@@ -87,13 +87,13 @@ int main(int argc, char *argv[]){
   }
   else{
     return EXIT_FAILURE;
-  }    
+  }
 }
 /**********************************************************************/
-void e_check_test( void *dev, 
-		   unsigned row, 
-		   unsigned col, 
-		   int *status 
+void e_check_test( void *dev,
+		   unsigned row,
+		   unsigned col,
+		   int *status
 		  ){
 
   unsigned int result;
@@ -114,7 +114,7 @@ void e_check_test( void *dev,
     }
     else{
       if(wait){
-	usleep(10000);      
+	usleep(10000);
 	printf("Core (%d,%d) WAITING...\n",row,col);
 	wait=0;
       }
@@ -124,7 +124,7 @@ void e_check_test( void *dev,
 	break;
       }
     }
-  }		  
+  }
 }
 /**********************************************************************/
 void usage(){

@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
   printf("(ROW,COL)   ADDRESS   DATA\n");
   printf("-----------------------------\n");
   for (i=row0; i<(row0+rows); i++) {
-    for (j=col0; j<(col0+cols); j++) {           
+    for (j=col0; j<(col0+cols); j++) {
       if(slow>0){
 	for(k=0;k<RAM_SIZE/4;k++){
 	  addr=4*k;
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]){
   //Close
   e_close(&dev);
   e_finalize();
-  
+
   //Always return sucess if it runs to completion
   return EXIT_SUCCESS;
 }

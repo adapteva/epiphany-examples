@@ -9,8 +9,8 @@ EHDF=${EPIPHANY_HDF}
 
 
 #dumping disassembly
-e-objdump -D bin/e_task.elf > DUMP
+e-objdump -D bin/e-task.elf > DUMP
 
 #running program
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} bin/main.elf
+sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} bin/e-main.elf
 

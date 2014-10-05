@@ -55,10 +55,10 @@ while(!($a eq "y" | $a eq "n")){
     $a = <STDIN>;
     chomp($a);
 }
-if($a eq "y"){   
+if($a eq "y"){
 system("screen -S para -X stuff 'rcp -r $DIR $IP:Logs\n'");
 ###DISPLAY PASS/FAIL###
-    while(1){  
+    while(1){
 	if(-e "Logs/$DIR/PASSED"){
 	    system("feh epiphany-examples/scripts/pass.png");
 	    exit;
@@ -82,7 +82,7 @@ else{
     exit;
 }
 ###COMPILING FILE###
-#system("echo $SN,$MACID $FA    
+#system("echo $SN,$MACID $FA
 
 
 

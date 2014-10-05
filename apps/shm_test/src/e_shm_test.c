@@ -28,7 +28,7 @@
 
 int main(void)
 {
-	const char		  ShmName[] = "test_shm"; 
+	const char		  ShmName[] = "test_shm";
 	const char        Msg[] = "Hello World from core 0x%03x!";
 	char              buf[256] = { 0 };
 	e_coreid_t		  coreid;
@@ -60,7 +60,7 @@ int main(void)
 	trace_write(T_SEVERITY_ERROR, T_EVENT_MARKER1, T_BP_2, 'c');
 
 	snprintf(buf, sizeof(buf), Msg, coreid);
-	
+
 	if ( emem.size >= strlen(buf) + 1 ) {
 		// Write the message (including the null terminating
 		// character) to shared memory

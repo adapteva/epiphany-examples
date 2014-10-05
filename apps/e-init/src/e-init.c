@@ -34,7 +34,7 @@ int main(int argc, char *argv[]){
   unsigned int data,stage;
   int i,j;
   int row,col;
-  
+
   if(argc < 2){
     usage();
     exit;
@@ -50,25 +50,25 @@ int main(int argc, char *argv[]){
   e_open(&dev,0, 0, platform.rows, platform.cols);
   //Reset the system
   e_reset_system();
-  
+
   //---------------------------------------
   //Shut down link (NORTH==0,2)
   if(stage>0){
     row=0;
-    col=2;    
+    col=2;
     ee_write_esys(E_SYS_CONFIG, 0x10000000);
-    
+
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
-    
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
+
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
-    
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
+
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
   //---------------------------------------
   //Shut down south link (SOUTH==7,2)
-  if(stage>1){   
+  if(stage>1){
     col=2;
     if ((dev.type == E_E64G401)){
       row=7;
@@ -77,13 +77,13 @@ int main(int argc, char *argv[]){
       row=3;
     }
     ee_write_esys(E_SYS_CONFIG, 0x90000000);
-    
+
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
-    
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
+
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
-    
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
+
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
   //---------------------------------------
@@ -92,13 +92,13 @@ int main(int argc, char *argv[]){
     row=2;
     col=0;
     ee_write_esys(E_SYS_CONFIG, 0xd0000000);
-    
+
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
-    
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
+
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
-    
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
+
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
   //---------------------------------------
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]){
     //e_write(&dev, 0, 0, 0xf0304, &data, sizeof(int));
     //Return to normal mode
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
-    
+
   }
   if(stage>3){
     //Enable clock gating
@@ -141,13 +141,13 @@ int main(int argc, char *argv[]){
   }
   //-------------------------------------------------------
   e_close(&dev);
-  e_finalize();  
+  e_finalize();
   return 0;
 }
 
 void usage(){
   printf("Usage: e-init <stage>\n");
-  printf("<stage>:\n");  
+  printf("<stage>:\n");
   printf(" 0 = Reset the Epiphany\n");
   printf(" 1 = #0 + power down north link\n");
   printf(" 2 = #1 + power down west link\n");

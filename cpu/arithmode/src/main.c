@@ -20,16 +20,16 @@ along with this program, see the file COPYING. If not, see
 
 /*
 
-The purpose of the program is to demonstrate simple parallel programming 
-example for the Parallella demonstrating how to do fork-join 
-parallel processing using the Epiphany library. Similar type programs can be 
+The purpose of the program is to demonstrate simple parallel programming
+example for the Parallella demonstrating how to do fork-join
+parallel processing using the Epiphany library. Similar type programs can be
 constructed with OpenCL, OpenMP, and many other parallel programming frameworks.
 
 
 The main.c program distributes N tasks to N Epiphany cores in parallel and
-aggregates the result after all cores have completed to produce the final 
+aggregates the result after all cores have completed to produce the final
 result.
-   
+
 */
 
 #include <stdlib.h>
@@ -49,18 +49,18 @@ int main(int argc, char *argv[]){
   clr = (unsigned)0x00000000;
 
   //Initalize Epiphany device
-  e_init(NULL);                      
+  e_init(NULL);
   e_reset_system();                                      //reset Epiphany
-  e_get_platform_info(&platform);                          
+  e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols); //open all cores
 
   //Load program to cores and run
   e_load_group("e_task.srec", &dev, 0, 0, platform.rows, platform.cols, E_TRUE);
-    
+
   //Close down Epiphany device
   e_close(&dev);
   e_finalize();
-  
+
   return 0;
 }
 

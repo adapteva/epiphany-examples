@@ -23,7 +23,7 @@ public class EpiphanyMonitor2 extends JFrame{
     public static Rectangle2D[] emeshRect = new Rectangle2D[16];
     public static Color[] cs = new Color[32];
 
-    public EpiphanyMonitor2(int colors) 
+    public EpiphanyMonitor2(int colors)
     {
         for (int i = 0; i < colors; i++)
         {
@@ -34,7 +34,7 @@ public class EpiphanyMonitor2 extends JFrame{
         }
     }
 
-    public static void main(String[] args) 
+    public static void main(String[] args)
     {
         String ecorePathname = "/home/linaro/ecore.status";
         String emeshPathname = "/home/linaro/emesh.status";
@@ -52,7 +52,7 @@ public class EpiphanyMonitor2 extends JFrame{
         scale map = new scale();
         ecoreFrame.add(map);
         ecoreFrame.setVisible(true);
-        
+
         ecoreFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         map = null;
 
@@ -67,7 +67,7 @@ public class EpiphanyMonitor2 extends JFrame{
             try {
                 Thread.sleep(refreshRate);
             } catch (InterruptedException e) {
-                
+
             }
         }
     }

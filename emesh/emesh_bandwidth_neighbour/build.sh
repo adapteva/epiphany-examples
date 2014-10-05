@@ -31,7 +31,7 @@ ${CROSS_PREFIX}gcc src/mesh_bandwidth.c -o bin/mesh_bandwidth.elf ${EINCS} ${ELI
 
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_mesh_bandwidth_near.c -o bin/e_mesh_bandwidth_near.elf -le-lib 
+e-gcc -O3 -T ${ELDF} src/e_mesh_bandwidth_near.c -o bin/e_mesh_bandwidth_near.elf -le-lib
 
 
 # Convert ebinary to SREC file

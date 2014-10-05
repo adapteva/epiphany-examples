@@ -29,8 +29,8 @@ _sfloop:
 	mov	  r1,  _B		;B[N] defined in emain.c
 	movt	r1,  _B
 	mov	  r44, 0x0		;sum = 0
-	
-loop_start:	
+
+loop_start:
 	ldr   r46, [r0], +0x1
 	ldr   r48, [r1], +0x1
 	ldr   r47, [r0], +0x1
@@ -44,7 +44,7 @@ loop_start:
 
 	mov 	r0,   r44		;save the result into r0
 
- 
+
 	rts; return
 
 

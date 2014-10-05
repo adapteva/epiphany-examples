@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 	sz = sizeof(Mailbox.A);
 	printf( "Writing A[%uB] to address %08x...\n", sz, addr);
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.A, sz);
-	
+
 	addr = offsetof(shared_buf_t, B[0]);
 	sz = sizeof(Mailbox.B);
 	printf( "Writing B[%uB] to address %08x...\n", sz, addr);
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
 	matprt(Bepi, _Smtx);
 #endif
 
-	
+
 
 
 	// Close connection to device
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
 int matmul_go(e_mem_t *pDRAM)
 {
 	unsigned int addr;
-	
+
 	// Wait until cores finished previous calculation
 	if (ar.verbose > 0) printf( "Waiting for Epiphany to be ready...\n");
 	addr = offsetof(shared_buf_t, core.go);

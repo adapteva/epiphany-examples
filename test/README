@@ -28,7 +28,7 @@ LEVEL1: (one core at a time)
  *dma test to other cores (x,y)
 ---------------------------------------------------------------
 LEVEL2:
- *dump-regs, range 
+ *dump-regs, range
  *dump-mem, range
  *fill-mem,range
  *matmul
@@ -38,6 +38,5 @@ LEVEL2:
 ---------------------------------------------------------------
 
 
- 
-  
- 
+
+

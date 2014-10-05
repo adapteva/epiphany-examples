@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 
 	// Open the first and second cores for master and slave programs, resp.
 	e_open(&dev, 0, 0, 1, 2);
-	
+
 	// Allocate the ext. mem. mailbox
 	e_alloc(&emem, _BufOffset, sizeof(M));
 
@@ -62,13 +62,13 @@ int main(int argc, char *argv[])
 
 	// Print mbox status.
 	print_mbox(&dev, &emem, "1. Clearing mbox:");
-	
+
 	// start the master program
 	e_start(&dev, 0, 0);
-	
+
 	usleep(500e3);
 	print_mbox(&dev, &emem, "2. Master started:");
-	
+
 	usleep(1e6);
 	print_mbox(&dev, &emem, "3. Slave started:");
 

@@ -21,7 +21,7 @@
 
 // This is the device side of the Hardware Barrier example project.
 // The host may load this program to any eCore. When launched, the
-// core runs varies assembly command. A success/error message is sent 
+// core runs varies assembly command. A success/error message is sent
 // to the host according to the result.
 //
 // Aug-2013, XM.
@@ -71,7 +71,7 @@ void test_testset();
 
 unsigned fault;
 
-int main(void) 
+int main(void)
 {
 	//initialize
 	sprintf(outbuf, "\t");
@@ -81,7 +81,7 @@ int main(void)
 	test_add();
 	test_and();
 	test_asr();
-	test_bitr(); 
+	test_bitr();
 	test_eor();
 	test_fabs();
 	test_fadd();
@@ -116,11 +116,11 @@ int main(void)
 	return EXIT_SUCCESS;
 }
 
-void test_add() 
+void test_add()
 {
 	int a, b, c;
 	a = 40; b = -60; c = 0;
-	
+
 	//add
 	__asm__ __volatile__ ("add %0, %1, %2": "=r"(c): "r"(a), "r"(b));
 	//check result
@@ -134,7 +134,7 @@ void test_add()
 	//add(displacement)
 	c = 0;
 	__asm__ __volatile__ ("add %0, %1, #-60": "=r"(c): "r"(a));
-	
+
 	//check result
 	if (c != -20)
 	{
@@ -145,13 +145,13 @@ void test_add()
 	return;
 }
 
-void test_and() 
+void test_and()
 {
 	unsigned a, b, c;
 	a = 0xe3; b = 0x79; c = 0x0;
-	
+
 	__asm__ __volatile__ ("and %0, %1, %2": "=r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != 0x61)
 	{
@@ -162,14 +162,14 @@ void test_and()
 	return;
 }
 
-void test_asr() 
+void test_asr()
 {
 	unsigned a, b, c;
 	a = 0xf0; b = 0x4; c = 0x0;
-	
+
 	//asr
 	__asm__ __volatile__ ("asr %0, %1, %2": "=r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != 0xf)
 	{
@@ -179,7 +179,7 @@ void test_asr()
 
 	//asr(displacement)
 	__asm__ __volatile__ ("asr %0, %1,#4 ": "=r"(c): "r"(a));
-	
+
 	//check result
 	if (c != 0xf)
 	{
@@ -190,7 +190,7 @@ void test_asr()
 	return;
 }
 
-void test_bitr() 
+void test_bitr()
 {
 	unsigned a, b;
 	a = 0x13; b = 0x0;
@@ -204,13 +204,13 @@ void test_bitr()
 	return;
 }
 
-void test_eor() 
+void test_eor()
 {
 	unsigned a, b, c;
 	a = 0x9999; b = 0x2222; c = 0x0;
-	
+
 	__asm__ __volatile__ ("eor %0, %1, %2": "=r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != 0xbbbb)
 	{
@@ -221,13 +221,13 @@ void test_eor()
 	return;
 }
 
-void test_fadd() 
+void test_fadd()
 {
 	float a, b, c;
 	a = 4.6f; b = 5.4f; c = 0.0f;
-	
+
 	__asm__ __volatile__ ("fadd %0, %1, %2":"=r"(c):"r"(a),"r"(b):);
-	
+
 	//check result
 	if ((c<10.0f*0.9) || (c>10.0f*1.1))
 	{
@@ -238,28 +238,28 @@ void test_fadd()
 	return;
 }
 
-void test_fabs() 
+void test_fabs()
 {
 	float a, b;
 	a = -4.6f; b = 0.0f;
-	
+
 	__asm__ __volatile__ ("fabs %0, %1":"=r"(b):"r"(a):);
-	
+
 	//check result
 	if ((b<4.6f*0.9) || (b>4.6f*1.1))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction FABS failed!\n\t");
 		fault++;
 	}
-	
+
 	return;
 }
 
-void test_fmadd() 
+void test_fmadd()
 {
 	float a, b, c;
 	a = 4.0f; b = 6.0f; c = 3.0f;
-	
+
 	__asm__ __volatile__ ("fmadd %0, %1, %2":"+r"(c):"r"(a),"r"(b):);
 
 	//check result
@@ -268,72 +268,72 @@ void test_fmadd()
 		sprintf(outbuf + strlen(outbuf),"Instruction FMADD failed!\n\t");
 		fault++;
 	}
-	
+
 	return;
 }
 
-void test_fmul() 
+void test_fmul()
 {
 	float a, b, c;
 	a = 4.6f; b = 5.4f; c = 3.0f;
-	
+
 	__asm__ __volatile__ ("fmul %0, %1, %2":"=r"(c):"r"(a),"r"(b):);
-	
+
 	//check result
 	if ((c<24.84f*0.9) || (c>24.84f*1.1))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction FMUL failed!\n\t");
 		fault++;
 	}
-	
+
 	return;
 }
 
-void test_fmsub() 
+void test_fmsub()
 {
 	float a, b, c;
 	a = 4.6f; b = 5.4f; c = 3.0f;
-	
+
 	__asm__ __volatile__ ("fmsub %0, %1, %2":"+r"(c):"r"(a),"r"(b):);
-	
+
 	//check result
 	if ((c>-21.84f*0.9) || (c<-21.84f*1.1))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction FMSUB failed!\n\t");
 		fault++;
 	}
-	
+
 	return;
 }
 
-void test_fsub() 
+void test_fsub()
 {
 	float a, b, c;
 	a = 5.4f; b =4.6f; c = 3.0f;
-	
+
 	__asm__ __volatile__ ("fsub %0, %1, %2":"=r"(c):"r"(a),"r"(b):);
-	
+
 	//check result
 	if ((c<0.8f*0.9) || (c>0.8f*1.1))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction FSUB failed!\n\t");
 		fault++;
 	}
-	
+
 	return;
 }
 
-void test_gid_and_gie() 
+void test_gid_and_gie()
 {
 	unsigned c, set1, set2, set3;
 	c = 0x0; set1 = 0x0; set2 = 0x0; set3 = 0x0;
-	
+
 	//disable for the 1st time
 	__asm__ __volatile__ ("GID");
-	
+
 	//check result
 	c = e_reg_read(E_REG_STATUS);
-	if((c&0x2) != 0x2) 
+	if((c&0x2) != 0x2)
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction GID failed(1st time)!\n\t");
 		fault++;
@@ -341,7 +341,7 @@ void test_gid_and_gie()
 
 	//enalbe
 	__asm__ __volatile__ ("GIE");
-	
+
 	//check result
 	c = e_reg_read(E_REG_STATUS);
 	if((c&0x2) != 0x0) {
@@ -351,7 +351,7 @@ void test_gid_and_gie()
 
 	//disable for the 2nd time
 	__asm__ __volatile__ ("GID");
-	
+
 	//check result
 	c = e_reg_read(E_REG_STATUS);
 	if((c&0x2) != 0x2) {
@@ -364,16 +364,16 @@ void test_gid_and_gie()
 }
 
 
-void test_iadd() 
+void test_iadd()
 {
 	int a, b, c;
 	a = -40; b = -60; c = 0;
-	
+
 	//change calculate mode
 	e_reg_write(E_REG_CONFIG, 0x80000);
-	
+
 	__asm__ __volatile__ ("iadd %0, %1, %2": "=r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != -100)
 	{
@@ -385,16 +385,16 @@ void test_iadd()
 	return;
 }
 
-void test_imadd() 
+void test_imadd()
 {
 	int a, b, c;
 	a=4; b=6; c=3;
-	
+
 	//change calculate mode
 	e_reg_write(E_REG_CONFIG, 0x80000);
-	
+
 	__asm__ __volatile__ ("imadd %0, %1, %2": "+r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != 27)
 	{
@@ -407,16 +407,16 @@ void test_imadd()
 
 }
 
-void test_imsub() 
+void test_imsub()
 {
 	int a, b, c;
 	a=4; b=6; c=3;
-	
+
 	//change calculate mode
 	e_reg_write(E_REG_CONFIG, 0x80000);
-	
+
 	__asm__ __volatile__ ("imsub %0, %1, %2": "+r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != -21)
 	{
@@ -429,16 +429,16 @@ void test_imsub()
 
 }
 
-void test_imul() 
+void test_imul()
 {
 	int a, b, c;
 	a=4; b=6; c=0;
-	
+
 	//change calculate mode
 	e_reg_write(E_REG_CONFIG, 0x80000);
-	
+
 	__asm__ __volatile__ ("imul %0, %1, %2": "=r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != 24)
 	{
@@ -451,16 +451,16 @@ void test_imul()
 
 }
 
-void test_isub() 
+void test_isub()
 {
 	int a, b, c;
 	a=4; b=6; c=0;
-	
+
 	//change calculate mode
 	e_reg_write(E_REG_CONFIG, 0x80000);
-	
+
 	__asm__ __volatile__ ("isub %0, %1, %2": "=r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != -2)
 	{
@@ -474,14 +474,14 @@ void test_isub()
 }
 
 
-void test_sub() 
+void test_sub()
 {
 	int a, b, c;
 	a = 40; b = 60; c = 0;
 
 	//sub
 	__asm__ __volatile__ ("sub %0, %1, %2": "=r"(c): "r"(a), "r"(b));
-	
+
 	//check result
 	if (c != -20)
 	{
@@ -491,7 +491,7 @@ void test_sub()
 
 	//sub(displacement)
 	__asm__ __volatile__ ("sub %0, %1, 60": "=r"(c): "r"(a));
-	
+
 	//check result
 	if (c != -20)
 	{
@@ -502,21 +502,21 @@ void test_sub()
 	return;
 }
 
-void test_jr() 
+void test_jr()
 {
 	unsigned *lab, i, jr_count, jr_sp_count;
 	jr_count = 0; jr_sp_count = 0;
 	lab = &&mylab;
-	
+
 	//jump
 	__asm__ __volatile__("jr %0"::"r"(lab):);
-	
+
 	//if jump failed, jr_sp_count will accumulated to 2
 	jr_sp_count++;
 
-mylab:	
+mylab:
 	jr_sp_count++;
-	
+
 	//check result
 	if (jr_sp_count != 1)
 	{
@@ -529,7 +529,7 @@ mylab:
 
 
 
-void test_lsl() 
+void test_lsl()
 {
 	unsigned a, b, c;
 	a = 0x12345678;
@@ -548,7 +548,7 @@ void test_lsl()
 	return;
 }
 
-void test_lsr() 
+void test_lsr()
 {
 	unsigned a, b, c;
 	a = 0x12345678;
@@ -568,7 +568,7 @@ void test_lsr()
 }
 
 
-void test_orr() 
+void test_orr()
 {
 	unsigned a, b, c;
 	a = 0x12345678;
@@ -589,12 +589,12 @@ void test_orr()
 
 
 
-void test_fix() 
+void test_fix()
 {
 	float a;
 	int b;
 	a = -134.567f;
-	
+
 	__asm__ __volatile__("fix %0, %1":"=r"(b):"r"(a):);
 
 	//check result
@@ -602,17 +602,17 @@ void test_fix()
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction FIX failed!\n\t");
 		fault++;
-	}	
+	}
 
 	return;
 }
 
-void test_float() 
+void test_float()
 {
 	float b;
 	int a;
 	a = -135;
-	
+
 	__asm__ __volatile__("float %0, %1":"=r"(b):"r"(a):);
 
 	//check result
@@ -625,7 +625,7 @@ void test_float()
 	return;
 }
 
-void test_ldr_str() 
+void test_ldr_str()
 {
 	unsigned a,b,c,d,r;
 	unsigned *p0;
@@ -636,7 +636,7 @@ void test_ldr_str()
 	p0 =(unsigned *) 0x4200;//p0 point to d
 	//test index
 	*p0 = 0x20;
-	
+
 	__asm__ __volatile__("str %0,[%1,%2]"::"r"(a),"r"(b),"r"(c):);
 	__asm__ __volatile__("ldr %0, [%1, %2]":"=r"(r):"r"(b),"r"(c):);
 
@@ -645,46 +645,46 @@ void test_ldr_str()
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction LDR & STR(index) failed!\n\t");
 		fault++;
-	}		
+	}
 
 	//test displacement
 	*p0 = 0x40;
-	
+
 	__asm__ __volatile__("str %0,[%1,#0x80]"::"r"(a),"r"(b):);
-	__asm__ __volatile__("ldr %0, [%1, #0x80]":"=r"(r):"r"(b):);	
-	
+	__asm__ __volatile__("ldr %0, [%1, #0x80]":"=r"(r):"r"(b):);
+
 	//check result
 	if (r != a)
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction LDR & STR(displacement) failed!\n\t");
 		fault++;
-	}		
+	}
 
 	//test ldr post
 	p0 = (unsigned *) 0x4000;
 	*p0 = 0x60;
-	
-	__asm__ __volatile__("ldr %0, [%1], %2":"=r"(r),"+r"(b):"r"(c):);	
+
+	__asm__ __volatile__("ldr %0, [%1], %2":"=r"(r),"+r"(b):"r"(c):);
 
 	//check result
 	if ((r!= 0x60) || (b!= 0x4200))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction LDR(post) failed!\n\t");
 		fault++;
-	}	
+	}
 
 	//test ldr post+dis
 	p0 = (unsigned *) 0x4000;
 	b = 0x4000;
 	*p0 = 0x80;
 	__asm__ __volatile__("ldr %0, [%1], #0x80":"=r"(r),"+r"(b):"r"(c):);
-	
+
 	//check result
 	if ((r!= 0x80) || (b!= 0x4200))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction LDR(post+displacement) failed!\n\t");
 		fault++;
-	}		
+	}
 
 
 	//test str post
@@ -692,13 +692,13 @@ void test_ldr_str()
 	b = 0x4000;
 	*p0 = 0x0;
 	__asm__ __volatile__("str %1,[%0],%2":"+r"(b):"r"(a),"r"(c):);
-	
+
 	//check result
 	if ((*p0 != a) & (b != 0x4200))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction STR(post) failed!\n\t");
 		fault++;
-	}		
+	}
 
 
 	//test str post_dis
@@ -706,24 +706,24 @@ void test_ldr_str()
 	b = 0x4000;
 	*p0 = 0x0;
 	__asm__ __volatile__("str %1,[%0],#0x80":"+r"(b):"r"(a):);
-	
+
 	//check result
 	if ((*p0 != a) & (b != 0x4200))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction STR(post+displacement) failed!\n\t");
 		fault++;
-	}		
+	}
 
 	return;
 }
 
-void test_mov() 
+void test_mov()
 {
 	int a, b, c;
 	a = 0x12345678;
 	b = 0x123;
 	c = 0x12345678;
-	
+
 	//test mov
 	__asm__ __volatile__("mov %0, %1":"=r"(b):"r"(a):);
 
@@ -732,7 +732,7 @@ void test_mov()
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction MOV failed!\n\t");
 		fault++;
-	}		
+	}
 
 	//test mov(immediate)
 	__asm__ __volatile__("mov %0, #0x345":"=r"(c)::);
@@ -742,7 +742,7 @@ void test_mov()
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction MOV(immediate) failed!\n\t");
 		fault++;
-	}		
+	}
 
 	//test movt
 	__asm__ __volatile__("movt %0, #0x345":"=r"(c)::);
@@ -752,19 +752,19 @@ void test_mov()
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction MOVT failed!\n\t");
 		fault++;
-	}	
+	}
 
 	return;
 
 }
 
-void test_movs() 
+void test_movs()
 {
 	unsigned a, b, c;
 
 	//test movts
 	b = 0x00080000;
-	
+
 	__asm__ __volatile__("movts ctimer0, %0"::"r"(b):);
 
 	//check result
@@ -773,30 +773,30 @@ void test_movs()
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction MOVTS failed!\n\t");
 		fault++;
-	}	
+	}
 
 	//test movfs
 	__asm__ __volatile__("movfs %0, ctimer0":"=r"(c)::);
-	
+
 	//check result
 	if (c != a)
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction MOVFS failed!\n\t");
 		fault++;
-	}	
-	
-	
+	}
+
+
 
 	return;
 
 }
 
 
-void test_testset() 
+void test_testset()
 {
 	unsigned a, b, c;
 	unsigned *pt;
-	
+
 	a = 0x1234;
 	b = (unsigned)e_get_global_address(e_group_config.core_row, e_group_config.core_col, (void *)0x6000);
 	c = 0x200;
@@ -804,28 +804,28 @@ void test_testset()
 
 	//test when target is zero
 	*pt = 0x0;
-	
+
 	__asm__ __volatile__("TESTSET %0,[%1,%2]":"+r"(a):"r"(b),"r"(c):);
-	
+
 	//check result
 	if ((a != 0x0)||(*pt != 0x1234))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction TESTSET(target is zero) failed!\n\t");
 		fault++;
-	}	
+	}
 
 	//test when target is not zero
 	a = 0x1234;
 	*pt = 0x100;
-	
+
 	__asm__ __volatile__("TESTSET %0,[%1,%2]":"=r"(a):"r"(b),"r"(c):);
-	
+
 	//check result
 	if ((a != 0x100)||(*pt != 0x100))
 	{
 		sprintf(outbuf + strlen(outbuf),"Instruction TESTSET(target is not zero) failed!\n\t");
 		fault++;
-	}	
+	}
 
 	return;
 }

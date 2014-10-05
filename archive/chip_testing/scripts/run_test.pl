@@ -38,7 +38,7 @@ my $Usage =<<EOF;
 #                         -cols  <ColsToRun>
 #                         -v     <Verbose>
 #                         [-h]   <DetailedHelp>
-# 
+#
 ##########################################################################
 EOF
 
@@ -49,7 +49,7 @@ if(defined $opt_h){
 print "$Usage";
 print "#
 # Elf      :Elf file to run
-# Row      :Row number of first core to run elf on  
+# Row      :Row number of first core to run elf on
 # Col      :Column number of first core to run elf on
 # Rows     :Total number of rows to run elf on
 # Cols     :Total number of columns to run elf on
@@ -62,9 +62,9 @@ print "#
   exit;
 }
 elsif(!defined $opt_elf || !defined $opt_row || !defined $opt_col || !defined $opt_rows || !defined $opt_cols ){
-    print "$Usage";		
+    print "$Usage";
     exit;
-}	
+}
 
 $GDB_CMD_FILE="gdb_tmp.cmd";
 
@@ -93,7 +93,7 @@ for $i ($Row..($Row+$Rows-1)){
 	print FILECMD "c\n";
 	print FILECMD "x 0x0\n";#check for pass
 	print FILECMD "detach\n";
-	print FILECMD "quit\n";	
+	print FILECMD "quit\n";
 	close(FILECMD);
 	system("e-gdb $Elf -x gdb_tmp.cmd >& $Test.$i.$j.log");
 	$Fail=system("grep -q -P \"0x0 <start>:\t0x12345678\" $Test.$i.$j.log");

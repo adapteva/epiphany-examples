@@ -20,8 +20,8 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the HOST side of the mutex example.
-// The program initializes the Epiphany system,put 
-// mutex key in core (0,0) and make other cores try to 
+// The program initializes the Epiphany system,put
+// mutex key in core (0,0) and make other cores try to
 // get the key to add 1 to the counter.
 
 
@@ -50,11 +50,11 @@ int main(int argc, char *argv[])
 
 	e_init(NULL);
 	e_reset_system();
-	e_get_platform_info(&platform);	
-	
+	e_get_platform_info(&platform);
+
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
-		
+
 	// Load the device program onto core (0,0)
 	e_load("e_mutex_test0.srec", &dev, 0, 0, E_TRUE);
 
@@ -62,19 +62,19 @@ int main(int argc, char *argv[])
 	// Load the device program onto all the other eCores
 	e_load_group("e_mutex_test.srec", &dev, 0, 1, 1, 3, E_TRUE);
 	e_load_group("e_mutex_test.srec", &dev, 1, 0, 3, 4, E_TRUE);
-	
+
 	usleep(100000);
-		
+
 	// Wait for core program execution to finish
 	// Read message from shared buffer
-				
+
 	e_read(&dev, 0, 0, 0x6200, &num, sizeof(num));
 	e_read(&dev, 0, 0, 0x6300, &counter, sizeof(counter));
 
 	// Print the message
 	fprintf(stderr, "The counter now is %d!\n", counter);
 	fprintf(stderr, "The clock cycle is %d!\n", num);
-	
+
 	if((num < clk_max)&&(num > clk_min))
 	{
 		fprintf(stderr, "PASS!\n");
@@ -82,10 +82,10 @@ int main(int argc, char *argv[])
 	{
 		fprintf(stderr, "FAIL!\n");
 	}
-		
+
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Finalize the e-platform connection.
 	e_finalize();
 

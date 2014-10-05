@@ -29,7 +29,7 @@
 int main(int argc, char *argv[]){
   int      i,j,k;
   unsigned int offset;
-  unsigned coreID,row,col; 
+  unsigned coreID,row,col;
 
   unsigned *addr;
   unsigned *dummy;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
   offset=START+(row*ROWS+col)*BUF_SIZE;
 #ifdef VERBOSE
   printf("offset=%x, id=%x, row=%d, col=%d\n",offset,coreID,row,col);
-#endif   
+#endif
   if(1){
       //Write PAT0
       for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
@@ -57,11 +57,11 @@ int main(int argc, char *argv[]){
 	(*(addr))=  PAT0;
 #ifdef VERBOSE
 	printf("WPAT0 k=%d, addr=%p, id=%x,row=%d, col=%d\n",k,addr,coreID,row,col);
-#endif 
+#endif
       }
       //Memory Ordering Sync (to get around RAW races)
       dummy = (unsigned *) (offset + BUF_SIZE-WORD_SIZE);
-      e_write_ack(dummy);  
+      e_write_ack(dummy);
       //Verify PAT0
       for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	addr=(unsigned *) (offset+k);
@@ -69,17 +69,17 @@ int main(int argc, char *argv[]){
 	if(result!= PAT0){
 	  status=0;
 #ifdef VERBOSE
-	  printf("FAIL: addr=(0x%p) result=0x%x\n",addr,result); 
+	  printf("FAIL: addr=(0x%p) result=0x%x\n",addr,result);
 #endif
 	}
-      }	
+      }
       //Write PAT1
       for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	addr=(unsigned *) (offset+k);
 	(*(addr))= PAT1;
       }
       //Memory Ordering Sync (to get around RAW races)
-      e_write_ack(dummy);  
+      e_write_ack(dummy);
       //Verify PAT0
       for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	addr=(unsigned *) (offset+k);
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
 	if(result!= PAT1){
 	  status=0;
 #ifdef VERBOSE
-	  printf("FAIL: addr=(0x%p) result=0x%x\n",addr,result); 
+	  printf("FAIL: addr=(0x%p) result=0x%x\n",addr,result);
 #endif
 	}
       }

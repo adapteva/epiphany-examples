@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
 	// Initialize the barriers
 	e_barrier_init(barriers, tgt_bars);
-	
+
 	do {
 		if (me.corenum == 0)
 		{
@@ -105,7 +105,7 @@ void init()
 	Mailbox.pCore = Mailbox.pBase + offsetof(shared_buf_t, core);
 
 	// Initialize per-core parameters - core data structure
-	
+
 	// Initialize pointers to the operand matrices ping-pong arrays
 	me.bank_A[_PING] = (void *) &(AA[_PING][0][0]);
 	me.bank_A[_PONG] = (void *) &(AA[_PONG][0][0]);
@@ -117,7 +117,7 @@ void init()
 	// cores, where the submatrices data will be swapped, and the inter-core sync signals.
 	me.tgt_A[_PING] = e_get_global_address(me.rowh, me.colh, me.bank_A[_PONG]);
 	me.tgt_A[_PONG] = e_get_global_address(me.rowh, me.colh, me.bank_A[_PING]);
-	
+
 	me.tgt_B[_PING] = e_get_global_address(me.rowv, me.colv, me.bank_B[_PONG]);
 	me.tgt_B[_PONG] = e_get_global_address(me.rowv, me.colv, me.bank_B[_PING]);
 
@@ -147,7 +147,7 @@ void init()
 		Mailbox.pCore->go    = 0;
 		Mailbox.pCore->ready = 1;
 	}
-	
+
 	return;
 }
 
@@ -217,7 +217,7 @@ void bigmatmul()
 					// Swap A banks horizontally
 					src = me.bank_A[me.pingpong];
 					dst = me.tgt_A[me.pingpong];
-					if (kc <= (_Nside - 1)) 
+					if (kc <= (_Nside - 1))
 						data_copy(&dma_desc[1], dst, src);
 
 					// Swap B banks vertically

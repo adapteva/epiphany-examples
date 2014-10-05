@@ -23,7 +23,7 @@ along with this program, see the file COPYING. If not, see
 // The program initializes the Epiphany system,
 // selects an eCore to read data from external memory.
 // In message mode, after sending the request, the core
-// will be busy until the last data arrives. 
+// will be busy until the last data arrives.
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -53,27 +53,27 @@ int main(int argc, char *argv[])
 	e_init(NULL);
 	e_reset_system();
 	e_get_platform_info(&platform);
-	
+
 	// Allocate a buffer in shared external memory
  	// for message passing from eCore to host.
 	e_alloc(&emem, _BufOffset, _BufSize);
-	
+
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
-	
-	
-	// Load the device program 
+
+
+	// Load the device program
 	e_load("e_dma_message_a.srec", &dev, mas_row, mas_col, E_TRUE);
 
 	// Wait for core program execution to finish
 	usleep(1000000);
-		
+
 	// Results from every slave core
 	row=mas_row;
 	col=mas_col;
 	coreid = (row + platform.row) * 64 + col + platform.col;
 	fprintf(stderr,"%d: Message from eCore 0x%03x (%2d,%2d) : \n",(row*platform.cols+col),coreid,row,col);
-			
+
 	// Read message
 	e_read(&dev, row, col, 0x6000, &flag1, sizeof(flag1));
 	e_read(&dev, row, col, 0x6004, &flag2, sizeof(flag2));
@@ -86,14 +86,14 @@ int main(int argc, char *argv[])
 	{
 		fprintf(stderr, "FAIL!\n");
 	}
-		
+
 	// Release the allocated buffer and finalize the
 	// e-platform connection.
 	e_free(&emem);
-	
+
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Finalize the e-platform connection.
 	e_finalize();
 

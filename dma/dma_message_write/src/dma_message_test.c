@@ -23,7 +23,7 @@ along with this program, see the file COPYING. If not, see
 // The program initializes the Epiphany system,
 // selects an eCore to be transmitter and another to be
 // the receiver and then loads and launches the device
-// program on that eCore. In message mode, after tranfer, 
+// program on that eCore. In message mode, after tranfer,
 // it will make receiver go into an interrupt. This test
 // generate the situation and output some message in the
 // interrupt.
@@ -59,11 +59,11 @@ int main(int argc, char *argv[])
 	e_init(NULL);
 	e_reset_system();
 	e_get_platform_info(&platform);
-	
+
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
-	
-	// Load the device program onto all slave cores  
+
+	// Load the device program onto all slave cores
 	for(i=0; i<platform.rows; i++)
 	{
 		for(j=0; j<platform.cols; j++)
@@ -73,23 +73,23 @@ int main(int argc, char *argv[])
 				e_load("e_dma_message_slave_test.srec", &dev, i, j, E_TRUE);
 			}
 		}
-	} 
-	usleep(100000);	
-	
+	}
+	usleep(100000);
+
 	// Send the coordinate of the transmitter to the receiver
 	e_write(&dev, mas_row, mas_col, 0x6500, &mail0, sizeof(mail0));
 	e_write(&dev, mas_row, mas_col, 0x6600, &mail1, sizeof(mail1));
 	e_load("e_dma_message_test.srec", &dev, mas_row, mas_col, E_TRUE);
-	
+
 	// Wait for core program execution to finish
 	usleep(1000000);
-		
+
 	// Results from every slave core
 	coreid = (mas_row + platform.row) * 64 + mas_col + platform.col;
 	fprintf(stderr,"Now the master core is 0x%03x (%2d,%2d)!\n",coreid, mas_row, mas_col);
-	
+
 	for (i=0; i<platform.rows; i++)
-	{	
+	{
 		for(j=0; j<platform.cols; j++)
 		{
 			if((i!=mas_row)|(j!=mas_col))
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 				col=j;
 				coreid = (row + platform.row) * 64 + col + platform.col;
 				fprintf(stderr,"%d: Message from eCore 0x%03x (%2d,%2d) : \n",(row*platform.cols+col),coreid,row,col);
-			
+
 				// Read message from slave
 				e_read(&dev, row, col, 0x6000, &flag1, sizeof(flag1));
 				e_read(&dev, row, col, 0x6100, &flag2, sizeof(flag2));
@@ -115,10 +115,10 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	
+
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Finalize the e-platform connection.
 	e_finalize();
 

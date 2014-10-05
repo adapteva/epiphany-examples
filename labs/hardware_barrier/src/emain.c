@@ -20,9 +20,9 @@
 */
 
 // This is the device side of the Hardware Barrier example project.
-// The host may load this program to any eCore. When launched, the 
-// core will do the counting. The hardware barrier is inserted in 
-// each counting to syncronize the counting. A success/error message 
+// The host may load this program to any eCore. When launched, the
+// core will do the counting. The hardware barrier is inserted in
+// each counting to syncronize the counting. A success/error message
 // is sent to the host according to the result.
 //
 // Aug-2013, XM.
@@ -46,18 +46,18 @@ int main(void) {
 	int i;
 	unsigned row, col, delay, num;
 	unsigned *ivt;
-	
+
 	e_irq_global_mask(E_FALSE);
 	e_irq_attach(E_WAND_INT, wand_isr);
 	e_irq_mask(E_WAND_INT, E_FALSE);
-	
+
 	row     = e_group_config.core_row;
 	col     = e_group_config.core_col;
 	num     = row * e_group_config.group_cols + col;
 	result  = (unsigned *) (0x8f000000 + 0x4*num);
 	delay   = 0x10000 * num + 0x10000;
 	*result = 0xdeadbeef;
-	
+
 	for(i=0; i<0x10000; i++)
 	{
 		*result = i;
@@ -71,7 +71,7 @@ int main(void) {
 		state = state & (~0x8);
 		e_reg_write(E_REG_FSTATUS, state);
 	}
-	
+
 	return EXIT_SUCCESS;
 }
 
@@ -80,7 +80,7 @@ int main(void) {
 void __attribute__((interrupt)) wand_isr(int signum)
 {
 //	e_wait(E_CTIMER_1, 0x100);
-	
+
 	return;
 }
 #endif

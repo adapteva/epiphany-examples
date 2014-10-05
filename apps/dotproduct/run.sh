@@ -10,11 +10,11 @@ EXEPATH=$(dirname "$SCRIPT")
 
 e-reset
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/main.elf 0 0 4 4 0x12345678 
+sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/bin/main.elf 0 0 4 4 0x12345678
 
 #> dotproduct.log
 
-if [ $? -ne 0 ] 
+if [ $? -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else

@@ -31,11 +31,11 @@ int main(int argc, char *argv[])
   e_platform_t platform;
   e_epiphany_t dev;
   e_mem_t emem;
-  
+
   unsigned int row, col;
   unsigned int sync_data,poll_data;
   int i,j;
- 
+
   // initialize system, read platform params from
   // default HDF. Then, reset the platform and
   // get the actual system parameters.
@@ -44,11 +44,11 @@ int main(int argc, char *argv[])
   e_init(NULL);
   e_reset_system();
   e_get_platform_info(&platform);
-  
+
   // Allocate a buffer in shared external memory
   // for message passing from eCore to host.
-  e_alloc(&emem, 0x0, 128);	
-  
+  e_alloc(&emem, 0x0, 128);
+
   // Open a workgroup
   e_open(&dev, 0, 0, platform.rows, platform.cols);
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
   sync_data=sync_data ^ 0xFFFFFF;
   //Write inverted data back to location
   e_write(&dev, 0, 0, 0x6000, &sync_data, sizeof(sync_data));
-  
+
   while(1){
     e_read(&dev, 0, 0, 0x6000, &poll_data, sizeof(sync_data));
     if(sync_data==poll_data){
@@ -66,15 +66,15 @@ int main(int argc, char *argv[])
       break;
     }
   }
-  
+
   // Close the workgroup
   e_close(&dev);
-  
+
   // Release the allocated buffer and finalize the
   e_free(&emem);
   e_finalize();
-  
+
   return EXIT_SUCCESS;
 }
 
- 
+

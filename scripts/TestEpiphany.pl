@@ -87,9 +87,9 @@ while(<FILE>){
 if(-e $opt_d){
     system("rm -r $opt_d");
 }
-system("mkdir -p $opt_d");    
+system("mkdir -p $opt_d");
 chdir("$opt_d");
-foreach  $Test (sort {$a<=>$b} keys %TestHash){    
+foreach  $Test (sort {$a<=>$b} keys %TestHash){
     print "Running $TestHash{$Test}{\"name\"} ";
 
     #Run Once Only Test
@@ -144,7 +144,7 @@ foreach  $Test (sort {$a<=>$b} keys %TestHash){
 			print "PASSED\n";
 		}
     }
-}    
+}
 chdir("../");
 ##############################################################
 #Checking Results

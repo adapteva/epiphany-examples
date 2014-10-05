@@ -49,12 +49,12 @@ int main(int argc, char *argv[]){
   char result,data_in,expected;
   char high_pattern = 0xff;
   char low_pattern  = 0x00;
-  
+
 
   if (argc < 5){
     usage();
     exit(1);
-  }  
+  }
   else{
     row0    = atoi(argv[1]);
     col0    = atoi(argv[2]);
@@ -68,11 +68,11 @@ int main(int argc, char *argv[]){
   e_open(&dev, 0, 0, platform.rows, platform.cols);
   //e_set_loader_verbosity(L_D3);
 
-  printf("-------------------------------------------------------\n");  
+  printf("-------------------------------------------------------\n");
 
   for (i=row0; i<(row0+rows); i++) {
-    for (j=col0; j<(col0+cols); j++) {   
-      printf("Running host march-C read/write test for core (%d,%d)\n", i,j);      
+    for (j=col0; j<(col0+cols); j++) {
+      printf("Running host march-C read/write test for core (%d,%d)\n", i,j);
       //M0: UP{w0}
       for(k=0;k<(RAM_SIZE);k=k+WORD_SIZE){
 	addr= k;
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]){
 	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M1: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M1: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -96,11 +96,11 @@ int main(int argc, char *argv[]){
 	data_in=high_pattern;
 	e_write(&dev, i, j, addr, &data_in, sizeof(data_in));
 	//R1
-	expected=high_pattern;	  
-	e_read(&dev, i, j, addr, &result, sizeof(result));	
+	expected=high_pattern;
+	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M1: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M1: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -109,10 +109,10 @@ int main(int argc, char *argv[]){
 	e_write(&dev, i, j, addr, &data_in, sizeof(data_in));
 	//R0
 	expected=low_pattern;
-	e_read(&dev, i, j, addr, &result, sizeof(result));	
+	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M1: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M1: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -120,12 +120,12 @@ int main(int argc, char *argv[]){
 	data_in=high_pattern;
 	e_write(&dev, i, j, addr, &data_in, sizeof(data_in));
       }
-      //M2: UP{r1,w0,w1}		
+      //M2: UP{r1,w0,w1}
       for(k=0;k<(RAM_SIZE);k=k+WORD_SIZE){
 	addr=(k);
 	//R1
 	expected=high_pattern;
-	e_read(&dev, i, j, addr, &result, sizeof(result));	
+	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
 	    printf("FAIL-PAT-M2: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
@@ -144,10 +144,10 @@ int main(int argc, char *argv[]){
 	addr=(RAM_SIZE-k-WORD_SIZE);
 	//R1
 	expected=high_pattern;
-	e_read(&dev, i, j, addr, &result, sizeof(result));	
+	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M3: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 	
+	    printf("FAIL-PAT-M3: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -166,10 +166,10 @@ int main(int argc, char *argv[]){
 	addr=(RAM_SIZE-k-WORD_SIZE);
 	//R0
 	expected=low_pattern;
-	e_read(&dev, i, j, addr, &result, sizeof(result));	
+	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M4: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M4: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -188,7 +188,7 @@ int main(int argc, char *argv[]){
 	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M5: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M5: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -200,7 +200,7 @@ int main(int argc, char *argv[]){
 	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M5: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M5: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -213,7 +213,7 @@ int main(int argc, char *argv[]){
 	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M6: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M6: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -225,7 +225,7 @@ int main(int argc, char *argv[]){
 	e_read(&dev, i, j, addr, &result, sizeof(result));
 	if(result!=expected){
 	  if(verbose){
-	    printf("FAIL-PAT-M6: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result); 
+	    printf("FAIL-PAT-M6: addr=0x%x expected=0x%x result=0x%x\n",addr,expected,result);
 	  }
 	  status=0;
 	}
@@ -242,7 +242,7 @@ int main(int argc, char *argv[]){
   }
   else{
     return EXIT_FAILURE;
-  }   
+  }
 }
 //////////////////////////////////////////////////////////////////////////
 void usage()
@@ -273,7 +273,7 @@ int my_reset_system()
   e_get_platform_info(&platform);
   ee_write_esys(E_SYS_RESET, 0);//reset
   usleep(200000);
-  
+
   //Open all cores
   e_open(&dev, 0, 0, platform.rows, platform.cols);
 
@@ -284,21 +284,21 @@ int my_reset_system()
 
       ee_write_esys(E_SYS_CONFIG, 0x10000000);
       data = 0x000000FFF;
-      e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
+      e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
       data = 0x000000FFF;
-      e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
+      e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
       ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
-  
+
   //Shut down west link (WEST==2,0)
   if(1){
     row=2;
     col=0;
-    ee_write_esys(E_SYS_CONFIG, 0xd0000000);    
+    ee_write_esys(E_SYS_CONFIG, 0xd0000000);
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
 
@@ -313,11 +313,11 @@ int my_reset_system()
       col=2;
     }
 
-    ee_write_esys(E_SYS_CONFIG, 0x90000000);    
+    ee_write_esys(E_SYS_CONFIG, 0x90000000);
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
 
@@ -337,15 +337,15 @@ int my_reset_system()
     data = 0x1;
     e_write(&dev, row, col, 0xf0300, &data, sizeof(int));
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
-  }  
+  }
 
  //Reset chip one more time (west side))
   if(0){
     row=2;
     col=0;
-    ee_write_esys(E_SYS_CONFIG, 0xd0000000);    
+    ee_write_esys(E_SYS_CONFIG, 0xd0000000);
     data = 0x000000001;
-    e_write(&dev, row, col, 0xf0324, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0324, &data, sizeof(int));
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
 
@@ -361,9 +361,9 @@ int my_reset_system()
 	e_write(&dev, i, j, 0xf0700, &data, sizeof(data));
       }
     }
-  }  
+  }
 
- 
+
   //Close down device
   e_close(&dev);
   return E_OK;

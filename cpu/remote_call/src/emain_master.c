@@ -20,8 +20,8 @@
 */
 
 // This is the device side of the Hardware Barrier example project.
-// The host may load this program to any eCore. When launched, the 
-// core remote call all other 15 cores. A success/error message is 
+// The host may load this program to any eCore. When launched, the
+// core remote call all other 15 cores. A success/error message is
 // sent to the host according to the result.
 //
 // Aug-2013, XM.
@@ -42,17 +42,17 @@
 #define finish                 (0x00000001)
 
 
-int main(void) 
+int main(void)
 {
 	unsigned i, j, k, row, col, num;
 	unsigned *result, *mailbox;
 	unsigned *signal;
-	
+
 	//mask interrupts
 	//e_irq_global_mask(E_FALSE);
 
 	//e_reg_write(E_REG_IMASK,0x0);
-	
+
 	row = e_group_config.core_row;
 	col = e_group_config.core_col;
 
@@ -73,13 +73,13 @@ int main(void)
 				mailbox[(i*4+j)] = host;
 			}
 			else
-			{	
+			{
 				result = e_get_global_address(i,j,(void *)resultbase);
 				signal = e_get_global_address(i,j,(void *)signalbase);
 
 				//insert interrupt
 				e_wait(E_CTIMER_0, delay);
-				
+
 				e_irq_set(i,j,E_SW_EXCEPTION);
 				e_irq_set(i,j,E_MEM_FAULT);
 				e_irq_set(i,j,E_TIMER0_INT);
@@ -104,7 +104,7 @@ int main(void)
 
 
 	while(1);
-	
+
 	return EXIT_SUCCESS;
 }
 

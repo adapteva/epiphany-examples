@@ -1,6 +1,6 @@
 /*
   e-lowpower-mode.c
-  
+
   Copyright (C) 2013 Adapteva, Inc.
   Contributed by Andreas Olofsson <support@adapteva.com>
 
@@ -8,12 +8,12 @@
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with this program, see the file COPYING. If not, see
   <http://www.gnu.org/licenses/>.
@@ -33,14 +33,14 @@ int main(void)
 
   /////////////////////////////////////////////////
   //North-Link
-  e_reg_write(E_REG_CONFIG, (unsigned) 0x00001000); 
+  e_reg_write(E_REG_CONFIG, (unsigned) 0x00001000);
 
   addr=(unsigned *) (0x80AF0308);
   (*(addr)) = 0x00000FFF;
   addr=(unsigned *) (0x80AF0304);
   (*(addr)) = 0x00000FFF;
 
-  e_reg_write(E_REG_CONFIG, (unsigned) 0x00400000); 
+  e_reg_write(E_REG_CONFIG, (unsigned) 0x00400000);
 
   /////////////////////////////////////////////////
   //South-Link
@@ -52,7 +52,7 @@ int main(void)
   (*(addr)) = 0x00000FFF;
 
   e_reg_write(E_REG_CONFIG, (unsigned) 0x00400000);
-  
+
   /////////////////////////////////////////////////
   //West-Link
   e_reg_write(E_REG_CONFIG, (unsigned) 0x0000d000);

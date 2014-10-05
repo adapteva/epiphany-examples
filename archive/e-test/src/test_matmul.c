@@ -34,7 +34,7 @@ static unsigned int mirand =1;
 
 int main(int argc, char *argv[]){
   int      i,j,k;
-  float    sum  = 0.f;  
+  float    sum  = 0.f;
   int      status = 1;
   unsigned coreID;
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
       sum+=C(i,j);
     }
   }
-  
+
   //Compare to expected result
   // printf("sum=%f\n",sum);
 

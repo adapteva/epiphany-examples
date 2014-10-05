@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
   unsigned col = 0;
 
   unsigned int offset;
-  
+
   unsigned *addr;
   unsigned *dummy;
 
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
 
   //Test Init
   e_test_init(&row, &col);
-  
+
   //Communicate with all cores on chip and DRAM
   for(i=0; i<(CORES+1); i++){
     offset = buffers[i] + 0x2000;
@@ -85,22 +85,22 @@ int main(int argc, char *argv[]){
       /*PAT0*/
       (*(addr))=PAT0;
       //call below b/c architecture does not guarantee RAW for external access
-      e_write_ack(dummy);                         
+      e_write_ack(dummy);
       result=(*(addr));
       if(result!=PAT0){
 	fail=1;
 	if(verbose>0){
-	  printf("FAIL-PAT0: core=(%d,%d) addr=(0x%x) result=0x%x\n",row,col,k,result); 
+	  printf("FAIL-PAT0: core=(%d,%d) addr=(0x%x) result=0x%x\n",row,col,k,result);
 	}
       }
       /*PAT1*/
       (*(addr))=PAT1;
-      e_write_ack(dummy); 
+      e_write_ack(dummy);
       result=(*(addr));
       if(result!=PAT1){
 	fail=1;
-	if(verbose>0){	    
-	  printf("FAIL-PAT1: core=(%d,%d) addr=(0x%x) result=0x%x\n",row,col,k,result); 
+	if(verbose>0){
+	  printf("FAIL-PAT1: core=(%d,%d) addr=(0x%x) result=0x%x\n",row,col,k,result);
 	}
       }
     }

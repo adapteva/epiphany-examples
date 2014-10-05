@@ -33,6 +33,6 @@ int main(int argc, char *argv[]){
   //Open
   e_init(NULL);
   e_reset_system();
-  e_finalize();  
+  e_finalize();
   return 0;
 }

@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
   if (argc < 5){
     usage();
     exit(1);
-  }  
+  }
   else{
     row0    = atoi(argv[1]);
     col0    = atoi(argv[2]);
@@ -65,13 +65,13 @@ int main(int argc, char *argv[]){
   my_reset_system();
   e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols);
-  
 
-  printf("-------------------------------------------------------\n");  
+
+  printf("-------------------------------------------------------\n");
 
   for (i=row0; i<(row0+rows); i++) {
-    for (j=col0; j<(col0+cols); j++) {   
-      printf("Running host register file test for core (%d,%d)\n", i,j);      
+    for (j=col0; j<(col0+cols); j++) {
+      printf("Running host register file test for core (%d,%d)\n", i,j);
       for(k=0;k<REGS;k++){
 	addr=0xF0000+k;
 	//high pattern
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]){
   }
   else{
     return EXIT_FAILURE;
-  }   
+  }
 }
 //////////////////////////////////////////////////////////////////////////
 void usage()
@@ -130,7 +130,7 @@ int my_reset_system()
   e_get_platform_info(&platform);
   ee_write_esys(E_SYS_RESET, 0);//reset
   usleep(200000);
-  
+
   //Open all cores
   e_open(&dev, 0, 0, platform.rows, platform.cols);
 
@@ -141,21 +141,21 @@ int my_reset_system()
 
       ee_write_esys(E_SYS_CONFIG, 0x10000000);
       data = 0x000000FFF;
-      e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
+      e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
       data = 0x000000FFF;
-      e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
+      e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
       ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
-  
+
   //Shut down west link (WEST==2,0)
   if(1){
     row=2;
     col=0;
-    ee_write_esys(E_SYS_CONFIG, 0xd0000000);    
+    ee_write_esys(E_SYS_CONFIG, 0xd0000000);
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
 
@@ -170,11 +170,11 @@ int my_reset_system()
       col=2;
     }
 
-    ee_write_esys(E_SYS_CONFIG, 0x90000000);    
+    ee_write_esys(E_SYS_CONFIG, 0x90000000);
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0304, &data, sizeof(int));
     data = 0x000000FFF;
-    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0308, &data, sizeof(int));
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
 
@@ -194,15 +194,15 @@ int my_reset_system()
     data = 0x1;
     e_write(&dev, row, col, 0xf0300, &data, sizeof(int));
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
-  }  
+  }
 
  //Reset chip one more time (west side))
   if(0){
     row=2;
     col=0;
-    ee_write_esys(E_SYS_CONFIG, 0xd0000000);    
+    ee_write_esys(E_SYS_CONFIG, 0xd0000000);
     data = 0x000000001;
-    e_write(&dev, row, col, 0xf0324, &data, sizeof(int));      
+    e_write(&dev, row, col, 0xf0324, &data, sizeof(int));
     ee_write_esys(E_SYS_CONFIG, 0x00000000);
   }
 
@@ -218,9 +218,9 @@ int my_reset_system()
 	e_write(&dev, i, j, 0xf0700, &data, sizeof(data));
       }
     }
-  }  
+  }
 
- 
+
   //Close down device
   e_close(&dev);
   return E_OK;

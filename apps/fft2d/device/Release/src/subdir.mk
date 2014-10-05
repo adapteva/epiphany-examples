@@ -2,24 +2,24 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-# Add inputs and outputs from these tool invocations to the build variables 
+# Add inputs and outputs from these tool invocations to the build variables
 C_SRCS += \
 ../src/dmalib.c \
 ../src/fft2d_main.c \
 ../src/fft2dlib.c \
-../src/static_buffers.c 
+../src/static_buffers.c
 
 OBJS += \
 ./src/dmalib.o \
 ./src/fft2d_main.o \
 ./src/fft2dlib.o \
-./src/static_buffers.o 
+./src/static_buffers.o
 
 C_DEPS += \
 ./src/dmalib.d \
 ./src/fft2d_main.d \
 ./src/fft2dlib.d \
-./src/static_buffers.d 
+./src/static_buffers.d
 
 
 # Each subdirectory must supply rules for building sources it contributes

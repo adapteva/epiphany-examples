@@ -19,7 +19,7 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the DEVICE side. By setting the specific bit of ILAT register
-// to 1 will make the core go into the interrupt. By attaching interrupt 
+// to 1 will make the core go into the interrupt. By attaching interrupt
 // handler, make the core to print out "I am interrupt!"
 
 #include <stdio.h>
@@ -46,17 +46,17 @@ int main(void)
 	strcpy (event[6], "E_DMA1_INT");
 	strcpy (event[7], "E_USER_INT");
 	po = 0x00006000;
-		
+
 	// Who am I? Query the CoreID from hardware.
 	coreid = e_get_coreid();
 
-	// Test E_SW_EXCEPTION interrupt	
+	// Test E_SW_EXCEPTION interrupt
 		// Attach the ISR with this interrupt
 		e_irq_attach(name_irq[0], timer_isr);
 /*
 		// Set the ivt entry address
 		ivt  = 0x4;
-	
+
 		// Set the relative branch offset.
 		*ivt = (((unsigned) timer_isr - (unsigned) ivt) >> 1) << 8;
 
@@ -64,13 +64,13 @@ int main(void)
 		*ivt = *ivt | B_OPCODE;
 */
 		// print out the name of the interrupt
-		sprintf(outbuf, "Interrupt %s: \n", event[0]);		
-	
+		sprintf(outbuf, "Interrupt %s: \n", event[0]);
+
 		// Clear the IMASK
 		e_irq_mask(name_irq[0], E_FALSE);
-	
+
 		// Enable the global interrupt
-		e_irq_global_mask(E_FALSE);	
+		e_irq_global_mask(E_FALSE);
 
 		// Set the ILAT
 		//e_reg_write(E_REG_ILATST, (unsigned)0x00000002);
@@ -78,22 +78,22 @@ int main(void)
 
 		// Clear the ILAT and the Set the IMASK
 		//e_reg_write(E_REG_ILATCL, (unsigned)0x00000002);
-		e_irq_clear(po[0], po[1], name_irq[0]);		
+		e_irq_clear(po[0], po[1], name_irq[0]);
 		e_irq_mask(name_irq[0], E_TRUE);
 		e_irq_global_mask(E_TRUE);
 
-	// Test E_MEM_FAULT interrupt	
+	// Test E_MEM_FAULT interrupt
 		// Attach the ISR with this interrupt
 		e_irq_attach(name_irq[1], timer_isr);
 
 		// print out the name of the interrupt
-		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[1]);		
-	
+		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[1]);
+
 		// Clear the IMASK
 		e_irq_mask(name_irq[1], E_FALSE);
-	
+
 		// Enable the global interrupt
-		e_irq_global_mask(E_FALSE);	
+		e_irq_global_mask(E_FALSE);
 
 		// Set the ILAT
 		e_reg_write(E_REG_ILATST, (unsigned)0x00000004);
@@ -103,18 +103,18 @@ int main(void)
 		e_irq_mask(name_irq[1], E_TRUE);
 		e_irq_global_mask(E_TRUE);
 
-	// Test E_TIMER0_INT interrupt	
+	// Test E_TIMER0_INT interrupt
 		// Attach the ISR with this interrupt
 		e_irq_attach(name_irq[2], timer_isr);
 
 		// print out the name of the interrupt
-		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[2]);		
-	
+		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[2]);
+
 		// Clear the IMASK
 		e_irq_mask(name_irq[2], E_FALSE);
-	
+
 		// Enable the global interrupt
-		e_irq_global_mask(E_FALSE);	
+		e_irq_global_mask(E_FALSE);
 
 		// Set the ILAT
 		e_reg_write(E_REG_ILATST, (unsigned)0x00000008);
@@ -124,18 +124,18 @@ int main(void)
 		e_irq_mask(name_irq[2], E_TRUE);
 		e_irq_global_mask(E_TRUE);
 
-	// Test E_TIMER1_INT interrupt	
+	// Test E_TIMER1_INT interrupt
 		// Attach the ISR with this interrupt
 		e_irq_attach(name_irq[3], timer_isr);
 
 		// print out the name of the interrupt
-		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[3]);		
-	
+		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[3]);
+
 		// Clear the IMASK
 		e_irq_mask(name_irq[3], E_FALSE);
-	
+
 		// Enable the global interrupt
-		e_irq_global_mask(E_FALSE);	
+		e_irq_global_mask(E_FALSE);
 
 		// Set the ILAT
 		e_reg_write(E_REG_ILATST, (unsigned)0x00000010);
@@ -145,18 +145,18 @@ int main(void)
 		e_irq_mask(name_irq[3], E_TRUE);
 		e_irq_global_mask(E_TRUE);
 
-	// Test E_MESSAGE_INT interrupt	
+	// Test E_MESSAGE_INT interrupt
 		// Attach the ISR with this interrupt
 		e_irq_attach(name_irq[4], timer_isr);
 
 		// print out the name of the interrupt
-		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[4]);		
-	
+		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[4]);
+
 		// Clear the IMASK
 		e_irq_mask(name_irq[4], E_FALSE);
-	
+
 		// Enable the global interrupt
-		e_irq_global_mask(E_FALSE);	
+		e_irq_global_mask(E_FALSE);
 
 		// Set the ILAT
 		e_reg_write(E_REG_ILATST, (unsigned)0x00000020);
@@ -166,18 +166,18 @@ int main(void)
 		e_irq_mask(name_irq[4], E_TRUE);
 		e_irq_global_mask(E_TRUE);
 
-	// Test E_DMA0_INT interrupt	
+	// Test E_DMA0_INT interrupt
 		// Attach the ISR with this interrupt
 		e_irq_attach(name_irq[5], timer_isr);
-	
+
 		// print out the name of the interrupt
-		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[5]);		
-	
+		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[5]);
+
 		// Clear the IMASK
 		e_irq_mask(name_irq[5], E_FALSE);
-	
+
 		// Enable the global interrupt
-		e_irq_global_mask(E_FALSE);	
+		e_irq_global_mask(E_FALSE);
 
 		// Set the ILAT
 		e_reg_write(E_REG_ILATST, (unsigned)0x00000040);
@@ -187,18 +187,18 @@ int main(void)
 		e_irq_mask(name_irq[5], E_TRUE);
 		e_irq_global_mask(E_TRUE);
 
-	// Test E_DMA1_INT interrupt	
+	// Test E_DMA1_INT interrupt
 		// Attach the ISR with this interrupt
 		e_irq_attach(name_irq[6], timer_isr);
-	
+
 		// print out the name of the interrupt
-		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[6]);		
-	
+		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[6]);
+
 		// Clear the IMASK
 		e_irq_mask(name_irq[6], E_FALSE);
-	
+
 		// Enable the global interrupt
-		e_irq_global_mask(E_FALSE);	
+		e_irq_global_mask(E_FALSE);
 
 		// Set the ILAT
 		e_reg_write(E_REG_ILATST, (unsigned)0x00000080);
@@ -208,18 +208,18 @@ int main(void)
 		e_irq_mask(name_irq[6], E_TRUE);
 		e_irq_global_mask(E_TRUE);
 
-	// Test E_USER_INT interrupt	
+	// Test E_USER_INT interrupt
 		// Attach the ISR with this interrupt
 		e_irq_attach(name_irq[7], timer_isr);
-	
+
 		// print out the name of the interrupt
-		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[7]);		
-	
+		sprintf(outbuf+strlen(outbuf), "Interrupt %s: \n", event[7]);
+
 		// Clear the IMASK
 		e_irq_mask(name_irq[7], E_FALSE);
-	
+
 		// Enable the global interrupt
-		e_irq_global_mask(E_FALSE);	
+		e_irq_global_mask(E_FALSE);
 
 		// Set the ILAT
 		e_reg_write(E_REG_ILATST, (unsigned)0x00000200);
@@ -237,4 +237,4 @@ void __attribute__((interrupt)) timer_isr(void)
 	sprintf(outbuf + strlen(outbuf),"I am interrupt !\n");
 
 	return;
-}	
+}

@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
   //----------------------------
   e_platform_t platform;
   e_epiphany_t dev;
-  e_loader_diag_t e_verbose;
+  e_hal_diag_t e_verbose;
   unsigned int i,j,k,addr;
   unsigned int data;
   int status=1;//pass

@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
   e_epiphany_t dev;
   int status=1;//pass
   char elfFile[4096];
-  //e_set_loader_verbosity(L_D3);
+  //e_set_host_verbosity(H_D3);
 
   //Gets ELF file name from command line
   strcpy(elfFile, argv[1]);

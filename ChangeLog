@@ -1,3 +1,27 @@
+2014-10-14  Ola Jeppsson  <ola@adapteva.com>
+	* apps/e-dump-regs/src/e-dump-regs.c:
+	* apps/eprime/build.sh:
+	* apps/fft2d/build.sh:
+	* apps/fft2d/host/src/fft2d_host.c:
+	* apps/matmul-16/host/Debug/objects.mk:
+	* apps/matmul-16/host/Release/objects.mk:
+	* apps/matmul-64/host/Debug/objects.mk:
+	* apps/matmul-64/host/Release/objects.mk:
+	* archive/chip_testing/e_test/src/e_test.c:
+	* archive/chip_testing/makefile:
+	* archive/e-test/src/e-test.c:
+	* cpu/ctimer/build.sh:
+	* cpu/interrupts/src/interrupt_test.c:
+	* cpu/nested_interrupts/src/interrupt_test.c:
+	* dma/dma_chain/src/dma_chain_test.c:
+	* test/e-main/bin/e_task.dump:
+	* test/e-main/src/e-main.c:
+	* test/e-mem-test/src/e-mem-test.c:
+	* test/e-regfile-test/src/e-regfile-test.c:
+	* test/e-standby-test/src/e-standby-test.c:
+	* test/e-test/src/e-test.c:
+	Minor build fixes against ESDK 2014.08rc
+
 2014-08-07  Ben Chaco  <bchaco@x3-c.com>
 
 	* apps/clear_shmtable/src/clear_shmtable.c:

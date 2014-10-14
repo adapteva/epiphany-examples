@@ -48,7 +48,7 @@ void e_test_init(unsigned *row, unsigned *col){
   unsigned coreID;
   int *pass = (int*) 0x0;
   *pass = 0xDEADBEEF;//initialize as fail
-  coreID=e_sysreg_read(E_COREID);
+  coreID=e_reg_read(E_REG_COREID);
   *row = (coreID >> 6) & 0x3f;
   *col = coreID & 0x3f;
 #endif

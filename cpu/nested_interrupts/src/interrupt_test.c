@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	// default HDF. Then, reset the platform and
 	// get the actual system parameters.
 	//e_set_host_verbosity(H_D2);
-	//e_set_loader_verbosity(L_D1);
+	//e_set_host_verbosity(H_D1);
 	e_init(NULL);
 	e_reset_system();
 	e_get_platform_info(&platform);

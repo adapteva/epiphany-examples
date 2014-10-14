@@ -59,8 +59,10 @@
 #include <IL/ilut.h>
 #endif
 
-typedef unsigned int e_coreid_t;
+//typedef unsigned int e_coreid_t;
 #include <e-hal.h>
+#include <e-loader.h>
+
 #include "fft2dlib.h"
 #include "fft2d.h"
 #include "dram_buffers.h"
@@ -70,13 +72,13 @@ typedef unsigned int e_coreid_t;
 
 typedef struct {
 	int  run_target;
-	e_loader_diag_t verbose;
+	e_hal_diag_t verbose;
 	char srecFile[4096];
 	char ifname[255];
 	char ofname[255];
 } args_t;
 
-args_t ar = {TRUE, L_D0, ""};
+args_t ar = {TRUE, H_D0, ""};
 void get_args(int argc, char *argv[]);
 
 
@@ -145,7 +147,7 @@ int main(int argc, char *argv[])
 
 	// Connect to device for communicating with the Epiphany system
 	// Prepare device
-	e_set_loader_verbosity(ar.verbose);
+	e_set_host_verbosity(ar.verbose);
 	e_init(NULL);
 	e_reset_system();
 	e_get_platform_info(&platform);
@@ -501,16 +503,16 @@ void get_args(int argc, char *argv[])
 			ar.run_target = FALSE;
 
 		if (!strcmp(argv[n], "-verbose0"))
-			ar.verbose = L_D0;
+			ar.verbose = H_D0;
 
 		if (!strcmp(argv[n], "-verbose1"))
-			ar.verbose = L_D1;
+			ar.verbose = H_D1;
 
 		if (!strcmp(argv[n], "-verbose2"))
-			ar.verbose = L_D2;
+			ar.verbose = H_D2;
 
 		if (!strcmp(argv[n], "-verbose3"))
-			ar.verbose = L_D3;
+			ar.verbose = H_D3;
 
 		if (!strcmp(argv[n], "-h"))
 			usage(0);

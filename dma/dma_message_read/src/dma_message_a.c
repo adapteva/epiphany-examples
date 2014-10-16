@@ -29,8 +29,9 @@ along with this program, see the file COPYING. If not, see
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <errno.h>
 #include <e-hal.h>
+
 #define mas_row (2)
 #define mas_col (2)
 #define _BufSize (512)
@@ -53,10 +54,14 @@ int main(int argc, char *argv[])
 	e_init(NULL);
 	e_reset_system();
 	e_get_platform_info(&platform);
-	
+
 	// Allocate a buffer in shared external memory
  	// for message passing from eCore to host.
-	e_alloc(&emem, _BufOffset, _BufSize);
+	if ( E_OK != e_shm_alloc(&emem, "shm_1", _BufSize) ) {
+		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
+				strerror(errno));
+		exit(EXIT_FAILURE);
+	}
 	
     	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
@@ -89,7 +94,7 @@ int main(int argc, char *argv[])
 		
 	// Release the allocated buffer and finalize the
 	// e-platform connection.
-	e_free(&emem);
+	e_shm_release("shm_1");
 	
 	// Close the workgroup
 	e_close(&dev);

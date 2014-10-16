@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 
 ESDK=${EPIPHANY_HOME}
 ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
@@ -10,7 +11,7 @@ EXEPATH=$(dirname "$SCRIPT")
 
 export LD_LIBRARY_PATH=${ELIBS}
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} $EXEPATH/../e-test/bin/e-test.elf 0 0 1 1 0 $EXEPATH/bin/e-task.srec > e-loopback-test.log
+$EXEPATH/bin/dma_message_a.elf > ./dma_message_read.log
 
 if [ $? -ne 0 ] 
 then
@@ -18,4 +19,3 @@ then
 else
     echo "$SCRIPT PASSED"
 fi
-

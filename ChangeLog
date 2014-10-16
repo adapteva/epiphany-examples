@@ -1,3 +1,19 @@
+2014-10-16  Ben Chaco  <bchaco@x3-c.com>
+	* cpu/arithmode/run.sh:
+	* cpu/arithmode/test.sh:
+	* dma/dma_message_read/test.sh:
+	* dma/dma_message_write/test.sh:
+	* dma/dma_slave/test.sh:
+	* dma/dma_2d/test.sh:
+	* dma/dma_chain/test.sh:
+	* dma/dma_interrupt/test.sh:
+	* scripts/DMA.E16:
+	Initial import of test scripts for testing
+	* dma/dma_message_read/src/dma_message_a.c (int main):
+	* dma/dma_message_read/src/e_dma_message_a.c:
+	Use SHM API rather than hardcoded shared DRAM address
+
+
 2014-10-14  Ola Jeppsson  <ola@adapteva.com>
 	* apps/e-dump-regs/src/e-dump-regs.c:
 	* apps/eprime/build.sh:

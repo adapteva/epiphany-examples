@@ -41,9 +41,17 @@ int main(void)
 	unsigned dma_busy;
 	unsigned *test_c1;
 	unsigned *test_c2;
+	e_memseg_t emem;
+
+	// Attach to the shm segment
+	if ( E_OK != e_shm_attach(&emem, "shm_1") ) {
+		return -1;
+	}
+
+
 	tran = 128;
-	p = (unsigned *)0x8f000000;
-		
+	p = (unsigned *)emem.ephy_base;
+
 	// Initialize the buffer address 
 	dst = (int *)0x2000;
 	test_c1 = (unsigned *)0x6000;

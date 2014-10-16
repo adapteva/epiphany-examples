@@ -1,0 +1,7 @@
+dma/dma_2d/test.sh                 1
+dma/dma_chain/test.sh              1
+dma/dma_interrupt/test.sh          1
+dma/dma_message_read/test.sh       1
+dma/dma_message_write/test.sh      1
+dma/dma_slave/test.sh              1
+cpu/arithmode/test.sh              1

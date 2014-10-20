@@ -1,8 +1,5 @@
 #!/bin/bash
 
-ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
-EHDF=${EPIPHANY_HDF}
 
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
@@ -10,7 +7,6 @@ LOG=$PWD/emesh_bandwidth_all2one.log
 
 cd $EXEPATH
 
-export LD_LIBRARY_PATH=${ELIBS}
 $EXEPATH/bin/mesh_one.elf > $LOG
 
 if [ $? -ne 0 ] 

@@ -2,14 +2,15 @@
 
 set -e
 
-ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
-EHDF=${EPIPHANY_HDF}
+EROW0=${EROW0:-0}
+ECOL0=${ECOL0:-0}
+EROWS=${EROWS:-4}
+ECOLS=${ECOLS:-4}
+
 
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-export LD_LIBRARY_PATH=${ELIBS}
 $EXEPATH/bin/e-test.elf $EROW0 $ECOL0 $EROWS $ECOLS 0  >> e-test.log
 
 if [ $? -ne 0 ] 

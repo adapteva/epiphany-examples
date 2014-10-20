@@ -1,12 +1,12 @@
 #!/bin/bash
 
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
+
 set -e
 
-ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
-EHDF=${EPIPHANY_HDF}
 
-cd bin
+cd $EXEPATH/bin
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./main.elf
+./main.elf
 

@@ -2,12 +2,12 @@
 
 set -e
 
-ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
-EHDF=${EPIPHANY_HDF}
-
-cd bin
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
 
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./dma_int_test.elf
+cd $EXEPATH/bin
+
+
+./dma_int_test.elf
 

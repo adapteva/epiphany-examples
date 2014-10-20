@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
   e_open(&dev, 0, 0, platform.rows, platform.cols);
   
   // Load the device program onto target core
-  e_load("bin/e_mesh_one.srec", &dev, mas_row, mas_col, E_TRUE);
+  e_load("e_mesh_one.srec", &dev, mas_row, mas_col, E_TRUE);
   
   // Let other cores know the core id of the target core
   for(i=0; i<platform.rows; i++){
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
   for (i=0; i<platform.rows; i++){
     for(j=0; j<platform.cols; j++){
       if((i!=mas_row)|(j!=mas_col)){
-	e_load("bin/e_mesh_one1.srec",&dev, i, j, E_TRUE);
+	e_load("e_mesh_one1.srec",&dev, i, j, E_TRUE);
       }
     }
   }

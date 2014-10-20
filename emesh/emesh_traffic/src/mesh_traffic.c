@@ -41,19 +41,12 @@ int main(int argc, char *argv[])
 	e_epiphany_t dev;
 	unsigned desired, real;
 	unsigned time[16][13];
-	unsigned flag[platform.rows*platform.cols];
 	row = mas_row;
 	col = mas_col;
 	signal = 0xdeadbeef;
 	
 	// For dma copy, define the number of desired transaction
 	desired = 0x3c00;
-	
-	// Initialize flag
-	for(i=0; i<platform.rows*platform.cols; i++)
-	{
-		flag[i] = 0;
-	}
 	
 	srand(1);
 	
@@ -64,7 +57,7 @@ int main(int argc, char *argv[])
 	e_reset_system();
 	e_get_platform_info(&platform);
 
-    	// Open a workgroup
+	// Open a workgroup
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 	
 	// Let other cores know the core id of the specific core

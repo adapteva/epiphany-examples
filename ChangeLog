@@ -1,4 +1,14 @@
 2014-10-20  Ola Jeppsson  <ola@adapteva.com>
+	* apps/shm_test/src/shm_test.c:
+	* emesh/emesh_bandwidth_all2one/src/mesh_one.c:
+	* emesh/emesh_traffic/src/mesh_traffic.c:
+	* io/link_lowpower_mode/src/link_lowpower_mode.c:
+	* test/e-main/src/e-main.c:
+	* test/e-test/src/e-test.c:
+	Minor changes. Make them compile.
+
+
+2014-10-20  Ola Jeppsson  <ola@adapteva.com>
 	* apps/dotproduct/run.sh:
 	* apps/e-bandwidth-test/test.sh:
 	* apps/e-dump-mem/test.sh:

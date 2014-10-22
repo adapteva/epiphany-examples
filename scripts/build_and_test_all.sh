@@ -5,7 +5,15 @@ trap "kill $BASHPID" SIGINT SIGTERM EXIT
 
 SCRIPT=$(readlink -e $0)
 EXEPATH=$(dirname $SCRIPT)
-cd $EXEPATH/..
+ROOT=$(readlink -e $EXEPATH/..)
+
+if [[ $PWD =~ .*$ROOT.* ]]; then
+    LIMIT=$PWD
+else
+    LIMIT=$ROOT
+fi
+
+cd $ROOT
 
 TEST_SKIP_REGEX=\
 "/archive/|/apps/eprime|/apps/erm|/apps/matmul-64|/labs/hardware_loops|"\
@@ -72,11 +80,10 @@ test_example () {
         status "$build_status"
         sync
 
-        # Prefer run.sh. It seems to silence less errors
-        if [ -e "run.sh" ]; then
-            test_script="./run.sh"
-        elif [ -e "test.sh" ]; then
+        if [ -e "test.sh" ]; then
             test_script="./test.sh"
+        elif [ -e "run.sh" ]; then
+            test_script="./run.sh"
         else
             test_script=""
         fi
@@ -111,9 +118,9 @@ printf "%-40.40s%-10.10s%-10.10s\n" "Directory" "Build" "Test"
 printf '=%.0s' {1..60}
 printf '\n'
 
-for f in $(find . -name "build.sh" | sort ); do
+for f in $(find $LIMIT -name "build.sh" | sort ); do
     dir=$(dirname $f)
-    printf "%-40.40s" $dir
+    printf "%-40.40s" $(echo $dir | sed s,$ROOT/*,,)
     test_example $dir
 done
 

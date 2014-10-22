@@ -1,4 +1,6 @@
 2014-10-22  Ola Jeppsson  <ola@adapteva.com>
+	* Many 'test.sh' and a few 'run.sh':
+	Return example's exit code
 	* scripts/build_and_test_all.sh:
 	Limit built examples to current working directory
 

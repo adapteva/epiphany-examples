@@ -8,10 +8,14 @@ EXEPATH=$(dirname "$SCRIPT")
 
 $EXEPATH/../e-test/bin/e-test.elf 0 0 1 1 0 $EXEPATH/bin/e-task.srec > e-loopback-test.log
 
-if [ $? -ne 0 ] 
+retval=$?
+
+if [ $retval -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else
     echo "$SCRIPT PASSED"
 fi
+
+exit $retval
 

@@ -9,10 +9,14 @@ EXEPATH=$(dirname "$SCRIPT")
 
 $EXEPATH/bin/e-read-word.elf > e-read-word.log
 
-if [ $? -ne 0 ] 
+retval=$?
+
+if [ $retval -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else
     echo "$SCRIPT PASSED"
 fi
+
+exit $retval
 

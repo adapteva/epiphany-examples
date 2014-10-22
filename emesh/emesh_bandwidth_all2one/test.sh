@@ -9,12 +9,16 @@ cd $EXEPATH
 
 $EXEPATH/bin/mesh_one.elf > $LOG
 
-if [ $? -ne 0 ] 
+retval=$?
+
+if [ $retval -ne 0 ]
 then
     echo "$SCRIPT FAILED"
 else
     echo "$SCRIPT PASSED"
 fi
+
+exit $retval
 
 
 

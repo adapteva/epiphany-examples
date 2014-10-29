@@ -34,15 +34,16 @@ along with this program, see the file COPYING. If not, see
 int main(void)
 {
 	unsigned k,i,j;
-	unsigned *dst, *dst1, *dst2, *mst;
+	unsigned *dst, *mst;
 	unsigned tran;
 	e_dma_desc_t dma_desc;
 	tran = 128;
 
 	dst = (unsigned *)0x2000;
-	dst1 = (unsigned *)0x2400;
-	dst2 = (unsigned *)0x2800;
 	mst = (unsigned *)0x4000;
+
+	e_reg_write(E_REG_DMA0CONFIG, 0);
+	e_reg_write(E_REG_DMA1CONFIG, 0);
 
 	// Initialize the buffer in receiver core
 	for (i=0; i<tran*5; i++)

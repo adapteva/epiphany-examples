@@ -1,3 +1,16 @@
+2014-10-29  Ola Jeppsson  <ola@adapteva.com>
+	* dma/dma_slave/src/e_dma_slave_test.c:
+	* dma/dma_slave/src/e_dma_slave_test1.c:
+	Reset DMA engines on init.
+	* dma/dma_slave/src/dma_slave_test.c:
+	Tell transmitter the coordinate of the receiver core before
+	starting it
+	* emesh/emesh_bandwidth_all2one/test.sh:
+	Fix path problems.
+	* apps/fft2d/host/Release/matprt.m:
+	Don't track.
+
+
 2014-10-22  Ola Jeppsson  <ola@adapteva.com>
 	* Many 'test.sh' and a few 'run.sh':
 	Return example's exit code

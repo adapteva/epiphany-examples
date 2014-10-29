@@ -5,9 +5,9 @@ SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 LOG=$PWD/emesh_bandwidth_all2one.log
 
-cd $EXEPATH
+cd $EXEPATH/bin
 
-$EXEPATH/bin/mesh_one.elf > $LOG
+./mesh_one.elf > $LOG
 
 retval=$?
 

@@ -40,11 +40,14 @@ int main(void)
 	unsigned *auto0, *p, *mst;
 	unsigned tran;	
 	unsigned *r_row, *r_col;
-	unsigned *dst, *dst1, *dst2;
+	unsigned *dst;
 	unsigned *mailbox;
 	unsigned index;
 	e_dma_desc_t dma_desc;
 	
+	e_reg_write(E_REG_DMA0CONFIG, 0);
+	e_reg_write(E_REG_DMA1CONFIG, 0);
+
 	// Number of transactions
 	tran = 128;
 	
@@ -65,12 +68,6 @@ int main(void)
 	
 	p = (unsigned *)0x2000;
 	dst = (unsigned *) e_get_global_address(*r_row, *r_col, p);
-	
-	p = (unsigned *)0x2400;
-	dst1 = (unsigned *) e_get_global_address(*r_row, *r_col, p);
-	
-	p = (unsigned *)0x2800;
-	dst2 = (unsigned *) e_get_global_address(*r_row, *r_col, p);
 	
 	p = (unsigned *)0x4000;
 	mst = (unsigned *) e_get_global_address(*r_row, *r_col, p);

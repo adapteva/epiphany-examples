@@ -5,7 +5,8 @@ set -e
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-$EXEPATH/bin/dma_int_test.elf > ./dma_int_test.log
+cd $EXEPATH/bin
+./dma_int_test.elf > ./dma_int_test.log
 
 retval=$?
 

@@ -1,3 +1,12 @@
+2014-10-30  Ola Jeppsson  <ola@adapteva.com>
+	* dma/dma_2d/test.sh:
+	* dma/dma_interrupt/test.sh:
+	* dma/dma_message_read/test.sh:
+	* dma/dma_message_write/test.sh:
+	* dma/dma_slave/test.sh:
+	Fix path problems
+
+
 2014-10-29  Ola Jeppsson  <ola@adapteva.com>
 	* dma/dma_slave/src/e_dma_slave_test.c:
 	* dma/dma_slave/src/e_dma_slave_test1.c:

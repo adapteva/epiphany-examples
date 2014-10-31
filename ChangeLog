@@ -1,3 +1,8 @@
+2014-10-31  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/eprime/build.sh: Fix cross compilation
+	* apps/fft2d/build.sh: Fix build failure caused by missing directory
+
 2014-10-30  Ola Jeppsson  <ola@adapteva.com>
 	* dma/dma_2d/test.sh:
 	* dma/dma_interrupt/test.sh:

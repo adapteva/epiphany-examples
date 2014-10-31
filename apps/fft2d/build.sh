@@ -30,7 +30,7 @@ if [[ "${BUILD_DEVICE}" == "yes" ]]; then
 fi
 
 
-
+mkdir -p ./host/${Config}
 rm -f ./host/${Config}/fft2d_host.elf
 
 CROSS_PREFIX=

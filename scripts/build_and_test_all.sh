@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-trap "kill $BASHPID" SIGINT SIGTERM EXIT
+trap "kill $BASHPID" SIGINT SIGTERM
 
 SCRIPT=$(readlink -e $0)
 EXEPATH=$(dirname $SCRIPT)
@@ -80,7 +80,9 @@ test_example () {
         status "$build_status"
         sync
 
-        if [ -e "test.sh" ]; then
+        if ! [[ "x$(uname -m)" =~ xarm.* ]]; then
+            true
+        elif [ -e "test.sh" ]; then
             test_script="./test.sh"
         elif [ -e "run.sh" ]; then
             test_script="./run.sh"
@@ -89,7 +91,9 @@ test_example () {
         fi
 
         test_status="SKIP"
-        if (echo $dir | grep -qE $TEST_SKIP_REGEX); then
+        if ! [[ "x$(uname -m)" =~ xarm.* ]]; then
+            test_status="CROSS_SKIP"
+        elif (echo $dir | grep -qE $TEST_SKIP_REGEX); then
             test_status="SKIP"
         elif [ "x" = "x$test_script" ]; then
             test_status="N/A"

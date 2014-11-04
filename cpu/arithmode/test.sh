@@ -5,7 +5,8 @@ set -e
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-$EXEPATH/bin/main.elf > ./arithmode.log
+cd $EXEPATH/bin
+./main.elf > ../arithmode.log
 
 retval=$?
 

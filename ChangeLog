@@ -1,3 +1,7 @@
+2014-11-04  Ola Jeppsson  <ola@adapteva.com>
+
+	* cpu/arithmode/test.sh: Fix path in test script.
+
 2014-10-31  Ola Jeppsson  <ola@adapteva.com>
 
 	* scripts/build_and_test_all.sh: Fix segfault on exit in trap

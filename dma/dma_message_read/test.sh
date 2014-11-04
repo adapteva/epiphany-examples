@@ -2,12 +2,11 @@
 
 set -e
 
-
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-
-$EXEPATH/bin/e-reset.elf > e-reset.log
+cd $EXEPATH/bin
+./dma_message_a.elf > ./dma_message_read.log
 
 retval=$?
 
@@ -19,4 +18,3 @@ else
 fi
 
 exit $retval
-

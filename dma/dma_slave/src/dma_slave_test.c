@@ -74,16 +74,17 @@ int main(int argc, char *argv[])
 	col=r_col;
 	coreid = (row + platform.row) * 64 + col + platform.col;
 	fprintf(stderr,"%3d: Message from eCore 0x%03x (%2d,%2d) : \n",(row*platform.cols+col),coreid,row,col);
-	// Start device
-	e_start(&dev, r_row, r_col);
-	usleep(10000);
-	
+
 	// Tell transmitter the coordinate of receiver core
 	e_write(&dev, t_row, t_col, 0x6500, &row, sizeof(row));
 	e_write(&dev, t_row, t_col, 0x6504, &col, sizeof(col));
-	
-	usleep(1000);
-	
+
+	usleep(10000);
+
+	// Start device
+	e_start(&dev, r_row, r_col);
+	usleep(10000);
+
 	// Start the transmitter core
 	e_start(&dev, t_row, t_col);
 	

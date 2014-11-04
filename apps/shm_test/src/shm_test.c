@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 		row = rand() % platform.rows;
 		col = rand() % platform.cols;
 
-		coreid = (row + platform.row) * 16 + col + platform.col;
+		coreid = (row + platform.row) * 64 + col + platform.col;
 		fprintf(stderr, "%3d: Message from eCore 0x%03x (%2d,%2d): ", i, coreid, row, col);
 
 		// Open the single-core workgroup and reset the core, in

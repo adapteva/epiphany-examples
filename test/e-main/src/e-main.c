@@ -41,13 +41,19 @@ result.
 
 void e_check_test(void *dev, unsigned row, unsigned col, int *status);
 
+
 int main(int argc, char *argv[]){
   e_loader_diag_t e_verbose;
   e_platform_t platform;
   e_epiphany_t dev;
   int status=1;//pass
   char elfFile[4096];
-  //e_set_loader_verbosity(L_D3);
+  //e_set_host_verbosity(H_D3);
+
+  if (argc < 2) {
+    fprintf(stderr, "usage: %s <binary>\n", argv[0]);
+    return EXIT_FAILURE;
+  }
 
   //Gets ELF file name from command line
   strcpy(elfFile, argv[1]);

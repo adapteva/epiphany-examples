@@ -2,15 +2,16 @@
 
 set -e
 
-ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
-EHDF=${EPIPHANY_HDF}
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
+
 
 
 
 #dumping disassembly
-e-objdump -D bin/e_task.elf > DUMP
+e-objdump -D bin/e-task.elf > DUMP
 
 #running program
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} bin/main.elf
+cd $EXEPATH/bin
+./e-main.elf e-task.elf
 

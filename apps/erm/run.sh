@@ -2,13 +2,13 @@
 
 set -e
 
-ESDK=${EPIPHANY_HOME}
-ELIBS=${ESDK}/tools/host/lib:${LD_LIBRARY_PATH}
-EHDF=${EPIPHANY_HDF}
+SCRIPT=$(readlink -f "$0")
+EXEPATH=$(dirname "$SCRIPT")
 
-cd bin
+
+cd $EXEPATH/bin
 
 java -jar ~/Desktop/EpiphanyMonitor2.jar &
 
-sudo -E LD_LIBRARY_PATH=${ELIBS} EPIPHANY_HDF=${EHDF} ./main.elf
+./main.elf
 

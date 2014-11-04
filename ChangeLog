@@ -1,3 +1,177 @@
+2014-10-31  Ola Jeppsson  <ola@adapteva.com>
+
+	* scripts/build_and_test_all.sh: Fix segfault on exit in trap
+	handler. Don't try to test examples when cross compiling.
+
+2014-10-31  Ola Jeppsson  <ola@adapteva.com>
+
+	* Create 2014.11 branch
+
+2014-10-31  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/eprime/build.sh: Fix cross compilation
+	* apps/fft2d/build.sh: Fix build failure caused by missing directory
+
+
+2014-10-30  Ola Jeppsson  <ola@adapteva.com>
+	* dma/dma_2d/test.sh:
+	* dma/dma_interrupt/test.sh:
+	* dma/dma_message_read/test.sh:
+	* dma/dma_message_write/test.sh:
+	* dma/dma_slave/test.sh:
+	Fix path problems
+
+
+2014-10-29  Ola Jeppsson  <ola@adapteva.com>
+	* dma/dma_slave/src/e_dma_slave_test.c:
+	* dma/dma_slave/src/e_dma_slave_test1.c:
+	Reset DMA engines on init.
+	* dma/dma_slave/src/dma_slave_test.c:
+	Tell transmitter the coordinate of the receiver core before
+	starting it
+	* emesh/emesh_bandwidth_all2one/test.sh:
+	Fix path problems.
+	* apps/fft2d/host/Release/matprt.m:
+	Don't track.
+
+
+2014-10-22  Ola Jeppsson  <ola@adapteva.com>
+	* Many 'test.sh' and a few 'run.sh':
+	Return example's exit code
+	* scripts/build_and_test_all.sh:
+	Limit built examples to current working directory
+
+
+2014-10-20  Ola Jeppsson  <ola@adapteva.com>
+	* scripts/build_and_test_all.sh:
+	Yet another build/test script. This one seems to find more
+	examples to build than the others, but its test failure
+	detection is probably worse.
+
+
+2014-10-20  Ola Jeppsson  <ola@adapteva.com>
+	* apps/shm_test/src/shm_test.c:
+	* emesh/emesh_bandwidth_all2one/src/mesh_one.c:
+	* emesh/emesh_traffic/src/mesh_traffic.c:
+	* io/link_lowpower_mode/src/link_lowpower_mode.c:
+	* test/e-main/src/e-main.c:
+	* test/e-test/src/e-test.c:
+	Minor changes. Make them compile.
+
+
+2014-10-20  Ola Jeppsson  <ola@adapteva.com>
+	* apps/dotproduct/run.sh:
+	* apps/e-bandwidth-test/test.sh:
+	* apps/e-dump-mem/test.sh:
+	* apps/e-dump-regs/test.sh:
+	* apps/e-fill-mem/test.sh:
+	* apps/e-init/test.sh:
+	* apps/e-mem-sync/test.sh:
+	* apps/eprime/run.sh:
+	* apps/erm/run.sh:
+	* apps/erm_example/run.sh:
+	* apps/fft2d/run.sh:
+	* apps/fft2d/test.sh:
+	* apps/hello-world/run.sh:
+	* apps/matmul-16/run.sh:
+	* apps/matmul-16/test.sh:
+	* apps/matmul-64/run.sh:
+	* apps/shm_test/run.sh:
+	* apps/shm_test/test.sh:
+	* archive/e-test/e-test:
+	* cpu/arithmode/run.sh:
+	* cpu/arithmode/test.sh:
+	* cpu/assembly/run.sh:
+	* cpu/basic_math/run.sh:
+	* cpu/complex_numbers/run.sh:
+	* cpu/ctimer/run.sh:
+	* cpu/interrupt-demo/run.sh:
+	* cpu/interrupts/run.sh:
+	* cpu/mutex/run.sh:
+	* cpu/nested_interrupts/run.sh:
+	* cpu/register_test/run.sh:
+	* cpu/remote_call/run.sh:
+	* dma/dma_2d/run.sh:
+	* dma/dma_2d/test.sh:
+	* dma/dma_chain/run.sh:
+	* dma/dma_chain/test.sh:
+	* dma/dma_interrupt/run.sh:
+	* dma/dma_interrupt/test.sh:
+	* dma/dma_message_read/run.sh:
+	* dma/dma_message_read/test.sh:
+	* dma/dma_message_write/run.sh:
+	* dma/dma_message_write/test.sh:
+	* dma/dma_slave/run.sh:
+	* dma/dma_slave/test.sh:
+	* emesh/emesh_bandwidth_all2one/run.sh:
+	* emesh/emesh_bandwidth_all2one/test.sh:
+	* emesh/emesh_bandwidth_bisection/run.sh:
+	* emesh/emesh_bandwidth_neighbour/run.sh:
+	* emesh/emesh_read_latency/run.sh:
+	* emesh/emesh_traffic/run.sh:
+	* io/link_lowpower_mode/run.sh:
+	* labs/clockgating_mode/run.sh:
+	* labs/hardware_barrier/run.sh:
+	* labs/hardware_loops/run.sh:
+	* labs/mem_protect/run.sh:
+	* test/e-loopback-test/test.sh:
+	* test/e-main/run.sh:
+	* test/e-main/test.sh:
+	* test/e-matmul-test/test.sh:
+	* test/e-mem-test/test.sh:
+	* test/e-read-buf/test.sh:
+	* test/e-read-word/test.sh:
+	* test/e-regfile-test/test.sh:
+	* test/e-reset/test.sh:
+	* test/e-standby-test/test.sh:
+	* test/e-test/e-test:
+	* test/e-test/test.sh:
+	* test/e-write-buf/test.sh:
+	* test/e-write-word/test.sh:
+	Don't run tests as super user (sudo).
+	Remove unnecessary environment variables.
+
+
+2014-10-16  Ben Chaco  <bchaco@x3-c.com>
+	* cpu/arithmode/run.sh:
+	* cpu/arithmode/test.sh:
+	* dma/dma_message_read/test.sh:
+	* dma/dma_message_write/test.sh:
+	* dma/dma_slave/test.sh:
+	* dma/dma_2d/test.sh:
+	* dma/dma_chain/test.sh:
+	* dma/dma_interrupt/test.sh:
+	* scripts/DMA.E16:
+	Initial import of test scripts for testing
+	* dma/dma_message_read/src/dma_message_a.c (int main):
+	* dma/dma_message_read/src/e_dma_message_a.c:
+	Use SHM API rather than hardcoded shared DRAM address
+
+
+2014-10-14  Ola Jeppsson  <ola@adapteva.com>
+	* apps/e-dump-regs/src/e-dump-regs.c:
+	* apps/eprime/build.sh:
+	* apps/fft2d/build.sh:
+	* apps/fft2d/host/src/fft2d_host.c:
+	* apps/matmul-16/host/Debug/objects.mk:
+	* apps/matmul-16/host/Release/objects.mk:
+	* apps/matmul-64/host/Debug/objects.mk:
+	* apps/matmul-64/host/Release/objects.mk:
+	* archive/chip_testing/e_test/src/e_test.c:
+	* archive/chip_testing/makefile:
+	* archive/e-test/src/e-test.c:
+	* cpu/ctimer/build.sh:
+	* cpu/interrupts/src/interrupt_test.c:
+	* cpu/nested_interrupts/src/interrupt_test.c:
+	* dma/dma_chain/src/dma_chain_test.c:
+	* test/e-main/bin/e_task.dump:
+	* test/e-main/src/e-main.c:
+	* test/e-mem-test/src/e-mem-test.c:
+	* test/e-regfile-test/src/e-regfile-test.c:
+	* test/e-standby-test/src/e-standby-test.c:
+	* test/e-test/src/e-test.c:
+	Minor build fixes against ESDK 2014.08rc
+
 2014-08-07  Ben Chaco  <bchaco@x3-c.com>
 
 	* apps/clear_shmtable/src/clear_shmtable.c:

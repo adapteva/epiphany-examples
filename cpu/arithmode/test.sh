@@ -2,12 +2,10 @@
 
 set -e
 
-
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-
-$EXEPATH/bin/e-reset.elf > e-reset.log
+$EXEPATH/bin/main.elf > ./arithmode.log
 
 retval=$?
 
@@ -19,4 +17,3 @@ else
 fi
 
 exit $retval
-

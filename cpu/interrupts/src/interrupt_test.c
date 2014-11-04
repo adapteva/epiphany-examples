@@ -33,7 +33,7 @@ along with this program, see the file COPYING. If not, see
 #include <e-hal.h>
 
 #define _BufSize   (4096)
-#define _BufOffset (0x01000000)
+#define _BufOffset (0x01000000 + 128)
 
 int main(int argc, char *argv[])
 {

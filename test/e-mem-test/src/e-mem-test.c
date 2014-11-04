@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
   my_reset_system();
   e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols);
-  //e_set_loader_verbosity(L_D3);
+  //e_set_host_verbosity(H_D3);
 
   printf("-------------------------------------------------------\n");  
 

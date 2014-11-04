@@ -37,9 +37,9 @@ int main(int argc, char *argv[]){
   int status=1;//pass
   int i,j;
 
-  if (argc < 5){
+  if (argc < 7){
     usage();
-    status=0;
+    exit(EXIT_FAILURE);
   }  
   else{
     row0    = atoi(argv[1]);
@@ -50,10 +50,11 @@ int main(int argc, char *argv[]){
     strcpy(elfFile, argv[6]);
 
     //Initalize Epiphany device
-    e_init(NULL);                      
+    e_init(NULL);
+
     e_reset_system();
     e_get_platform_info(&platform);                          
-    //e_set_loader_verbosity(L_D3);
+    //e_set_host_verbosity(H_D3);
     e_open(&dev, 0, 0, platform.rows, platform.cols); //open all cores
     
     //Load program one at a time, checking one a time
@@ -66,7 +67,7 @@ int main(int argc, char *argv[]){
       }    
     }  
     else{
-      e_load_group(elfFile, &dev, row0, col0, (row0+rows), (col0+cols), E_TRUE);
+      e_load_group(elfFile, &dev, row0, col0, rows, cols, E_TRUE);
     }
     //Checking the test
     for (i=row0; i<(row0+rows); i++) {
@@ -141,6 +142,4 @@ void usage(){
   printf("  para    - run test in parallel\n");
   printf("  elf     - path to elf file\n");
   printf("-----------------------------------------------\n");
-  return;
-
 }

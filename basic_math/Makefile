@@ -1,30 +1,19 @@
 # Use this option to toggle the cache manager on or off.
 WITH_CACHE=yes
 
-EPIPHANY_HOME=/opt/epiphany/esdk
+EPIPHANY_HOME=/opt/adapteva/esdk
 
 HOST_ELIBS=$(EPIPHANY_HOME)/tools/host/lib
 HOST_EINCS=$(EPIPHANY_HOME)/tools/host/include
 
-HOST_CC = arm-linux-gnueabihf-gcc
-HOST_CFLAGS = -g
-HOST_LDFLAGS = -le-hal -le-loader
+HOST_CC ?= arm-linux-gnueabihf-gcc
+HOST_CFLAGS ?= -g
+HOST_LDFLAGS ?= -le-hal -le-loader
 
-ifeq ($(WITH_CACHE), yes)
-TARGET_CC=${EPIPHANY_HOME}/tools/e-gnu.armv7l.software-caching/bin/epiphany-elf-gcc
-TARGET_OBJCOPY=${EPIPHANY_HOME}/tools/e-gnu.armv7l.software-caching/bin/epiphany-elf-objcopy
-else
-TARGET_CC=${EPIPHANY_HOME}/tools/e-gnu.armv7l/bin/epiphany-elf-gcc
-TARGET_OBJCOPY=${EPIPHANY_HOME}/tools/e-gnu.armv7l/bin/epiphany-elf-objcopy
-endif
+TARGET_CC ?= epiphany-elf-gcc
+TARGET_OBJCOPY ?= epiphany-elf-objcopy
 
 TARGET_ELIBS=${EPIPHANY_HOME}/tools/e-gnu.armv7l/epiphany-elf/lib/libe-lib.a
-
-ifeq ($(WITH_CACHE), yes)
-TARGET_ELIBPICS=${EPIPHANY_HOME}/tools/e-gnu.armv7l.software-caching/epiphany-elf/lib
-else
-TARGET_ELIBPICS=${EPIPHANY_HOME}/tools/e-gnu.armv7l/epiphany-elf/lib
-endif
 
 TARGET_EINCS=${EPIPHANY_HOME}/tools/e-gnu.armv7l/epiphany-elf/sys-include
 
@@ -55,7 +44,7 @@ e_math_test: e_math_test.c cachemanager.S
 else
 e_math_test: e_math_test.c
 endif
-	$(TARGET_CC) $(TARGET_CFLAGS) -o $@ $^ -T $(LDSCRIPT) $(TARGET_LDFLAGS) $(TARGET_ELIBS) -L$(TARGET_ELIBPICS) -I$(TARGET_EINCS)
+	$(TARGET_CC) $(TARGET_CFLAGS) -o $@ $^ -T $(LDSCRIPT) $(TARGET_LDFLAGS) $(TARGET_ELIBS)
 
 e_math_test.srec: e_math_test
 	$(TARGET_OBJCOPY) --srec-forceS3 --output-target srec $< $@

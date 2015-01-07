@@ -1,0 +1,13 @@
+# See git-shortlog(1) section MAPPING AUTHORS
+#
+# Fix names and email addresses
+
+Andreas Olofsson <andreas@adapteva.com>
+Ben Chaco <bchaco@x3-c.com>
+Ben Chaco <bchaco@x3-c.com> Jenkins <jenkins@benvm.(none)>
+Mikael Taveniku <mtaveniku@x3-c.com>
+<ola@adapteva.com> <ola.jeppsson@gmail.com>
+Yaniv Sapir <yanivsap@hotmail.com>
+Yaniv Sapir <yanivsap@hotmail.com> ysapir <yaniv@adapteva.com>
+Xin Mao <maoxin99@gmail.com>
+Wenlin Song <wsong@wpi.edu>

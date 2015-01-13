@@ -7,7 +7,7 @@ EXEPATH=$(dirname "$SCRIPT")
 TEST="e-standby-test"
 
 cd $EXEPATH/bin
-./$TEST.elf > $TEST.log
+./$TEST.elf
 
 retval=$?
 

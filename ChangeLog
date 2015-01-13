@@ -1,5 +1,13 @@
 2015-01-13  Ola Jeppsson  <ola@adapteva.com>
 
+	* test/e-standby-test/src/e-standby-test.c (int main): Call
+	e_reset_system().
+	(int my_reset_system): Rename to my_config_system(). Update
+	for new ESYS API. Let e_reset_system() handle reset.
+	* test/e-standby-test/test.sh: Do not redirect stdout.
+
+2015-01-13  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/e-init/src/e-init.c (int main): Update for new ESYS API.
 	* apps/e-init/test.sh: Do not redirect stdout.
 

@@ -1,5 +1,5 @@
 /*
-e-dump-regs.c
+e-standby-test.c
 
 Copyright (C) 2013 Adapteva, Inc.
 Contributed by Andreas Olofsson <support@adapteva.com>
@@ -30,7 +30,7 @@ along with this program, see the file COPYING. If not, see
 #define WORD_SIZE    (1)
 
 void usage();
-int my_reset_system();
+int my_config_system();
 
 int main(int argc, char *argv[]){
 
@@ -49,9 +49,12 @@ int main(int argc, char *argv[]){
  
   //Open
   e_init(NULL);
+  e_get_platform_info(&platform);
+  e_reset_system();
+  e_open(&dev,0, 0, platform.rows, platform.cols);
 
   //Power down function
-  my_reset_system();
+  my_config_system();
   e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols);
  
@@ -68,18 +71,19 @@ int main(int argc, char *argv[]){
 }
 
 //////////////////////////////////////////////////////////////////////////
-int my_reset_system()
+int my_config_system()
 {
   unsigned int row,col,i,j,data;
   e_epiphany_t dev;
   e_platform_t platform;
+  e_syscfg_tx_t txcfg;
 
 
   e_init(NULL);
   e_get_platform_info(&platform);
-  ee_write_esys(E_SYS_RESET, 0);//reset
-  usleep(200000);
-  
+
+  txcfg.reg = ee_read_esys(E_SYS_CFGTX);
+
   //Open all cores
   e_open(&dev, 0, 0, platform.rows, platform.cols);
 
@@ -88,24 +92,29 @@ int my_reset_system()
       row=0;
       col=2;
 
-      ee_write_esys(E_SYS_CONFIG, 0x10000000);
+
+      txcfg.fields.ctrlmode = 0x1;
+      ee_write_esys(E_SYS_CFGTX, txcfg.reg);
       data = 0x000000FFF;
       e_write(&dev, row, col, 0xf0304, &data, sizeof(int));  
       data = 0x000000FFF;
       e_write(&dev, row, col, 0xf0308, &data, sizeof(int));  
-      ee_write_esys(E_SYS_CONFIG, 0x00000000);
+      txcfg.fields.ctrlmode = 0x0;
+      ee_write_esys(E_SYS_CFGTX, txcfg.reg);
   }
   
   //Shut down west link (WEST==2,0)
   if(1){
     row=2;
     col=0;
-    ee_write_esys(E_SYS_CONFIG, 0xd0000000);    
+    txcfg.fields.ctrlmode = 0xd;
+    ee_write_esys(E_SYS_CFGTX, txcfg.reg);
     data = 0x000000FFF;
     e_write(&dev, row, col, 0xf0304, &data, sizeof(int));      
     data = 0x000000FFF;
     e_write(&dev, row, col, 0xf0308, &data, sizeof(int));      
-    ee_write_esys(E_SYS_CONFIG, 0x00000000);
+    txcfg.fields.ctrlmode = 0x0;
+    ee_write_esys(E_SYS_CFGTX, txcfg.reg);
   }
 
   //Shut down south link (SOUTH==7,2)
@@ -119,12 +128,14 @@ int my_reset_system()
       col=2;
     }
 
-    ee_write_esys(E_SYS_CONFIG, 0x90000000);    
+    txcfg.fields.ctrlmode = 0x9;
+    ee_write_esys(E_SYS_CFGTX, txcfg.reg);
     data = 0x000000FFF;
     e_write(&dev, row, col, 0xf0304, &data, sizeof(int));      
     data = 0x000000FFF;
     e_write(&dev, row, col, 0xf0308, &data, sizeof(int));      
-    ee_write_esys(E_SYS_CONFIG, 0x00000000);
+    txcfg.fields.ctrlmode = 0x0;
+    ee_write_esys(E_SYS_CFGTX, txcfg.reg);
   }
 
    //Change elink clock divider (temporary workaround due to FPGA timing issue)
@@ -139,20 +150,24 @@ int my_reset_system()
       col=3;
     }
     //Writing to the east ELINK transmit config register
-    ee_write_esys(E_SYS_CONFIG, 0x50000000);
+    txcfg.fields.ctrlmode = 0x5;
+    ee_write_esys(E_SYS_CFGTX, txcfg.reg);
     data = 0x1;
     e_write(&dev, row, col, 0xf0300, &data, sizeof(int));
-    ee_write_esys(E_SYS_CONFIG, 0x00000000);
+    txcfg.fields.ctrlmode = 0x0;
+    ee_write_esys(E_SYS_CFGTX, txcfg.reg);
   }  
 
  //Reset chip one more time (west side))
   if(0){
     row=2;
     col=0;
-    ee_write_esys(E_SYS_CONFIG, 0xd0000000);    
+    txcfg.fields.ctrlmode = 0xd;
+    ee_write_esys(E_SYS_CFGTX, txcfg.reg);
     data = 0x000000001;
     e_write(&dev, row, col, 0xf0324, &data, sizeof(int));      
-    ee_write_esys(E_SYS_CONFIG, 0x00000000);
+    txcfg.fields.ctrlmode = 0x0;
+    ee_write_esys(E_SYS_CFGTX, txcfg.reg);
   }
 
   //Enable Clock Gating

@@ -1,5 +1,9 @@
 2015-01-13  Ola Jeppsson  <ola@adapteva.com>
 
+	* errata/noc_fifo/build.sh: Link with e-loader.
+
+2015-01-13  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/e-dump-mem/src/e-dump-mem.c (int main): Call
 	e_reset_system().
 	* apps/e-dump-regs/src/e-dump-regs.c (int main): Likewise.

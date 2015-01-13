@@ -7,7 +7,7 @@ EXEPATH=$(dirname "$SCRIPT")
 
 e-reset
 
-$EXEPATH/bin/e-init.elf 6 > e-init.log
+$EXEPATH/bin/e-init.elf 5
 
 retval=$?
 

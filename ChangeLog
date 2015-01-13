@@ -1,5 +1,10 @@
 2015-01-13  Ola Jeppsson  <ola@adapteva.com>
 
+	* apps/e-init/src/e-init.c (int main): Update for new ESYS API.
+	* apps/e-init/test.sh: Do not redirect stdout.
+
+2015-01-13  Ola Jeppsson  <ola@adapteva.com>
+
 	* errata/noc_fifo/build.sh: Link with e-loader.
 
 2015-01-13  Ola Jeppsson  <ola@adapteva.com>

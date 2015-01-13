@@ -51,6 +51,8 @@ int main(int argc, char *argv[]){
   //Open
   e_init(NULL);
   e_get_platform_info(&platform);
+  e_reset_system();
+
   e_open(&dev, 0, 0, platform.rows, platform.cols);
   //e_set_host_verbosity(H_D3);
   //Put Code here

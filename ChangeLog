@@ -1,3 +1,20 @@
+2015-01-13  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/e-dump-mem/src/e-dump-mem.c (int main): Call
+	e_reset_system().
+	* apps/e-dump-regs/src/e-dump-regs.c (int main): Likewise.
+	* io/link_lowpower_mode/src/link_lowpower_mode.c (int main):
+	Likewise.
+	* labs/clockgating_mode/src/clockgating_mode.c (int main):
+	Likewise.
+	* test/e-mem-test/src/e-mem-test.c (int main): Likewise.
+	* test/e-regfile-test/src/e-regfile-test.c (int main):
+	Likewise.
+	* test/e-mem-test/src/e-mem-test.c (int my_reset_system):
+	Remove.
+	* test/e-regfile-test/src/e-regfile-test.c (int
+	my_reset_system): Likewise.
+
 2014-11-04  Ola Jeppsson  <ola@adapteva.com>
 
 	* cpu/arithmode/test.sh: Fix path in test script.

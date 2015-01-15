@@ -1,5 +1,33 @@
 2015-01-15  Ola Jeppsson  <ola@adapteva.com>
 
+	* softcache/basic_math/Makefile: Adjustment of paths and cross
+	compiling.
+	* softcache/math_example/Makefile: Likewise.
+	* softcache/basic_math/.gitignore: New file.
+	* softcache/basic_math/build.sh: New file.
+	* softcache/basic_math/test.sh: New file.
+	* softcache/math_example/.gitignore: New file.
+	* softcache/math_example/build.sh: New file.
+	* softcache/math_example/test.sh: New file.
+
+2015-01-15  Ola Jeppsson  <ola@adapteva.com>
+
+	* softcache/README.md: New file.
+	* softcache/basic_math/Makefile: New file.
+	* softcache/basic_math/cachemanager.S: New file.
+	* softcache/basic_math/e_math_test.c: New file.
+	* softcache/basic_math/fast.ldf: New file.
+	* softcache/basic_math/fast_cacheman.ldf: New file.
+	* softcache/basic_math/math_test.c: New file.
+	* softcache/math_example/Makefile: New file.
+	* softcache/math_example/cachemanager.S: New file.
+	* softcache/math_example/e_math_example.c: New file.
+	* softcache/math_example/fast.ldf: New file.
+	* softcache/math_example/fast_cacheman.ldf: New file.
+	* softcache/math_example/math_example.c: New file.
+
+2015-01-15  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/hello-world/src/hello_world.c (int main): Attach to shm
 	segment if it already exists, instead of failing
 

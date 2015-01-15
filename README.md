@@ -1,9 +1,12 @@
+applications: Complete applications and utilities  
+board:        Various board tests  
+cpu:          Various "howto" examples  
 dma:          DMA examples  
 emesh:        Performance testing for the emesh  
-cpu:          Various "howto" examples  
+errata:       Examples that demonstrates documented erratas  
 labs:         Experimental feature testing  
-applications: Complete applications and utilities  
-test:         Regression tests
+softcache:    Software caching examples  
+test:         Regression tests  
 
 To run the TestEpiphany.pl test harness you must define an environment variable
 name EPIPHANY_TESTS which defines the path to the epiphany-examples. The LIST

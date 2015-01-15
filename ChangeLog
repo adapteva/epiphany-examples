@@ -1,5 +1,9 @@
 2015-01-15  Ola Jeppsson  <ola@adapteva.com>
 
+	* README.md: Add descriptions for missing directories.
+
+2015-01-15  Ola Jeppsson  <ola@adapteva.com>
+
 	* softcache/basic_math/Makefile: Adjustment of paths and cross
 	compiling.
 	* softcache/math_example/Makefile: Likewise.

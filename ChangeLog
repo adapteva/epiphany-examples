@@ -1,5 +1,17 @@
 2015-01-15  Ola Jeppsson  <ola@adapteva.com>
 
+	* softcache/basic_math/Makefile: Adjustment of paths and cross
+	compiling.
+	* softcache/math_example/Makefile: Likewise.
+	* softcache/basic_math/.gitignore: New file.
+	* softcache/basic_math/build.sh: New file.
+	* softcache/basic_math/test.sh: New file.
+	* softcache/math_example/.gitignore: New file.
+	* softcache/math_example/build.sh: New file.
+	* softcache/math_example/test.sh: New file.
+
+2015-01-15  Ola Jeppsson  <ola@adapteva.com>
+
 	* softcache/README.md: New file.
 	* softcache/basic_math/Makefile: New file.
 	* softcache/basic_math/cachemanager.S: New file.

@@ -1,12 +1,17 @@
 # Use this option to toggle the cache manager on or off.
 WITH_CACHE=yes
 
-EPIPHANY_HOME=/opt/adapteva/esdk
+EPIPHANY_HOME ?= /opt/adapteva/esdk
+CROSS_COMPILE ?= arm-linux-gnueabihf-
 
 HOST_ELIBS=$(EPIPHANY_HOME)/tools/host/lib
 HOST_EINCS=$(EPIPHANY_HOME)/tools/host/include
 
-HOST_CC ?= arm-linux-gnueabihf-gcc
+ifeq ($(ARCH), armv7l)
+	HOST_CC := gcc
+else
+	HOST_CC := $(CROSS_COMPILE)gcc
+endif
 HOST_CFLAGS ?= -g
 HOST_LDFLAGS ?= -le-hal -le-loader
 

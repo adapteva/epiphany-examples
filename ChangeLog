@@ -1,3 +1,8 @@
+2015-01-15  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/hello-world/src/hello_world.c (int main): Print to
+	stdout instead of stderr.
+
 2015-01-13  Ola Jeppsson  <ola@adapteva.com>
 
 	* test/e-standby-test/src/e-standby-test.c (int main): Call

@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t   mbuf;
+	int rc;
 
 	srand(1);
 
@@ -59,7 +60,11 @@ int main(int argc, char *argv[])
 
 	// Allocate a buffer in shared external memory
 	// for message passing from eCore to host.
-	if ( E_OK != e_shm_alloc(&mbuf, ShmName, ShmSize) ) {
+	rc = e_shm_alloc(&mbuf, ShmName, ShmSize);
+	if (rc != E_OK)
+		rc = e_shm_attach(&mbuf, ShmName);
+
+	if (rc != E_OK) {
 		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
 				strerror(errno));
 		return EXIT_FAILURE;

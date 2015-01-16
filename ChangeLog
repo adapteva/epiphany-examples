@@ -1,3 +1,8 @@
+2015-01-16  Ola Jeppsson  <ola@adapteva.com>
+
+	* labs/hardware_barrier/src/main.c (int main): Exit with
+	failure code on detected failure.
+
 2015-01-15  Ola Jeppsson  <ola@adapteva.com>
 
 	* README.md: Add descriptions for missing directories.

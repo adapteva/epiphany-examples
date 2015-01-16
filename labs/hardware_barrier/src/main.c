@@ -102,6 +102,6 @@ int main(int argc, char *argv[])
 	e_free(&emem);
 	e_finalize();
 
-	return 0;
+	return fault != 0;
 }
 

@@ -5,9 +5,8 @@ set -e
 ESDK=${EPIPHANY_HOME}
 ELIBS="-L ${ESDK}/tools/host/lib"
 EINCS="-I ${ESDK}/tools/host/include"
-#ELDF=${ESDK}/bsps/current/internal.ldf
-#ELDF=${ESDK}/bsps/current/legacy.ldf
-ELDF=src/int-code-ext-stack.ldf
+ELDF=${ESDK}/bsps/current/internal.ldf
+#ELDF=src/int-code-ext-stack.ldf
 
 # Create the binaries directory
 mkdir -p bin/
@@ -29,7 +28,7 @@ ${CROSS_PREFIX}gcc src/main.c -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le-loa
 
 # Build DEVICE side program
 OPT=0
-e-gcc -T ${ELDF} src/emain.c src/mpf_isr.s -O$OPT -o bin/emain.elf -le-lib
+e-gcc -T ${ELDF} src/emain.c -O$OPT -o bin/emain.elf -le-lib
 #e-gcc src/emain.c -S -O$OPT -o bin/emain.O$OPT.s
 
 # Convert ebinary to SREC file

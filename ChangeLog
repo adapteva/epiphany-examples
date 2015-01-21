@@ -1,5 +1,16 @@
 2015-01-16  Ola Jeppsson  <ola@adapteva.com>
 
+	* labs/mem_protect/src/mpf_isr.s: Remove.
+	* labs/mem_protect/src/emain.c (void mpf_isr): Replace above
+	assembler page fault handler with C version.
+	(int main): Simplify. Do not test stack page.
+	* labs/mem_protect/src/main.c: Simplify.
+	* labs/mem_protect/build.sh: Don't link with removed assembly
+	mpf isr. Use linker script that will place stack in local core
+	SRAM.
+
+2015-01-16  Ola Jeppsson  <ola@adapteva.com>
+
 	* labs/hardware_barrier/src/main.c (int main): Exit with
 	failure code on detected failure.
 

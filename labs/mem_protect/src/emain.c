@@ -22,23 +22,34 @@
 // This is the device side of the Hardware Barrier example project.
 // The host may load this program to any eCore. When launched, the
 // core sets the mem protect registers, and tries to write to those 
-// protected pages. The mpf_isr handler returns an address showing 
-// which address location failed. A success/error message is sent 
-// to the host according to the result.
-//
-// Aug-2013, XM.
+// protected pages. The mpf_isr() handler sets the isr_flag if a write
+// failed. That way mem_write() can determine if the write failed or
+// succeeded. The result for each page is reported back to the host.
 
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <e-lib.h>
+#include <stdint.h>
 
 #define pagesize (0x1000)
 #define offset (pagesize - sizeof(int))
-#define mailbox ((unsigned *) 0x8f000000)
 
-#define delay (300000)
+#define length(array) (sizeof(array)/sizeof(*(array)))
+
+struct state {
+	uint32_t expect_fail[8];
+	uint32_t expect_pass[8];
+	uint32_t isr_flag;
+	uint32_t finished;
+};
+
+
+
+volatile struct state *mbox;
+
+#define delay (100000)
 
 typedef enum
 {
@@ -49,21 +60,29 @@ typedef enum
 }test_state;
 
 
-void __attribute__((interrupt)) mpf_isr(int signum);
+void __attribute__((interrupt)) mpf_isr()
+{
+	mbox->isr_flag = 1;
+}
 
 
-void mem_write(int page) {
-	int *address;
+void mem_write(int page, volatile uint32_t *result) {
+	int i;
+	volatile uint32_t *address;
 
-	mailbox[1] = pagesize * page + offset;
-	e_wait(E_CTIMER_0, delay);
-
+	mbox->isr_flag = 0;
 	// write to the address
-	address = (int *) mailbox[1];
+	address = (volatile uint32_t *) (pagesize * page + offset);
 	*address = 0xdeadbeef;
+
 	e_wait(E_CTIMER_0, delay);
-	if (mailbox[0] == clear)
-		mailbox[0] = write_success;
+
+	if (mbox->isr_flag == 1)
+		*result = write_failed;
+	else
+		*result = write_success;
+
+	e_wait(E_CTIMER_0, delay);
 
 	return;
 }
@@ -74,48 +93,43 @@ int main(void)
 {
 	int i;
 
+	mbox = (volatile struct state *) 0x8f000000;
+
 	//initialize
 	e_irq_attach(E_MEM_FAULT, mpf_isr);
+
+	e_reg_write(E_REG_MEMPROTECT, 0);
 
 	//enable the interrupt
 	e_irq_global_mask(E_FALSE);
 	e_irq_mask(E_MEM_FAULT, E_FALSE);
 
 
-	//set the mem protect
-	int mem_pages = 0xff;
+	// set the mem protect
+	// mask all pages expect stack segment
+	int mem_pages = 0x7f;
 	e_reg_write(E_REG_MEMPROTECT, mem_pages);
 
-	while (mailbox[0] != clear) { e_wait(E_CTIMER_0, delay); }
-	for (i=0; i<8; i++)
+
+	for (i=0; i<length(mbox->expect_fail)-1; i++)
 	{
-		//tell the host that write_failure is expected here
-		mailbox[3] = write_failed;
-		
-		mailbox[2] = i;
-		mem_write(i);
-		e_wait(E_CTIMER_0, delay); 
-		while (mailbox[0] != clear) { e_wait(E_CTIMER_0, delay); }
+		mem_write(i, &mbox->expect_fail[i]);
 	}
 
-	//set the mem protect
+	//clear the mem protect
 	mem_pages = 000;
 	e_reg_write(E_REG_MEMPROTECT, mem_pages);
-	for (i=0; i<8; i++)
+
+	for (i=0; i<length(mbox->expect_fail)-1; i++)
 	{
-		//tell the host that write_succeed is expected here
-		mailbox[3] = write_success;
-		
-		mailbox[2] = i;
-		mem_write(i);
-		e_wait(E_CTIMER_0, delay); 
-		while (mailbox[0] != clear) { e_wait(E_CTIMER_0, delay); }
+		mem_write(i, &mbox->expect_pass[i]);
 	}
 
-
-	mailbox[2] = i;
-	mailbox[0] = finished;
 	e_reg_write(E_REG_MEMPROTECT, 0);
+
+	e_wait(E_CTIMER_0, delay);
+
+	mbox->finished = 1;
 	
 	return EXIT_SUCCESS;
 }

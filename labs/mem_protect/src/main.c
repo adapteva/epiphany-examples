@@ -33,30 +33,39 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <e-hal.h>
 
-#define _BufSize      (10 * sizeof(int))
 #define _BufOffset    (0x01000000)
-#define mail_offset   (0x0)
+
+#define length(array) (sizeof(array)/sizeof(*(array)))
 
 typedef enum
 {
 	clear         = 0,
 	write_success = 2,
 	write_failed  = 3,
-	finished      = 9,
-}test_state;
+	finished      = 9
+} test_state;
 
 unsigned address;
-unsigned mbox[10];
 
+struct state {
+	uint32_t expect_fail[8];
+	uint32_t expect_pass[8];
+	uint32_t isr_flag;
+	uint32_t finished;
+};
+
+struct state mbox;
 
 
 
 int main(int argc, char *argv[])
 {
-	unsigned rows, cols, coreid, i, j, fault;
-	e_bool_t endloop;
+	unsigned rows, cols, coreid, i, j, k, fault, rc=0;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t      emem;
@@ -70,7 +79,7 @@ int main(int argc, char *argv[])
 
 	// Allocate a buffer in shared external memory
 	// for message passing from eCore to host.
-	e_alloc(&emem, _BufOffset, _BufSize);
+	e_alloc(&emem, _BufOffset, sizeof(mbox));
 
 	//open the workgroup
 	rows = platform.rows;
@@ -78,74 +87,54 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, rows, cols);
 
 	//load the device program on the board
-	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
+	e_load_group("emain.elf", &dev, 0, 0, rows, cols, E_FALSE);
 	e_set_host_verbosity(H_D0);
 
-	for (i=0; i<rows; i++){
-		for (j=0; j<cols; j++)
-		{
-			mbox[0] = clear;
-			e_write(&emem, 0, 0, mail_offset, &mbox[0], sizeof(unsigned));
-			usleep(100000);
+	for (i=0; i<rows; i++) {
+		for (j=0; j<cols; j++) {
+			fault=0;
+			memset((void *) &mbox, 0, sizeof(mbox));
+			e_write(&emem, 0, 0, 0, &mbox, sizeof(mbox));
 
 			coreid = (i + platform.row) * 64 + j + platform.col;
 			fprintf(stderr, "Message from eCore 0x%03x (%2d,%2d): \n", coreid, i, j);
 			e_start(&dev, i, j);
 
-			fault = 0x0;
-			endloop = E_FALSE;
-			while (!endloop)
-			{
-				switch (mbox[0])
-				{
-					case clear:
-						break;
-
-					case write_success:
-						if (mbox[0] != mbox[3])
-						{
-							fprintf(stderr, "Unexpected performance:\t");
-							fprintf(stderr, "Write to unprotected memory 0x%04x succeeded. Expecting failure!\n", mbox[1]);
-							fault++;
-						}
-						mbox[0] = clear;
-						e_write(&emem, 0, 0, mail_offset, &mbox[0], sizeof(unsigned));
-						break;
-
-					case write_failed:
-						if (mbox[0] != mbox[3])
-						{
-							fprintf(stderr, "Unexpected performance:\t");
-							fprintf(stderr, "Write to   protected memory 0x%04x    failed. Expecting succeed!\n", mbox[1]);
-							fault++;
-						}
-						mbox[0] = clear;
-						e_write(&emem, 0, 0, mail_offset, &mbox[0], sizeof(unsigned));
-						break;
-
-					case finished:
-						endloop = E_TRUE;
-						continue;
-
-					default:
-						fprintf(stderr, "Warnning: Unexpected mailbox value (%d)!\n", mbox[0]);
-						break;
-				}
+			while (1) {
+				e_read(&emem, 0, 0, 0, &mbox, sizeof(mbox));
+				if (mbox.finished)
+					break;
 				usleep(100000);
-				e_read(&emem, 0, 0, mail_offset, &mbox[0], 4*sizeof(unsigned));
 			}
 
+			for (k = 0; k < length(mbox.expect_fail)-1; k++) {
+				if (mbox.expect_fail[k] != write_failed) {
+					printf("Expected WRITE_FAIL,\tgot WRITE_SUCCESS,\tpage: %d\n", k);
+					fault++;
+				}
+			}
+
+			for (k = 0; k < length(mbox.expect_pass)-1 ; k++) {
+				if (mbox.expect_pass[k] != write_success) {
+					printf("Expected WRITE_SUCCESS,\tgot WRITE_FAIL,\tpage: %d\n", k);
+					fault++;
+				}
+			}
+
+
 			if (fault == 0)
-				fprintf(stderr, "\ntest14: Mem_Protect passed!\n\n\n");
-			else
-				fprintf(stderr, "\ntest14: Mem_Protect Failed!\t\t\t\tFault = %d!\n\n\n", fault);
-		}	
-	}	
+				fprintf(stderr, "PASSED\n\n");
+			else {
+				fprintf(stderr, "FAILED\n\n");
+				rc = 1;
+			}
+		}
+	}
 
 	e_close(&dev);
 	e_free(&emem);
 	e_finalize();
 
-	return 0;
+	return rc;
 }
 

@@ -1,3 +1,13 @@
+2015-01-24  Ola Jeppsson  <ola@adapteva.com>
+
+	* dma/dma_2d/src/dma_2d_test.c (int main): Indicate error with
+	return code.
+	* dma/dma_chain/src/dma_chain_test.c: Likewise
+	* dma/dma_interrupt/src/dma_int_test.c: Likewise
+	* dma/dma_message_read/src/dma_message_a.c: Likewise
+	* dma/dma_message_write/src/dma_message_test.c: Likewise
+	* dma/dma_slave/src/dma_slave_test.c: Likewise
+
 2015-01-16  Ola Jeppsson  <ola@adapteva.com>
 
 	* labs/mem_protect/src/mpf_isr.s: Remove.

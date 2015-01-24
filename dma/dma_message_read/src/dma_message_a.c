@@ -40,6 +40,7 @@ along with this program, see the file COPYING. If not, see
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i, j, m, n, k;
+	int err = 0;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t emem;
@@ -90,6 +91,7 @@ int main(int argc, char *argv[])
 	}else
 	{
 		fprintf(stderr, "FAIL!\n");
+		err = 1;
 	}
 		
 	// Release the allocated buffer and finalize the
@@ -102,5 +104,5 @@ int main(int argc, char *argv[])
 	// Finalize the e-platform connection.
 	e_finalize();
 
-	return 0;
+	return err;
 }

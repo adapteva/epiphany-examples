@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 	unsigned row, col, coreid, i, j, m, n, k;
 	e_platform_t platform;
 	e_epiphany_t dev;
+	int err = 0;
 	unsigned flag = 0x00000000;
 	unsigned flag1 = 0x00000000;
 	unsigned flag2 = 0x00000000;
@@ -85,6 +86,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr, "Fail for word size!\n");
+				err = 1;
 			}
 
 			if(flag1 == 0xffffffff)
@@ -101,6 +103,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr, "Fail for halfword size!\n");
+				err = 1;
 			}
                       
 			if(flag3 == 0xffffffff)
@@ -109,6 +112,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr, "Fail for byte size!\n");
+				err = 1;
 			}
 		}
 	}
@@ -119,5 +123,5 @@ int main(int argc, char *argv[])
 	// Finalize the e-platform connection.
 	e_finalize();
 
-	return 0;
+	return err;
 }

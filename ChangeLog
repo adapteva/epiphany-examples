@@ -1,5 +1,10 @@
 2015-01-24  Ola Jeppsson  <ola@adapteva.com>
 
+	* dma/dma_slave/src/dma_slave_test.c (int main): Go back to
+	wait time before previous commit.
+
+2015-01-24  Ola Jeppsson  <ola@adapteva.com>
+
 	* dma/dma_2d/src/dma_2d_test.c (int main): Fix missing err
 	check.
 	* dma/dma_slave/src/dma_slave_test.c: Slightly increase wait.

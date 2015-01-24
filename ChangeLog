@@ -1,5 +1,11 @@
 2015-01-24  Ola Jeppsson  <ola@adapteva.com>
 
+	* dma/dma_2d/src/dma_2d_test.c (int main): Fix missing err
+	check.
+	* dma/dma_slave/src/dma_slave_test.c: Slightly increase wait.
+
+2015-01-24  Ola Jeppsson  <ola@adapteva.com>
+
 	* dma/dma_2d/src/dma_2d_test.c (int main): Indicate error with
 	return code.
 	* dma/dma_chain/src/dma_chain_test.c: Likewise

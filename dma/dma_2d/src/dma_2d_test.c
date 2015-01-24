@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr, "Fail for doubleword size!\n");
+				err = 1;
 			}
 
 			if(flag2 == 0xffffffff)

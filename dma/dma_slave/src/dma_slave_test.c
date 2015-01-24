@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 	e_start(&dev, t_row, t_col);
 	
 	// Wait for core program execution to finish
-	usleep(300000);
+	usleep(500000);
 	
 	// Read message from the mailbox in transmitter core		
 	e_read(&dev, t_row, t_col, 0x6100, &flag, sizeof(flag));

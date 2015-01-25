@@ -103,13 +103,13 @@ int main(int argc, char *argv[])
   
   //////////////////////////////
   // Test Host-Device throughput
-  SRAM_speed();
-  ERAM_speed();
-  DRAM_speed();
+  fail += SRAM_speed();
+  fail += ERAM_speed();
+  fail += DRAM_speed();
   
   /////////////////////////////
   // Test eCore-ERAM throughput
-  result = EPI_speed();
+  fail += EPI_speed();
 
   //Finalize
   e_close(pEpiphany);
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
   
   /////////////////////////////
   //For now, always pass
-  return EXIT_SUCCESS;
+  return (fail ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 
@@ -130,6 +130,7 @@ timeval_t timer[2];
 char    sbuf[SRAM_BUF_SZ];
 int SRAM_speed(){
   double tdiff, rate;
+  int err = 0;
   
   gettimeofday(&timer[0], NULL);
   e_write(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
@@ -137,7 +138,13 @@ int SRAM_speed(){
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
   rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
   
-  printf("ARM Host    --> eCore(0,0) write spead       = %7.2f MB/s\n", rate);
+  printf("ARM Host    --> eCore(0,0) write speed       = %7.2f MB/s", rate);
+
+  if (rate < 30.0) {
+    printf(" (TOO SLOW)");
+    err  = 1;
+  }
+  putchar('\n');
 
   gettimeofday(&timer[0], NULL);
   e_read(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
@@ -145,8 +152,15 @@ int SRAM_speed(){
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
   rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
   
-  printf("ARM Host    --> eCore(0,0) read spead        = %7.2f MB/s\n", rate);
-  return 0;
+  printf("ARM Host    --> eCore(0,0) read speed        = %7.2f MB/s", rate);
+
+  if (rate < 4.0) {
+    printf(" (TOO SLOW)");
+    err  = 1;
+  }
+  putchar('\n');
+
+  return err;
 }
 
 /*****************************************************************************/
@@ -226,8 +240,9 @@ int EPI_speed(){
   printf("eCore (0,0) <-- ERAM read speed (DMA)        = %7.2f MB/s\n", rate);
   
   e_read(pEpiphany, row, col, 0x7010, &result, sizeof(result));
-  
-  return result;
+
+  /* Return anything but 0 on error */
+  return !(result == 5);
 }
 
 

@@ -1,5 +1,13 @@
 2015-01-25  Ola Jeppsson  <ola@adapteva.com>
 
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c (int main):
+	Return with non-zero exit code on detected errors.
+	(int SRAM_speed): Report performance regressions.
+	(int EPI_speed): Return error if Epiphany test did not run to
+	completion
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
 	* softcache/basic_math/Makefile: Fix cross compilation paths.
 	* softcache/math_example/Makefile: Likewise.
 

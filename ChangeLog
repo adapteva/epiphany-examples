@@ -1,5 +1,16 @@
 2015-01-25  Ola Jeppsson  <ola@adapteva.com>
 
+	* labs/hardware_barrier/src/emain.c (int main): Add
+	synchronization point between first E core and host so that
+	the host can read out the core iteration counters in a
+	race-free manner.
+	* labs/hardware_barrier/src/main.c: Likewise.
+	* labs/hardware_barrier/src/hwb_isr.s: Remove.
+	* labs/hardware_barrier/build.sh: Remove all references to
+	hwb_isr.s.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
 	* cpu/mutex/src/mutex_test.c (int main): Update allowed clock
 	cycle range for new ESDK. Use exit status to report errors.
 

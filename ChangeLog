@@ -1,3 +1,8 @@
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
+	* softcache/basic_math/Makefile: Fix cross compilation paths.
+	* softcache/math_example/Makefile: Likewise.
+
 2015-01-24  Ola Jeppsson  <ola@adapteva.com>
 
 	* dma/dma_slave/src/dma_slave_test.c (int main): Go back to

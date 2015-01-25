@@ -1,5 +1,9 @@
 2015-01-25  Ola Jeppsson  <ola@adapteva.com>
 
+	* apps/matmul-16/test.sh: Forward program's exit status.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/matmul-16/host/src/matmul_host.c (int main): Return
 	with non-zero exit status on detected performance regressions.
 

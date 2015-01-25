@@ -11,9 +11,13 @@ cd $EXEPATH/host/Release
 
 ./matmul.elf $@ ../../device/Release/e_matmul.srec > $LOG
 
-if [ $? -ne 0 ] 
+retval=$?
+
+if [ $retval -ne 0 ]
 then
     echo "$SCRIPT FAILED!!!!"
 else
     echo "$SCRIPT PASSED"
 fi
+
+exit $retval

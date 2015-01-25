@@ -1,5 +1,10 @@
 2015-01-25  Ola Jeppsson  <ola@adapteva.com>
 
+	* cpu/mutex/src/mutex_test.c (int main): Update allowed clock
+	cycle range for new ESDK. Use exit status to report errors.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/matmul-16/test.sh: Forward program's exit status.
 
 2015-01-25  Ola Jeppsson  <ola@adapteva.com>

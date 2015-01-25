@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 	unsigned int addr; //, clocks;
 	size_t       sz;
 	double       tdiff[2];
-	int          result, rerval;
+	int          result, retval;
 
 
 	pEpiphany = &Epiphany;
@@ -230,14 +230,21 @@ int main(int argc, char *argv[])
 	    printf( "Host     -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
 	    printf( "\n* * *   EPIPHANY FTW !!!   * * *\n");
 	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	    printf( "GOOD: TEST PASSED\n");
-	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	    rerval = 0;
+	    /* Check for performanc regressions */
+	    if (tdiff[0] < 190.0) {
+		    printf( "GOOD: TEST PASSED\n");
+		    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+			retval = 0;
+	    } else {
+		    printf( "BAD: TEST PASSED BUT WAS TOO SLOW\n");
+		    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+		    retval = 2;
+	    }
 	} else {
 	  printf( "\n\nERROR: C_epiphany is different from C_host !!!\n");
 	  printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 	  printf( "BAD: CHIP FAILED!!!\n");
-	  rerval = 1;
+	  retval = 1;
 	}
 	printf( "\n");
 
@@ -285,7 +292,7 @@ int main(int argc, char *argv[])
 
 	e_finalize();
 
-	return rerval;
+	return retval;
 }
 
 

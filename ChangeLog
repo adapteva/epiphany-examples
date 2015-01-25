@@ -1,5 +1,10 @@
 2015-01-25  Ola Jeppsson  <ola@adapteva.com>
 
+	* apps/matmul-16/host/src/matmul_host.c (int main): Return
+	with non-zero exit status on detected performance regressions.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c (int main):
 	Return with non-zero exit code on detected errors.
 	(int SRAM_speed): Report performance regressions.

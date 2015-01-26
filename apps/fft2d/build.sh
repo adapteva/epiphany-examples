@@ -66,7 +66,8 @@ ${CROSS_PREFIX}g++ \
 	-lILU \
 	-lILUT \
 	-ljpeg \
-	-lpthread
+	-lpthread \
+	-lrt
 
 
 #echo "=== Building FFTW bemchmark program ==="

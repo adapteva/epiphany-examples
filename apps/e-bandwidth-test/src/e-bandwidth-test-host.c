@@ -22,7 +22,7 @@ along with this program, see the file COPYING. If not, see
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <sys/time.h>
+#include <time.h>
 
 #include <e-hal.h>
 #include <e-loader.h>
@@ -122,8 +122,7 @@ int main(int argc, char *argv[])
 }
 
 
-typedef struct timeval timeval_t;
-timeval_t timer[2];
+struct timespec timer[2];
 /*****************************************************************************/
 #define SRAM_BUF_SZ_KB 32
 #define SRAM_BUF_SZ    (SRAM_BUF_SZ_KB * 1024)
@@ -132,10 +131,10 @@ int SRAM_speed(){
   double tdiff, rate;
   int err = 0;
   
-  gettimeofday(&timer[0], NULL);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[0]);
   e_write(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
-  gettimeofday(&timer[1], NULL);
-  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[1]);
+  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000000.0);
   rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
   
   printf("ARM Host    --> eCore(0,0) write speed       = %7.2f MB/s", rate);
@@ -146,10 +145,10 @@ int SRAM_speed(){
   }
   putchar('\n');
 
-  gettimeofday(&timer[0], NULL);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[0]);
   e_read(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
-  gettimeofday(&timer[1], NULL);
-  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[1]);
+  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000000.0);
   rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
   
   printf("ARM Host    --> eCore(0,0) read speed        = %7.2f MB/s", rate);
@@ -171,18 +170,18 @@ __suseconds_t d;
 int ERAM_speed(){
   double tdiff, rate;
   
-  gettimeofday(&timer[0], NULL);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[0]);
   e_write(pERAM, 0, 0, (off_t) 0, ebuf, ERAM_BUF_SZ);
-  gettimeofday(&timer[1], NULL);
-  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[1]);
+  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000000.0);
   rate  = (double) ERAM_BUF_SZ_MB / tdiff;
   
   printf("ARM Host    --> ERAM write speed             = %7.2f MB/s\n", rate);
   
-  gettimeofday(&timer[0], NULL);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[0]);
   e_read(pERAM, 0, 0, (off_t) 0, ebuf, ERAM_BUF_SZ);
-  gettimeofday(&timer[1], NULL);
-  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[1]);
+  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000000.0);
   rate  = (double) ERAM_BUF_SZ_MB / tdiff;
   
   printf("ARM Host    <-- ERAM read speed              = %7.2f MB/s\n", rate);
@@ -197,10 +196,10 @@ char    dbufw[DRAM_BUF_SZ];
 int DRAM_speed(){
 
   double tdiff, rate;
-  gettimeofday(&timer[0], NULL);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[0]);
   memcpy(dbufw, dbufr, DRAM_BUF_SZ);
-  gettimeofday(&timer[1], NULL);
-  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[1]);
+  tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000000.0);
   rate  = (double) DRAM_BUF_SZ_MB / tdiff;
   
   printf("ARM Host    <-> DRAM: Copy speed             = %7.2f MB/s\n", rate);

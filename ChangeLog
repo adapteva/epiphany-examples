@@ -1,3 +1,16 @@
+2015-01-26  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c (int
+	SRAM_speed): Use clock_gettime() instead gettimeofday() for
+	better accuracy.
+	* apps/fft2d/host/src/fft2d_host.c (int main): Likewise.
+	* apps/fft2d/host/src/fftw.c: Likewise.
+	* apps/matmul-16/host/src/matmul_host.c (void
+	matmul_strassen): Likewise.
+	* apps/matmul-64/host/src/matmul_host.c: Likewise.
+	* apps/e-bandwidth-test/build.sh: Link host binary with -lrt.
+	* apps/fft2d/build.sh: Likewise.
+
 2015-01-25  Ola Jeppsson  <ola@adapteva.com>
 
 	* scripts/build_and_test_all.sh: Improve testing and output.

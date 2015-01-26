@@ -42,7 +42,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stddef.h>
-#include <sys/time.h>
+#include <time.h>
 
 #include <IL/il.h>
 #define ILU_ENABLED
@@ -97,7 +97,6 @@ unsigned int DRAM_BASE  = 0x8f000000;
 unsigned int BankA_addr = 0x2000;
 unsigned int coreID[_Ncores];
 
-typedef struct timeval timeval_t;
 e_platform_t platform;
 
 int main(int argc, char *argv[])
@@ -118,7 +117,7 @@ int main(int argc, char *argv[])
 
 	unsigned int addr;
 	size_t sz;
-	timeval_t timer[4];
+	struct timespec timer[4];
 	uint32_t time_p[TIMERS];
 	uint32_t time_d[TIMERS];
 	FILE *fo;
@@ -277,9 +276,9 @@ int main(int argc, char *argv[])
 	fprintf(fo, "%% GO!\n");
 	fflush(stdout);
 	fflush(fo);
-	gettimeofday(&timer[0], NULL);
+	clock_gettime(CLOCK_MONOTONIC, &timer[0]);
 	fft2d_go(pDRAM);
-	gettimeofday(&timer[1], NULL);
+	clock_gettime(CLOCK_MONOTONIC, &timer[1]);
 	 printf(       "Done!\n\n");
 	fprintf(fo, "%% Done!\n\n");
 	fflush(stdout);

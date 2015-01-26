@@ -1,5 +1,13 @@
 2015-01-26  Ola Jeppsson  <ola@adapteva.com>
 
+	* apps/matmul-16/host/src/matmul_host.c (int main): Also clock
+	CPUTIME. Compare this value to monotonic time to detect if the
+	system is under high load. If that is the case, and monotonic
+	time was too slow, do not indicate failure unless we were
+	allocated enough CPU time. Just print a warning.
+
+2015-01-26  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c (int
 	SRAM_speed): Use clock_gettime() instead gettimeofday() for
 	better accuracy.

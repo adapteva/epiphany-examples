@@ -80,7 +80,7 @@ float Bepi[_Smtx * _Smtx];
 float Cref[_Smtx * _Smtx];
 float Cdiff[_Smtx * _Smtx];
 
-struct timespec timer[4];
+struct timespec timer[6];
 
 extern e_platform_t e_platform;
 
@@ -92,8 +92,8 @@ int main(int argc, char *argv[])
 	float        seed;
 	unsigned int addr; //, clocks;
 	size_t       sz;
-	double       tdiff[2];
-	int          result, retval;
+	double       tdiff[3];
+	int          result, retval = 0;
 
 
 	pEpiphany = &Epiphany;
@@ -156,14 +156,18 @@ int main(int argc, char *argv[])
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 #endif
 
+	/* Wallclock time */
 	clock_gettime(CLOCK_MONOTONIC, &timer[0]);
+	/* Clock CPUTIME too. We don't want to indicate failure just
+	 * because the system was under high load. */
+	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[4]);
 
 	// Copy operand matrices to Epiphany system
 	addr = offsetof(shared_buf_t, A[0]);
 	sz = sizeof(Mailbox.A);
 	printf( "Writing A[%uB] to address %08x...\n", sz, addr);
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.A, sz);
-	
+
 	addr = offsetof(shared_buf_t, B[0]);
 	sz = sizeof(Mailbox.B);
 	printf( "Writing B[%uB] to address %08x...\n", sz, addr);
@@ -183,6 +187,7 @@ int main(int argc, char *argv[])
 	e_read(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 
 	clock_gettime(CLOCK_MONOTONIC, &timer[1]);
+	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[5]);
 
 
 	// Calculate a reference result
@@ -215,6 +220,7 @@ int main(int argc, char *argv[])
 	tdiff[0] = (timer[1].tv_sec - timer[0].tv_sec) * 1000 + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000.0);
 //	tdiff[0] = ((double) clocks) / eMHz * 1000;
 	tdiff[1] = (timer[3].tv_sec - timer[2].tv_sec) * 1000 + ((double) (timer[3].tv_nsec - timer[2].tv_nsec) / 1000000.0);
+	tdiff[2] = (timer[5].tv_sec - timer[4].tv_sec) * 1000 + ((double) (timer[5].tv_nsec - timer[4].tv_nsec) / 1000000.0);
 
 
 	// If the difference is 0, then the matrices are identical and the
@@ -227,15 +233,21 @@ int main(int argc, char *argv[])
 	    printf( "Host     -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
 	    printf( "\n* * *   EPIPHANY FTW !!!   * * *\n");
 	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	    /* Check for performanc regressions */
+	    /* Check for performance regressions */
 	    if (tdiff[0] < 190.0) {
 		    printf( "GOOD: TEST PASSED\n");
 		    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-			retval = 0;
 	    } else {
-		    printf( "BAD: TEST PASSED BUT WAS TOO SLOW\n");
-		    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-		    retval = 2;
+		if (tdiff[2] > 190.0) {
+			printf( "BAD: TEST PASSED BUT WAS TOO SLOW\n");
+			retval = 2;
+		} else {
+			printf( "GOOD: TEST PASSED\n");
+			printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+			printf( "WARNING: System seems to be under high load. Re-run test to get\n");
+			printf( "         accurate timing!\n");
+		}
+		printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
 	    }
 	} else {
 	  printf( "\n\nERROR: C_epiphany is different from C_host !!!\n");

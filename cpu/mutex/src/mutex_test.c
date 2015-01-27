@@ -29,6 +29,7 @@ along with this program, see the file COPYING. If not, see
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 
 #include <e-hal.h>
 
@@ -38,11 +39,13 @@ int main(int argc, char *argv[])
 	unsigned row, col, coreid, i, j, m, n, k;
 	e_platform_t platform;
 	e_epiphany_t dev;
-	/* Assume 600 Mhz clock frequency. Allow ~5% wiggle room */
-	unsigned clk_max = 18500000;
-	unsigned clk_min = 16500000;
+	/* Assume 600 Mhz clock frequency. */
+	unsigned clk_max = 5600; /* 10 stddev */
+	unsigned clk_min = 1500;
 	unsigned num;
 	unsigned counter = 0;
+	const uint32_t one = 1;
+	const uint32_t zero = 0;
 	int err = 0;
 	srand(1);
 
@@ -58,20 +61,37 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 
 	// Load the device program onto core (0,0)
-	e_load("e_mutex_test0.srec", &dev, 0, 0, E_TRUE);
+	e_load("e_mutex_test0.srec", &dev, 0, 0, E_FALSE);
 
-	usleep(10000);
 	// Load the device program onto all the other eCores
-	e_load_group("e_mutex_test.srec", &dev, 0, 1, 1, 3, E_TRUE);
-	e_load_group("e_mutex_test.srec", &dev, 1, 0, 3, 4, E_TRUE);
+	e_load_group("e_mutex_test.srec", &dev, 0, 1, 1, 3, E_FALSE);
+	e_load_group("e_mutex_test.srec", &dev, 1, 0, 3, 4, E_FALSE);
 
-	usleep(100000);
+	usleep(1000);
+
+	/* Clear the go flag */
+	e_write(&dev, 0, 0, 0x6400, &zero, sizeof(zero));
+
+	usleep(1000);
+
+	/* Start all cores */
+	e_start_group(&dev);
+
+	/* Give core0 plenty of time to initialize mutex */
+	usleep(10000);
+
+	/* Go! */
+	e_write(&dev, 0, 0, 0x6400, &one, sizeof(one));
 
 	// Wait for core program execution to finish
-	// Read message from shared buffer
+	usleep(10000);
 
+	/* Read results from core0 */
 	e_read(&dev, 0, 0, 0x6200, &num, sizeof(num));
 	e_read(&dev, 0, 0, 0x6300, &counter, sizeof(counter));
+
+	/* Clear go flag */
+	e_write(&dev, 0, 0, 0x6400, &zero, sizeof(zero));
 
 	// Print the message
 	fprintf(stderr, "The counter now is %d\n", counter);

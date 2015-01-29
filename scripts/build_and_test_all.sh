@@ -21,7 +21,7 @@ BUILD_SKIP_REGEX="/archive/|/test/e-test|/test/e-matmul-test"
 # Problematic/unreliable/too slow examples we don't want to test goes here.
 TEST_SKIP_REGEX=\
 "/apps/eprime|/apps/erm|/apps/matmul-64|/labs/hardware_loops|"\
-"/test/e-loopback-test|/cpu/ctimer"
+"/test/e-loopback-test|/cpu/ctimer|/labs/|/io/|/test/e-standby-test"
 
 tput_ () {
     # Fail silently, will only result in no colors.

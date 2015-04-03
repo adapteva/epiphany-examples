@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	size_t       sz;
 	double       tdiff[2];
 	int          result, rerval;
-
+	int          verbose=0;
 
 	pEpiphany = &Epiphany;
 	pDRAM     = &DRAM;
@@ -106,12 +106,12 @@ int main(int argc, char *argv[])
 
 	fo = stderr;
 	fi = stdin;
-
-	printf( "\nMatrix: C[%d][%d] = A[%d][%d] * B[%d][%d]\n\n", _Smtx, _Smtx, _Smtx, _Smtx, _Smtx, _Smtx);
-	printf( "Using %d x %d cores\n\n", _Nside, _Nside);
+	printf( "------------------------------------------------------------\n");
+	printf( "Calculating:   C[%d][%d] = A[%d][%d] * B[%d][%d]\n", _Smtx, _Smtx, _Smtx, _Smtx, _Smtx, _Smtx);
 	seed = 0.0;
-	printf( "Seed = %f\n", seed);
-
+	if(verbose){
+	  printf( "Seed = %f\n", seed);
+	}
 
 
 	// Connect to device for communicating with the Epiphany system
@@ -136,7 +136,9 @@ int main(int argc, char *argv[])
 	Mailbox.core.ready = 0;
 	e_write(pDRAM, 0, 0, addr, &Mailbox.core.ready, sizeof(Mailbox.core.ready));
 
-	printf("Loading program on Epiphany chip...\n");
+	if(verbose){
+	  printf("Loading program on Epiphany chip...\n");
+	}
 	e_set_loader_verbosity(ar.verbose);
 	result = e_load_group(ar.srecFile, pEpiphany, ar.row, 0, 4, 4, ar.run_target);
 	if (result == E_ERR) {
@@ -153,7 +155,9 @@ int main(int argc, char *argv[])
 	// Wipe-out any previous remains in result matrix (for verification)
 	addr = offsetof(shared_buf_t, C[0]);
 	sz = sizeof(Mailbox.C);
-	printf( "Writing C[%uB] to address %08x...\n", sz, addr);
+	if(verbose){
+	  printf( "Writing C[%uB] to address %08x...\n", sz, addr);
+	}
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 #endif
 
@@ -162,34 +166,37 @@ int main(int argc, char *argv[])
 	// Copy operand matrices to Epiphany system
 	addr = offsetof(shared_buf_t, A[0]);
 	sz = sizeof(Mailbox.A);
-	printf( "Writing A[%uB] to address %08x...\n", sz, addr);
+	if(verbose){
+	  printf( "Writing A[%uB] to address %08x...\n", sz, addr);
+	}
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.A, sz);
 	
 	addr = offsetof(shared_buf_t, B[0]);
 	sz = sizeof(Mailbox.B);
-	printf( "Writing B[%uB] to address %08x...\n", sz, addr);
+	if(verbose){
+	  printf( "Writing B[%uB] to address %08x...\n", sz, addr);
+	}
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.B, sz);
-
-
 	// Call the Epiphany matmul() function
-	printf( "GO Epiphany! ...   ");
+	if(verbose){
+	  printf( "GO Epiphany! ...   ");
+	}
 //	gettimeofday(&timer[0], NULL);
 	matmul_go(pDRAM);
 //	gettimeofday(&timer[1], NULL);
-	printf( "Finished calculating Epiphany result.\n");
-
 
 	// Read result matrix and timing
 	addr = offsetof(shared_buf_t, C[0]);
 	sz = sizeof(Mailbox.C);
-	printf( "Reading result from address %08x...\n", addr);
+	if(verbose){
+	  printf( "Reading result from address %08x...\n", addr);
+	}
 	e_read(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 
 	gettimeofday(&timer[1], NULL);
 
 
 	// Calculate a reference result
-	printf( "Calculating result on Host ...   ");
 	gettimeofday(&timer[2], NULL);
 #ifndef __DO_STRASSEN__
 	matmul(Mailbox.A, Mailbox.B, Cref, _Smtx);
@@ -197,12 +204,14 @@ int main(int argc, char *argv[])
 	matmul_strassen(Mailbox.A, Mailbox.B, Cref, _Smtx);
 #endif
 	gettimeofday(&timer[3], NULL);
+	if(verbose){
 	printf( "Finished calculating Host result.\n");
-
-
+	}
 	addr = offsetof(shared_buf_t, core.clocks);
 	sz = sizeof(Mailbox.core.clocks);
-	printf( "Reading time from address %08x...\n", addr);
+	if(verbose){
+	  printf( "Reading time from address %08x...\n", addr);
+	}
 	e_read(pDRAM,0, 0, addr, &Mailbox.core.clocks, sizeof(Mailbox.core.clocks));
 //	clocks = Mailbox.core.clocks;
 
@@ -211,8 +220,6 @@ int main(int argc, char *argv[])
 
 
 	// Calculate the difference between the Epiphany result and the reference result
-	printf( "\n*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	printf( "Verifying result correctness ...   ");
 	matsub(Mailbox.C, Cref, Cdiff, _Smtx);
 
 	tdiff[0] = (timer[1].tv_sec - timer[0].tv_sec) * 1000 + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000.0);
@@ -224,23 +231,16 @@ int main(int argc, char *argv[])
 	// calculation was correct
 	if (iszero(Cdiff, _Smtx))
 	  {
-	    printf( "C_epiphany == C_host\n");
-	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	    printf( "Epiphany -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[0], eMHz);
-	    printf( "Host     -  time: %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
-	    printf( "\n* * *   EPIPHANY FTW !!!   * * *\n");
-	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	    printf( "GOOD: TEST PASSED\n");
-	    printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
+	    printf( "Epiphany(time) %9.1f msec  (@ %03d MHz)\n", tdiff[0], eMHz);
+	    printf( "Host(time)     %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
+	    printf( "------------------------------------------------------------\n");
+	    printf( "TEST \"matmul-16\" PASSED\n");
 	    rerval = 0;
 	} else {
 	  printf( "\n\nERROR: C_epiphany is different from C_host !!!\n");
-	  printf( "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-	  printf( "BAD: CHIP FAILED!!!\n");
+	  printf( "TEST \"matmul-16\" FAILED\n");
 	  rerval = 1;
 	}
-	printf( "\n");
-
 
 #ifdef __DUMP_MATRICES__
 	printf( "\n\n\n");
@@ -283,8 +283,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	e_finalize();
-
+	e_finalize();		
 	return rerval;
 }
 
@@ -302,19 +301,15 @@ int matmul_go(e_mem_t *pDRAM)
 		e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
 
 	// Signal cores to start crunching
-	printf( "Writing the GO!...\n");
 	addr = offsetof(shared_buf_t, core.go);
 	Mailbox.core.go = _MAX_MEMBER_;
 	e_write(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
-
 	// Wait until cores finished calculation
 	addr = offsetof(shared_buf_t, core.go);
 	Mailbox.core.go = 1;
-	while (Mailbox.core.go != 0)
-		e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
-
-	printf( "Done...\n");
-
+	while (Mailbox.core.go != 0){
+	  e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
+	}
 	return 0;
 }
 

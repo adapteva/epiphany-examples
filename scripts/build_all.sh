@@ -16,9 +16,6 @@ echo "Building ../test/e-mem-test"
 echo "Building ../test/e-write-word"
 ../test/e-write-word/build.sh
 
-echo "Building ../test/e-main" 
-../test/e-main/build.sh
-
 echo "Building ../test/e-read-buf"
 ../test/e-read-buf/build.sh
 

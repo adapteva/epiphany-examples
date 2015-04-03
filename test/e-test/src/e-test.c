@@ -1,30 +1,10 @@
-/*
-
-Copyright (C) 2012 Adapteva, Inc.
-Contributed by Andreas Olofsson <support@adapteva.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program, see the file COPYING. If not, see
-<http://www.gnu.org/licenses/>.
-*/
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <e-hal.h>
 #include <e-loader.h>
 
-void e_check_test(void *dev, unsigned row, unsigned col, int *status);
+void e_check_test(void *dev, unsigned row, unsigned col, int *status, int verbose);
 void usage();
 
 int main(int argc, char *argv[]){
@@ -36,6 +16,7 @@ int main(int argc, char *argv[]){
   char elfFile[4096];
   int status=1;//pass
   int i,j;
+  int verbose=0;
 
   if (argc < 7){
     usage();
@@ -72,7 +53,7 @@ int main(int argc, char *argv[]){
     //Checking the test
     for (i=row0; i<(row0+rows); i++) {
       for (j=col0; j<(col0+cols); j++) {   
-	e_check_test(&dev, i, j, &status);
+	e_check_test(&dev, i, j, &status,verbose);
       }
     }
 
@@ -84,9 +65,11 @@ int main(int argc, char *argv[]){
 
   //self check
   if(status){
+    printf("TEST %s PASSED\n", elfFile);
     return EXIT_SUCCESS;
   }
   else{
+    printf("TEST %s FAILED\n", elfFile);
     return EXIT_FAILURE;
   }    
 }
@@ -94,7 +77,8 @@ int main(int argc, char *argv[]){
 void e_check_test( void *dev, 
 		   unsigned row, 
 		   unsigned col, 
-		   int *status 
+		   int *status,
+		   int verbose
 		  ){
 
   unsigned int result;
@@ -110,17 +94,23 @@ void e_check_test( void *dev,
     else if(result==0x12345678){
       unsigned clr= ( unsigned ) 0x0;
       e_write(dev,row, col, 0x24, &clr, sizeof(clr));
-      printf("Core (%d,%d) PASSED\n",row,col);
+      if(verbose){
+	  printf("Core (%d,%d) PASSED\n",row,col);
+	}
       break;
     }
     else{
       if(wait){
 	usleep(10000);      
-	printf("Core (%d,%d) WAITING...\n",row,col);
+	if(verbose){
+	  printf("Core (%d,%d) WAITING...\n",row,col);
+	}
 	wait=0;
       }
       else{
-	printf("Core (%d,%d) FAILED\n",row,col);
+	if(verbose){
+	  printf("Core (%d,%d) FAILED\n",row,col);
+	}
 	*status=0;
 	break;
       }

@@ -64,8 +64,12 @@ FILE *fd;
 
 int main(int argc, char *argv[])
 {
+  char    elfFile[4096];
+  //arguments  
+  strcpy(elfFile, argv[1]);
+
   int result, fail;
-  
+
   fd = stderr;
   
   pEpiphany = &Epiphany;
@@ -100,7 +104,7 @@ int main(int argc, char *argv[])
   fail = 0;
   
   
-  
+  printf("------------------------------------------------------------\n");
   //////////////////////////////
   // Test Host-Device throughput
   SRAM_speed();
@@ -109,6 +113,9 @@ int main(int argc, char *argv[])
   
   /////////////////////////////
   // Test eCore-ERAM throughput
+  
+  //Run program
+  e_load_group(elfFile, pEpiphany,0,0,1,1, E_TRUE);
   result = EPI_speed();
 
   //Finalize
@@ -118,6 +125,8 @@ int main(int argc, char *argv[])
   
   /////////////////////////////
   //For now, always pass
+  printf("------------------------------------------------------------\n");
+  printf( "TEST \"e-bandwidth-test\" PASSED\n");
   return EXIT_SUCCESS;
 }
 
@@ -128,6 +137,8 @@ timeval_t timer[2];
 #define SRAM_BUF_SZ_KB 32
 #define SRAM_BUF_SZ    (SRAM_BUF_SZ_KB * 1024)
 char    sbuf[SRAM_BUF_SZ];
+
+
 int SRAM_speed(){
   double tdiff, rate;
   
@@ -136,7 +147,6 @@ int SRAM_speed(){
   gettimeofday(&timer[1], NULL);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000000.0);
   rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
-  
   printf("ARM Host    --> eCore(0,0) write spead       = %7.2f MB/s\n", rate);
 
   gettimeofday(&timer[0], NULL);
@@ -199,11 +209,8 @@ int EPI_speed(){
   unsigned int clocks;
   double       rate;
   int          result;
-  int row = 0;
-  int col = 0;
-
-  //Run program
-  e_load_group(ar.srecFile, pEpiphany, row, col,1,1, E_TRUE);
+  int row=0;
+  int col=0;
 
   //Lazy way of waiting till finished
   sleep(2);

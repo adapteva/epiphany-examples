@@ -71,11 +71,12 @@
 #define TRUE  1
 
 typedef struct {
-	int  run_target;
-	e_hal_diag_t verbose;
-	char srecFile[4096];
-	char ifname[255];
-	char ofname[255];
+  int  run_target;
+  e_hal_diag_t verbose;
+  char srecFile[4096];
+  char ifname[255];
+  char ofname[255];
+  char elfFile[4096];
 } args_t;
 
 args_t ar = {TRUE, H_D0, ""};
@@ -130,12 +131,11 @@ int main(int argc, char *argv[])
 	pDRAM     = &DRAM;
 	msize     = 0x00400000;
 
-	get_args(argc, argv);
-
-
-
-//	fi = fopen(ifname, "rb");
-//	fo = stdout;
+	//get_args(argc, argv);
+	strcpy(ar.ifname,argv[1]);
+	strcpy(ar.elfFile,argv[2]);
+	strcpy(ar.ofname, ar.ifname);
+	printf("------------------------------------------------------------\n");
 	fo = fopen("matprt.m", "w");
 	if ((fo == NULL)) // || (fi == NULL))
 	{
@@ -167,9 +167,7 @@ int main(int argc, char *argv[])
 	Mailbox.core.ready = 0;
 	e_write(pDRAM, 0, 0, addr, (void *) &(Mailbox.core.ready), sizeof(Mailbox.core.ready));
 
-	printf("Loading program on Epiphany chip...\n");
-	strcpy(ar.srecFile, "../../device/Release/e_fft2d.srec");
-	result = e_load_group(ar.srecFile, pEpiphany, 0, 0, platform.rows, platform.cols, (e_bool_t) (ar.run_target));
+	result = e_load_group(ar.elfFile, pEpiphany, 0, 0, platform.rows, platform.cols, (e_bool_t) (ar.run_target));
 	if (result == E_ERR) {
 		printf("Error loading Epiphany program.\n");
 		exit(1);
@@ -198,9 +196,7 @@ int main(int argc, char *argv[])
 	// Generate the main image name to use, bind it and load the image file.
 	ilGenImages(1, &ImgId);
 	ilBindImage(ImgId);
-	printf("\n");
-	printf("Loading original image from file \"%s\".\n\n", ar.ifname);
-	if (!ilLoadImage(ar.ifname))
+	       if (!ilLoadImage(ar.ifname))//ar.ifname
 	{
 		fprintf(stderr, "Could not open input image file \"%s\" ...exiting.\n", ar.ifname);
 		exit(3);
@@ -208,12 +204,13 @@ int main(int argc, char *argv[])
 
 
 	// Display the image's dimensions to the end user.
+	/*
 	printf("Width: %d  Height: %d  Depth: %d  Bpp: %d\n\n",
 	       ilGetInteger(IL_IMAGE_WIDTH),
 	       ilGetInteger(IL_IMAGE_HEIGHT),
 	       ilGetInteger(IL_IMAGE_DEPTH),
 	       ilGetInteger(IL_IMAGE_BITS_PER_PIXEL));
-
+	*/
 	imdata = ilGetData();
 	imsize = ilGetInteger(IL_IMAGE_WIDTH) * ilGetInteger(IL_IMAGE_HEIGHT);
 	imBpp  = ilGetInteger(IL_IMAGE_BYTES_PER_PIXEL);
@@ -241,18 +238,15 @@ int main(int argc, char *argv[])
 	// Copy operand matrices to Epiphany system
 	addr = DRAM_BASE + offsetof(shared_buf_t, A[0]);
 	sz = sizeof(Mailbox.A);
-	 printf(       "Writing A[%ldB] to address %08x...\n", sz, addr);
 	fprintf(fo, "%% Writing A[%ldB] to address %08x...\n", sz, addr);
 	e_write(addr, (void *) Mailbox.A, sz);
 
 	addr = DRAM_BASE + offsetof(shared_buf_t, B[0]);
 	sz = sizeof(Mailbox.B);
-	 printf(       "Writing B[%ldB] to address %08x...\n", sz, addr);
 	fprintf(fo, "%% Writing B[%ldB] to address %08x...\n", sz, addr);
 	e_write(addr, (void *) Mailbox.B, sz);
 #else
 	// Copy operand matrices to Epiphany cores' memory
-	 printf(       "Writing image to Epiphany\n");
 	fprintf(fo, "%% Writing image to Epiphany\n");
 
 	sz = sizeof(Mailbox.A) / _Ncores;
@@ -260,27 +254,23 @@ int main(int argc, char *argv[])
 		for (col=0; col<(int) platform.cols; col++)
 		{
 			addr = BankA_addr;
-			printf(".");
 			fflush(stdout);
 			cnum = e_get_num_from_coords(pEpiphany, row, col);
 //			 printf(       "Writing A[%uB] to address %08x...\n", sz, addr);
 			fprintf(fo, "%% Writing A[%uB] to address %08x...\n", sz, (coreID[cnum] << 20) | addr); fflush(fo);
 			e_write(pEpiphany, row, col, addr, (void *) &Mailbox.A[cnum * _Score * _Sfft], sz);
 		}
-	printf("\n");
 #endif
 
 
 
 	// Call the Epiphany fft2d() function
-	 printf(       "GO!\n");
 	fprintf(fo, "%% GO!\n");
 	fflush(stdout);
 	fflush(fo);
 	gettimeofday(&timer[0], NULL);
 	fft2d_go(pDRAM);
 	gettimeofday(&timer[1], NULL);
-	 printf(       "Done!\n\n");
 	fprintf(fo, "%% Done!\n\n");
 	fflush(stdout);
 	fflush(fo);
@@ -302,8 +292,6 @@ int main(int argc, char *argv[])
 	time_d[6] = time_p[7] - time_p[8]; // FFT-2D
 	time_d[7] = time_p[6] - time_p[7]; // LPF
 	time_d[9] = time_p[0] - time_p[9]; // Total cycles
-
-	 printf(       "Finished calculation in %u cycles (%5.3f msec @ %3.0f MHz)\n\n", time_d[9], (time_d[9] * 1000.0 / eMHz), (eMHz / 1e6));
 	fprintf(fo, "%% Finished calculation in %u cycles (%5.3f msec @ %3.0f MHz)\n\n", time_d[9], (time_d[9] * 1000.0 / eMHz), (eMHz / 1e6));
 
 	 printf(       "FFT2D         - %7u cycles (%5.3f msec)\n", time_d[6], (time_d[6] * 1000.0 / eMHz));
@@ -312,10 +300,7 @@ int main(int argc, char *argv[])
 	 printf(       "  FFT1D       - %7u cycles (%5.3f msec x2)\n", time_d[4], (time_d[4] * 1000.0 / eMHz));
 	 printf(       "  Corner Turn - %7u cycles (%5.3f msec)\n", time_d[5], (time_d[5] * 1000.0 / eMHz));
 	 printf(       "LPF           - %7u cycles (%5.3f msec)\n", time_d[7], (time_d[7] * 1000.0 / eMHz));
-	 printf(       "\n");
-
-	 printf(       "Reading processed image back to host\n");
-	fprintf(fo, "%% Reading processed image back to host\n");
+	 fprintf(fo, "%% Reading processed image back to host\n");
 
 
 
@@ -329,11 +314,9 @@ int main(int argc, char *argv[])
 	remndr = sz % RdBlkSz;
 	for (i=0; i<blknum; i++)
 	{
-		printf(".");
 		fflush(stdout);
 		e_read(addr+i*RdBlkSz, (void *) ((long unsigned)(Mailbox.B)+i*RdBlkSz), RdBlkSz);
 	}
-	printf(".");
 	fflush(stdout);
 	e_read(addr+i*RdBlkSz, (void *) ((long unsigned)(Mailbox.B)+i*RdBlkSz), remndr);
 #else
@@ -343,7 +326,6 @@ int main(int argc, char *argv[])
 		for (col=0; col<(int) platform.cols; col++)
 		{
 			addr = BankA_addr;
-			printf(".");
 			fflush(stdout);
 			cnum = e_get_num_from_coords(pEpiphany, row, col);
 //			printf(        "Reading A[%uB] from address %08x...\n", sz, addr);
@@ -351,9 +333,6 @@ int main(int argc, char *argv[])
 			e_read(pEpiphany, row, col, addr, (void *) &Mailbox.B[cnum * _Score * _Sfft], sz);
 		}
 #endif
-	printf("\n");
-
-
 
 	// Convert processed image matrix B into the image file date.
 	for (unsigned int i=0; i<imsize; i++)
@@ -364,7 +343,6 @@ int main(int argc, char *argv[])
 
 	// Save processed image to the output file.
 	ilEnable(IL_FILE_OVERWRITE);
-	printf("\nSaving processed image to file \"%s\".\n\n", ar.ofname);
 	if (!ilSaveImage(ar.ofname))
 	{
 		fprintf(stderr, "Could not open output image file \"%s\" ...exiting.\n", ar.ofname);
@@ -395,10 +373,13 @@ int main(int argc, char *argv[])
 
 	//Returnin success if test runs expected number of clock cycles
 	//Need to add comparison with golden reference image!
+	printf("------------------------------------------------------------\n");
 	if(time_d[9]>50000){
+	  printf( "TEST \"fft2d\" PASSED\n");
 	  return EXIT_SUCCESS;
 	}
 	else{
+	  printf( "TEST \"fft2d\" FAILED\n");
 	  return EXIT_FAILURE;
 	}
 }
@@ -517,7 +498,7 @@ void get_args(int argc, char *argv[])
 		if (!strcmp(argv[n], "-h"))
 			usage(0);
 
-		strcpy(ar.ifname, argv[n]);
+	
 	}
 
 
@@ -526,7 +507,7 @@ void get_args(int argc, char *argv[])
 	{
 		usage(1);
 	} else {
-		strcpy(ar.ofname, ar.ifname);
+		
 		dotp = strrchr(ar.ofname, '.');
 		if (dotp != NULL)
 		{

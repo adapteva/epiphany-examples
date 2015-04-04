@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
 
   unsigned PAT0 = 0x55555555;
   unsigned PAT1 = 0xAAAAAAAA;
-
+  unsigned data;
   //Test Init
   coreID=e_test_init();
   row = (coreID >> 26) & 0x7;
@@ -38,10 +38,12 @@ int main(int argc, char *argv[]){
       dummy = (unsigned *) (offset + BUF_SIZE-WORD_SIZE);
       if(1){
 	if(!(offset==coreID)){
+
 	  //Write PAT0
+	  data=(PAT0 & 0xFFFF0000) | (row*ROWS+col);
 	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	    addr=(unsigned *) (offset+k);
-	    (*(addr))= ( PAT0 | k );
+	    (*(addr))= data;
 	  }
 	  //Memory Ordering Sync (to get around RAW races)
 	  e_write_ack(dummy);  
@@ -49,14 +51,15 @@ int main(int argc, char *argv[]){
 	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	    addr=(unsigned *) (offset+k);
 	    result=(*(addr));
-	    if(result!= ( PAT0  | k )){
+	    if(result!=data){
 	      status=0;
 	    }
 	  }	
 	  //Write PAT1
+	  data=( (PAT1 & 0x0000FFFF) | ((row*ROWS+col)<<16));
 	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	    addr=(unsigned *) (offset+k);
-	    (*(addr))= ( PAT1 | k );
+	    (*(addr))= data;	      
 	  }
 	  //Memory Ordering Sync (to get around RAW races)
 	  e_write_ack(dummy);  
@@ -64,7 +67,7 @@ int main(int argc, char *argv[]){
 	  for(k=0; k<(BUF_SIZE-WORD_SIZE); k=k+WORD_SIZE){
 	    addr=(unsigned *) (offset+k);
 	    result=(*(addr));
-	    if(result!= ( PAT1  | k )){
+	    if(result!= data){
 	      status=0;
 	    }
 	  }

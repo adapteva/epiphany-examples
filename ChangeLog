@@ -1,3 +1,111 @@
+2015-01-29  Ola Jeppsson  <ola@adapteva.com>
+
+	* scripts/build_and_test_all.sh: Disable some tests that might be
+	problematic.
+
+2015-01-27  Ola Jeppsson  <ola@adapteva.com>
+
+	* cpu/mutex/src/e_mutex_test.c (int main): Set flag on core0
+	to start computation. Update expected clock cycles.
+	* cpu/mutex/src/e_mutex_test0.c: Wait on go flag before
+	starting.
+	* cpu/mutex/src/mutex_test.c: Likewise.
+
+2015-01-26  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/matmul-16/host/src/matmul_host.c (int main): Also clock
+	CPUTIME. Compare this value to monotonic time to detect if the
+	system is under high load. If that is the case, and monotonic
+	time was too slow, do not indicate failure unless we were
+	allocated enough CPU time. Just print a warning.
+
+2015-01-26  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c (int
+	SRAM_speed): Use clock_gettime() instead gettimeofday() for
+	better accuracy.
+	* apps/fft2d/host/src/fft2d_host.c (int main): Likewise.
+	* apps/fft2d/host/src/fftw.c: Likewise.
+	* apps/matmul-16/host/src/matmul_host.c (void
+	matmul_strassen): Likewise.
+	* apps/matmul-64/host/src/matmul_host.c: Likewise.
+	* apps/e-bandwidth-test/build.sh: Link host binary with -lrt.
+	* apps/fft2d/build.sh: Likewise.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
+	* scripts/build_and_test_all.sh: Improve testing and output.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
+	* labs/hardware_barrier/src/emain.c (int main): Add
+	synchronization point between first E core and host so that
+	the host can read out the core iteration counters in a
+	race-free manner.
+	* labs/hardware_barrier/src/main.c: Likewise.
+	* labs/hardware_barrier/src/hwb_isr.s: Remove.
+	* labs/hardware_barrier/build.sh: Remove all references to
+	hwb_isr.s.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
+	* cpu/mutex/src/mutex_test.c (int main): Update allowed clock
+	cycle range for new ESDK. Use exit status to report errors.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/matmul-16/test.sh: Forward program's exit status.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/matmul-16/host/src/matmul_host.c (int main): Return
+	with non-zero exit status on detected performance regressions.
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c (int main):
+	Return with non-zero exit code on detected errors.
+	(int SRAM_speed): Report performance regressions.
+	(int EPI_speed): Return error if Epiphany test did not run to
+	completion
+
+2015-01-25  Ola Jeppsson  <ola@adapteva.com>
+
+	* softcache/basic_math/Makefile: Fix cross compilation paths.
+	* softcache/math_example/Makefile: Likewise.
+
+2015-01-24  Ola Jeppsson  <ola@adapteva.com>
+
+	* dma/dma_slave/src/dma_slave_test.c (int main): Go back to
+	wait time before previous commit.
+
+2015-01-24  Ola Jeppsson  <ola@adapteva.com>
+
+	* dma/dma_2d/src/dma_2d_test.c (int main): Fix missing err
+	check.
+	* dma/dma_slave/src/dma_slave_test.c: Slightly increase wait.
+
+2015-01-24  Ola Jeppsson  <ola@adapteva.com>
+
+	* dma/dma_2d/src/dma_2d_test.c (int main): Indicate error with
+	return code.
+	* dma/dma_chain/src/dma_chain_test.c: Likewise
+	* dma/dma_interrupt/src/dma_int_test.c: Likewise
+	* dma/dma_message_read/src/dma_message_a.c: Likewise
+	* dma/dma_message_write/src/dma_message_test.c: Likewise
+	* dma/dma_slave/src/dma_slave_test.c: Likewise
+
+2015-01-16  Ola Jeppsson  <ola@adapteva.com>
+
+	* labs/mem_protect/src/mpf_isr.s: Remove.
+	* labs/mem_protect/src/emain.c (void mpf_isr): Replace above
+	assembler page fault handler with C version.
+	(int main): Simplify. Do not test stack page.
+	* labs/mem_protect/src/main.c: Simplify.
+	* labs/mem_protect/build.sh: Don't link with removed assembly
+	mpf isr. Use linker script that will place stack in local core
+	SRAM.
+
 2015-01-16  Ola Jeppsson  <ola@adapteva.com>
 
 	* labs/hardware_barrier/src/main.c (int main): Exit with

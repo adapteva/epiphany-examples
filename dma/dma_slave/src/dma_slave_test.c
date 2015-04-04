@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 	e_platform_t platform;
 	e_epiphany_t dev;
 	unsigned flag;
+	int err = 0;
 	srand(1);
 
 	// initialize system, read platform params from
@@ -100,6 +101,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "PASS!\n");
 	}else
 	{
+		err = 1;
 		fprintf(stderr,"Fail!\n");
 	}
 
@@ -110,5 +112,5 @@ int main(int argc, char *argv[])
 	// e-platform connection.
 	e_finalize();
 
-	return 0;
+	return err;
 }

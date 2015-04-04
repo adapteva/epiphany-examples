@@ -36,6 +36,7 @@ along with this program, see the file COPYING. If not, see
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i, j, m, n, k;
+	int err = 0;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	unsigned flag  = 0x00000000;
@@ -94,6 +95,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr, "Fail for word size!\n");
+				err = 1;
 			}
 	
 			if(flag1 == 0xffffffff)
@@ -102,6 +104,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr, "Fail for doubleword size!\n");
+				err = 1;
 			}
 			
 			if(flag2 == 0xffffffff)
@@ -110,6 +113,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr, "Fail for halfword size!\n");
+				err = 1;
 			}
 		
 			if(flag3 == 0xffffffff)
@@ -118,6 +122,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr, "Fail for byte size!\n");
+				err = 1;
 			}
 		}
 	}
@@ -129,5 +134,5 @@ int main(int argc, char *argv[])
 	// e-platform connection.
 	e_finalize();
 
-	return 0;
+	return err;
 }

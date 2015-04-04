@@ -37,7 +37,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <unistd.h>
-#include <sys/time.h>
+#include <time.h>
 #include <math.h>
 #include <string.h>
 #include "e-hal.h"
@@ -80,8 +80,7 @@ float Bepi[_Smtx * _Smtx];
 float Cref[_Smtx * _Smtx];
 float Cdiff[_Smtx * _Smtx];
 
-typedef struct timeval timeval_t;
-timeval_t timer[4];
+struct timespec timer[6];
 
 extern e_platform_t e_platform;
 
@@ -93,16 +92,18 @@ int main(int argc, char *argv[])
 	float        seed;
 	unsigned int addr; //, clocks;
 	size_t       sz;
-	double       tdiff[2];
+	double       tdiff[3];
 	int          result, rerval;
 	int          verbose=0;
-
+	double       tdiff[3];
+	int          result, retval = 0;
+	
 	pEpiphany = &Epiphany;
 	pDRAM     = &DRAM;
 	msize     = 0x00400000;
-
+	
 	get_args(argc, argv);
-
+	
 
 	fo = stderr;
 	fi = stdin;
@@ -161,7 +162,11 @@ int main(int argc, char *argv[])
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 #endif
 
-	gettimeofday(&timer[0], NULL);
+	/* Wallclock time */
+	clock_gettime(CLOCK_MONOTONIC, &timer[0]);
+	/* Clock CPUTIME too. We don't want to indicate failure just
+	 * because the system was under high load. */
+	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[4]);
 
 	// Copy operand matrices to Epiphany system
 	addr = offsetof(shared_buf_t, A[0]);
@@ -170,7 +175,7 @@ int main(int argc, char *argv[])
 	  printf( "Writing A[%uB] to address %08x...\n", sz, addr);
 	}
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.A, sz);
-	
+
 	addr = offsetof(shared_buf_t, B[0]);
 	sz = sizeof(Mailbox.B);
 	if(verbose){
@@ -178,12 +183,12 @@ int main(int argc, char *argv[])
 	}
 	e_write(pDRAM, 0, 0, addr, (void *) Mailbox.B, sz);
 	// Call the Epiphany matmul() function
+
 	if(verbose){
 	  printf( "GO Epiphany! ...   ");
 	}
-//	gettimeofday(&timer[0], NULL);
 	matmul_go(pDRAM);
-//	gettimeofday(&timer[1], NULL);
+
 
 	// Read result matrix and timing
 	addr = offsetof(shared_buf_t, C[0]);
@@ -193,20 +198,18 @@ int main(int argc, char *argv[])
 	}
 	e_read(pDRAM, 0, 0, addr, (void *) Mailbox.C, sz);
 
-	gettimeofday(&timer[1], NULL);
+	clock_gettime(CLOCK_MONOTONIC, &timer[1]);
+	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[5]);
 
 
 	// Calculate a reference result
-	gettimeofday(&timer[2], NULL);
+	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[2]);
 #ifndef __DO_STRASSEN__
 	matmul(Mailbox.A, Mailbox.B, Cref, _Smtx);
 #else
 	matmul_strassen(Mailbox.A, Mailbox.B, Cref, _Smtx);
 #endif
-	gettimeofday(&timer[3], NULL);
-	if(verbose){
-	printf( "Finished calculating Host result.\n");
-	}
+	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[3]);
 	addr = offsetof(shared_buf_t, core.clocks);
 	sz = sizeof(Mailbox.core.clocks);
 	if(verbose){
@@ -222,24 +225,26 @@ int main(int argc, char *argv[])
 	// Calculate the difference between the Epiphany result and the reference result
 	matsub(Mailbox.C, Cref, Cdiff, _Smtx);
 
-	tdiff[0] = (timer[1].tv_sec - timer[0].tv_sec) * 1000 + ((double) (timer[1].tv_usec - timer[0].tv_usec) / 1000.0);
+	tdiff[0] = (timer[1].tv_sec - timer[0].tv_sec) * 1000 + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000.0);
 //	tdiff[0] = ((double) clocks) / eMHz * 1000;
-	tdiff[1] = (timer[3].tv_sec - timer[2].tv_sec) * 1000 + ((double) (timer[3].tv_usec - timer[2].tv_usec) / 1000.0);
+	tdiff[1] = (timer[3].tv_sec - timer[2].tv_sec) * 1000 + ((double) (timer[3].tv_nsec - timer[2].tv_nsec) / 1000000.0);
+	tdiff[2] = (timer[5].tv_sec - timer[4].tv_sec) * 1000 + ((double) (timer[5].tv_nsec - timer[4].tv_nsec) / 1000000.0);
 
 
 	// If the difference is 0, then the matrices are identical and the
 	// calculation was correct
 	if (iszero(Cdiff, _Smtx))
 	  {
+
 	    printf( "Epiphany(time) %9.1f msec  (@ %03d MHz)\n", tdiff[0], eMHz);
 	    printf( "Host(time)     %9.1f msec  (@ %03d MHz)\n", tdiff[1], aMHz);
 	    printf( "------------------------------------------------------------\n");
 	    printf( "TEST \"matmul-16\" PASSED\n");
-	    rerval = 0;
+	    retval = 0;
 	} else {
 	  printf( "\n\nERROR: C_epiphany is different from C_host !!!\n");
 	  printf( "TEST \"matmul-16\" FAILED\n");
-	  rerval = 1;
+	  retval = 1;
 	}
 
 #ifdef __DUMP_MATRICES__
@@ -283,8 +288,8 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	e_finalize();		
-	return rerval;
+	e_finalize();
+	return retval;
 }
 
 
@@ -726,9 +731,7 @@ void matmul_strassen(volatile float * a, volatile float * b, volatile float * c,
     	}
 
 	LEAF_SIZE = 32;
-	gettimeofday(&timer[2], NULL);
 	strassen(as, bs, cs, NN, LEAF_SIZE);
-	gettimeofday(&timer[3], NULL);
 
     for (i=0; i<NN; i++)
     	for (j=0; j<NN; j++)

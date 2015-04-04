@@ -15,9 +15,13 @@ fi
 
 cd $ROOT
 
+# Examples we don't even want to build (nor test) goes here
+BUILD_SKIP_REGEX="/archive/|/test/e-test|/test/e-matmul-test"
+
+# Problematic/unreliable/too slow examples we don't want to test goes here.
 TEST_SKIP_REGEX=\
-"/archive/|/apps/eprime|/apps/erm|/apps/matmul-64|/labs/hardware_loops|"\
-"/test/e-loopback-test|/test/e-test"
+"/apps/eprime|/apps/erm|/apps/matmul-64|/labs/hardware_loops|"\
+"/test/e-loopback-test|/cpu/ctimer|/labs/|/io/|/test/e-standby-test"
 
 tput_ () {
     # Fail silently, will only result in no colors.
@@ -73,10 +77,16 @@ test_example () {
     test_status=""
 
     dir=${1}
+    nobuild=${2} # Anything but empty string
     (
         cd $dir
 
-        ./build.sh >./build.log 2>&1 && build_status="OK" || build_status="FAIL"
+        build_status="SKIP"
+        if (echo $dir | grep -qE $BUILD_SKIP_REGEX); then
+            true
+        elif [ "x${nobuild}" = "x" ]; then
+            ./build.sh >./build.log 2>&1 && build_status="OK" || build_status="FAIL"
+        fi
         status "$build_status"
         sync
 
@@ -93,6 +103,8 @@ test_example () {
         test_status="SKIP"
         if ! [[ "x$(uname -m)" =~ xarm.* ]]; then
             test_status="CROSS_SKIP"
+        elif (echo $dir | grep -qE $BUILD_SKIP_REGEX); then
+            test_status="SKIP"
         elif (echo $dir | grep -qE $TEST_SKIP_REGEX); then
             test_status="SKIP"
         elif [ "x" = "x$test_script" ]; then
@@ -114,10 +126,55 @@ test_example () {
         status $test_status
 
         printf "\n"
+        if (echo $build_status | grep -qE ".*FAIL"); then
+            false
+        elif (echo $test_status | grep -qE ".*FAIL"); then
+            false
+        else
+            true
+        fi
     )
 }
 
 
+repeat () {
+    local err dir iterations
+    dir=$1
+    iterations=$2
+
+    err=
+
+    printf "%s (%s iterations)\n" $(echo $dir | sed s,$ROOT/*,,) "$iterations"
+
+    for i in `seq 1 $iterations`; do
+        if test_example $dir nobuild 2>&1 1>/dev/null; then
+            printf "."
+            [ $[i%40] -eq 0 ] && printf "\n"
+            continue
+        fi
+
+        err=yes
+        break
+    done
+    printf "\n%-40.40s" " "
+
+    if [ "x$err" = "xyes" ]; then
+        status "FAIL"
+        printf "${i}\n"
+        false
+    else
+        status "PASS"
+        printf "${i}\n"
+        true
+    fi
+
+}
+
+
+
+err=no
+
+printf "Phase 1: Build and run all tests once\n\n"
 printf "%-40.40s%-10.10s%-10.10s\n" "Directory" "Build" "Test"
 printf '=%.0s' {1..60}
 printf '\n'
@@ -125,7 +182,45 @@ printf '\n'
 for f in $(find $LIMIT -name "build.sh" | sort ); do
     dir=$(dirname $f)
     printf "%-40.40s" $(echo $dir | sed s,$ROOT/*,,)
-    test_example $dir
+    test_example $dir || err="yes"
 done
 
+
+if [ $LIMIT = $ROOT ]; then
+    printf "\nPhase 2: Select repeated tests\n\n"
+    printf "%-40.40s%-10.10s%-10.10s\n" "Directory" "Test" "Iterations"
+    printf '=%.0s' {1..60}
+    printf '\n'
+    repeat "${ROOT}/apps/e-bandwidth-test"  100 || err="yes"
+    repeat "${ROOT}/apps/matmul-16"         100 || err="yes"
+    repeat "${ROOT}/dma/dma_slave"          100 || err="yes"
+    repeat "${ROOT}/test/e-mem-test"         10 || err="yes"
+fi
+
+
+#printf "\nPhase 3: Build and run all tests once (RANDOM ORDER)\n\n"
+#printf "%-40.40s%-10.10s%-10.10s\n" "Directory" "Build" "Test"
+#printf '=%.0s' {1..60}
+#printf '\n'
+#
+#for f in $(find $LIMIT -name "build.sh" | shuf); do
+#    dir=$(dirname $f)
+#    printf "%-40.40s" $(echo $dir | sed s,$ROOT/*,,)
+#    test_example $dir || err="yes"
+#done
+
+
+printf "\n\n"
+printf '=%.0s' {1..60}
+printf "\nSTATUS: "
+
+if [ "x${err}" = "xyes" ]; then
+    status "FAIL"
+    printf "\n\n"
+    exit 1
+else
+    status "PASS"
+    printf "\n\n"
+    exit 0
+fi
 

@@ -42,6 +42,7 @@ along with this program, see the file COPYING. If not, see
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i, j, m, n, k;
+	int err = 0;
 	unsigned mail0, mail1;
 	e_platform_t platform;
 	e_epiphany_t dev;
@@ -110,6 +111,7 @@ int main(int argc, char *argv[])
 				}else
 				{
 					fprintf(stderr, "FAIL!\n");
+					err = 1;
 				}
 			}
 		}
@@ -122,5 +124,5 @@ int main(int argc, char *argv[])
 	// Finalize the e-platform connection.
 	e_finalize();
 
-	return 0;
+	return err;
 }

@@ -20,8 +20,8 @@ along with this program, see the file COPYING. If not, see
 */
 
 // This is the HOST side of the mutex example.
-// The program initializes the Epiphany system,put 
-// mutex key in core (0,0) and make other cores try to 
+// The program initializes the Epiphany system,put
+// mutex key in core (0,0) and make other cores try to
 // get the key to add 1 to the counter.
 
 
@@ -29,6 +29,7 @@ along with this program, see the file COPYING. If not, see
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 
 #include <e-hal.h>
 
@@ -38,10 +39,14 @@ int main(int argc, char *argv[])
 	unsigned row, col, coreid, i, j, m, n, k;
 	e_platform_t platform;
 	e_epiphany_t dev;
-	unsigned clk_max = 21618997;
-	unsigned clk_min = 17688270;
+	/* Assume 600 Mhz clock frequency. */
+	unsigned clk_max = 5600; /* 10 stddev */
+	unsigned clk_min = 1500;
 	unsigned num;
 	unsigned counter = 0;
+	const uint32_t one = 1;
+	const uint32_t zero = 0;
+	int err = 0;
 	srand(1);
 
 	// initialize system, read platform params from
@@ -50,45 +55,70 @@ int main(int argc, char *argv[])
 
 	e_init(NULL);
 	e_reset_system();
-	e_get_platform_info(&platform);	
-	
-    	// Open a workgroup
-	e_open(&dev, 0, 0, platform.rows, platform.cols);
-		
-	// Load the device program onto core (0,0)
-	e_load("e_mutex_test0.srec", &dev, 0, 0, E_TRUE);
+	e_get_platform_info(&platform);
 
-	usleep(10000);
+	// Open a workgroup
+	e_open(&dev, 0, 0, platform.rows, platform.cols);
+
+	// Load the device program onto core (0,0)
+	e_load("e_mutex_test0.srec", &dev, 0, 0, E_FALSE);
+
 	// Load the device program onto all the other eCores
-	e_load_group("e_mutex_test.srec", &dev, 0, 1, 1, 3, E_TRUE);
-	e_load_group("e_mutex_test.srec", &dev, 1, 0, 3, 4, E_TRUE);
-	
-	usleep(100000);
-		
+	e_load_group("e_mutex_test.srec", &dev, 0, 1, 1, 3, E_FALSE);
+	e_load_group("e_mutex_test.srec", &dev, 1, 0, 3, 4, E_FALSE);
+
+	usleep(1000);
+
+	/* Clear the go flag */
+	e_write(&dev, 0, 0, 0x6400, &zero, sizeof(zero));
+
+	usleep(1000);
+
+	/* Start all cores */
+	e_start_group(&dev);
+
+	/* Give core0 plenty of time to initialize mutex */
+	usleep(10000);
+
+	/* Go! */
+	e_write(&dev, 0, 0, 0x6400, &one, sizeof(one));
+
 	// Wait for core program execution to finish
-	// Read message from shared buffer
-				
+	usleep(10000);
+
+	/* Read results from core0 */
 	e_read(&dev, 0, 0, 0x6200, &num, sizeof(num));
 	e_read(&dev, 0, 0, 0x6300, &counter, sizeof(counter));
 
+	/* Clear go flag */
+	e_write(&dev, 0, 0, 0x6400, &zero, sizeof(zero));
+
 	// Print the message
-	fprintf(stderr, "The counter now is %d!\n", counter);
-	fprintf(stderr, "The clock cycle is %d!\n", num);
-	
+	fprintf(stderr, "The counter now is %d\n", counter);
+	fprintf(stderr, "The clock cycle is %d\n", num);
+
 	if((num < clk_max)&&(num > clk_min))
 	{
-		fprintf(stderr, "PASS!\n");
-	}else
-	{
-		fprintf(stderr, "FAIL!\n");
+		fprintf(stderr, "Clock: PASS\n");
+	} else {
+		fprintf(stderr, "Clock: FAIL\n");
+		err = 1;
 	}
-		
+
+	if (counter == 16) {
+		fprintf(stderr, "Counter: PASS\n");
+	} else {
+		fprintf(stderr, "Counter: FAIL\n");
+		err = 1;
+	}
+
+
 	// Close the workgroup
 	e_close(&dev);
-	
+
 	// Finalize the e-platform connection.
 	e_finalize();
 
-	return 0;
+	return err;
 }
 

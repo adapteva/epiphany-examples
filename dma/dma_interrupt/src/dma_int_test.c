@@ -36,6 +36,7 @@ along with this program, see the file COPYING. If not, see
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i, j, m, n, k;
+	int err;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	unsigned flag;
@@ -84,6 +85,7 @@ int main(int argc, char *argv[])
 			}else
 			{
 				fprintf(stderr,"Fail!\nThe interrupt output is 0x%08x!\nThe return output is 0x%08x!\n",flag,flag1);
+				err = 1;
 			}
 		}
 	}
@@ -95,5 +97,5 @@ int main(int argc, char *argv[])
 	// e-platform connection.
 	e_finalize();
 
-	return 0;
+	return err;
 }

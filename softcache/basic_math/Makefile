@@ -18,9 +18,9 @@ HOST_LDFLAGS ?= -le-hal -le-loader
 TARGET_CC ?= epiphany-elf-gcc
 TARGET_OBJCOPY ?= epiphany-elf-objcopy
 
-TARGET_ELIBS=${EPIPHANY_HOME}/tools/e-gnu.armv7l/epiphany-elf/lib/libe-lib.a
+TARGET_ELIBS=${EPIPHANY_HOME}/tools/e-gnu/epiphany-elf/lib/libe-lib.a
 
-TARGET_EINCS=${EPIPHANY_HOME}/tools/e-gnu.armv7l/epiphany-elf/sys-include
+TARGET_EINCS=${EPIPHANY_HOME}/tools/e-gnu/epiphany-elf/sys-include
 
 ifeq ($(WITH_CACHE), yes)
 TARGET_CFLAGS= -g -ffast-math -mfp-mode=round-nearest -fpic

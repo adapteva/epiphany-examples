@@ -35,6 +35,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <stdint.h>
+
 #include <e-hal.h>
 
 #define _MAX_CORES 64
@@ -44,6 +46,7 @@
 int main(int argc, char *argv[])
 {
 	unsigned rows, cols, ncores, coreid, i, j;
+	const uint32_t one = 1, zero = 0;
 	int result[_MAX_CORES];
 	e_platform_t platform;
 	e_epiphany_t dev;
@@ -69,26 +72,46 @@ int main(int argc, char *argv[])
 	//load the device program on the board
 	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
 	e_start_group(&dev);
+	usleep(100000);
 
 	ncores = rows * cols;
 	printf("num-cores = %4d\n", ncores);
 	fault = 0x0;
-	for (i=0; i<100; i++)
+	for (i=0; i<=0x400; i++)
 	{
-		//read the results and print them on the terminal
-		usleep(100000);
+		/* Pause leader core so we can read without races */
+		e_write(&dev, 0, 0, 0x7000, &one, sizeof(one));
+
+		/* Lazily assume cores will be paused and writes from all cores
+		 * to ERAM have propagated after below sleep. This must be
+		 * calibrated w.r.t Epiphany chip clock frequency and delay
+		 * cycles in the device code */
+		usleep(1000);
+
+		/* read the results */
 		e_read(&emem, 0, 0, 0x0, &result, ncores*sizeof(int));
-		
+
+		/* Resume */
+		e_write(&dev, 0, 0, 0x7000, &zero, sizeof(zero));
+
 		for (j=0; j<ncores; j++)
 		{
 			if (result[j] != result[0])
 				fault++;
 		}
-		
-		printf("[%3d] ", i);
+
+		/* Don't print every iteration */
+		if (i % 0x10)
+			continue;
+
+		printf("[%3x] ", i);
 		for (j=0;j<ncores;j++)
 			printf("%04x ", result[j]);
 		printf("\n");
+
+		/* Do a small wait so it is easy to see that the E cores are
+		 * running */
+		usleep(4000);
 	}
 
 

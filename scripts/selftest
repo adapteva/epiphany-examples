@@ -4,8 +4,8 @@ TPATH=/home/parallella/epiphany-examples
 
 R0=0
 C0=0
-ROWS=1
-COLS=1
+ROWS=4
+COLS=4
 PARA=0
 
 #Hosted Tests
@@ -21,17 +21,20 @@ LAUNCHER=$TPATH/test/e-test/bin/e-test.elf
 $LAUNCHER $R0 $C0 $ROWS $COLS $PARA $TPATH/test/e-main/bin/e-task.elf 
 $LAUNCHER $R0 $C0 $ROWS $COLS $PARA $TPATH/test/e-extmem-test/bin/e-task.elf 
 $LAUNCHER $R0 $C0 $ROWS $COLS $PARA $TPATH/test/e-matmul-test/bin/e-task.elf 
+$LAUNCHER $R0 $C0 $ROWS $COLS $PARA $TPATH/test/e-mesh-test/bin/e-task.elf 
 
 ####APPS###
 
 #MATMUL
-$TPATH/apps/matmul-16/host/Release/matmul.elf $TPATH/apps/matmul-16/device/Release/e_matmul.srec
+$TPATH/apps/matmul-16/host/Release/matmul.elf $TPATH/apps/matmul-16/device/Release/e_matmul.elf
 
 #BANDWIDTH
 $TPATH/apps/e-bandwidth-test/bin/e-bandwidth-test-host.elf $TPATH/apps/e-bandwidth-test/bin/e-bandwidth-test-device.elf
 
 #FFT
 $TPATH/apps/fft2d/host/Release/fft2d_host.elf /home/parallella/epiphany-examples/apps/fft2d/lenna.jpg $TPATH/apps/fft2d/device/Release/e_fft2d.elf
+
+
 
 
 

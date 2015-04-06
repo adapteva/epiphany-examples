@@ -18,10 +18,15 @@ cd $ROOT
 # Examples we don't even want to build (nor test) goes here
 BUILD_SKIP_REGEX="/archive/|/test/e-test|/test/e-matmul-test"
 
+# Examples we don't want to cross compile (hard to get library dependencies)
+CROSS_BUILD_SKIP_REGEX="/apps/fft2d"
+
 # Problematic/unreliable/too slow examples we don't want to test goes here.
 TEST_SKIP_REGEX=\
 "/apps/eprime|/apps/erm|/apps/matmul-64|/labs/hardware_loops|"\
 "/test/e-loopback-test|/cpu/ctimer|/labs/|/io/|/test/e-standby-test"
+
+[[ "x$(uname -m)" =~ xarm.* ]] && CROSS=no || CROSS=yes
 
 tput_ () {
     # Fail silently, will only result in no colors.
@@ -34,9 +39,9 @@ color () {
 
     # Only color if stdout is not terminal
     if [ -t 1 ]; then
-        printf "$(tput_ setaf $color)%-10.10s$(tput_ sgr0)" "$str"
+        printf "$(tput_ setaf $color)%-12.12s$(tput_ sgr0)" "$str"
     else
-        printf "%-10.10s" "$str"
+        printf "%-12.12s" "$str"
     fi
 }
 
@@ -84,13 +89,19 @@ test_example () {
         build_status="SKIP"
         if (echo $dir | grep -qE $BUILD_SKIP_REGEX); then
             true
+        elif ! [ "$x${CROSS}" = "xyes" ]; then
+            if (echo $dir | grep -qE $CROSS_BUILD_SKIP_REGEX); then
+                build_status="CROSS_SKIP"
+            else
+                ./build.sh >./build.log 2>&1 && build_status="OK" || build_status="FAIL"
+            fi
         elif [ "x${nobuild}" = "x" ]; then
             ./build.sh >./build.log 2>&1 && build_status="OK" || build_status="FAIL"
         fi
         status "$build_status"
         sync
 
-        if ! [[ "x$(uname -m)" =~ xarm.* ]]; then
+        if [ "x${CROSS}" = "xyes" ]; then
             true
         elif [ -e "test.sh" ]; then
             test_script="./test.sh"
@@ -175,31 +186,34 @@ repeat () {
 err=no
 
 printf "Phase 1: Build and run all tests once\n\n"
-printf "%-40.40s%-10.10s%-10.10s\n" "Directory" "Build" "Test"
+printf "%-36.36s%-12.12s%-12.12s\n" "Directory" "Build" "Test"
 printf '=%.0s' {1..60}
 printf '\n'
 
 for f in $(find $LIMIT -name "build.sh" | sort ); do
     dir=$(dirname $f)
-    printf "%-40.40s" $(echo $dir | sed s,$ROOT/*,,)
+    printf "%-36.36s" $(echo $dir | sed s,$ROOT/*,,)
     test_example $dir || err="yes"
 done
 
+echo
 
-if [ $LIMIT = $ROOT ]; then
-    printf "\nPhase 2: Select repeated tests\n\n"
-    printf "%-40.40s%-10.10s%-10.10s\n" "Directory" "Test" "Iterations"
-    printf '=%.0s' {1..60}
-    printf '\n'
-    repeat "${ROOT}/apps/e-bandwidth-test"  100 || err="yes"
-    repeat "${ROOT}/apps/matmul-16"         100 || err="yes"
-    repeat "${ROOT}/dma/dma_slave"          100 || err="yes"
-    repeat "${ROOT}/test/e-mem-test"         10 || err="yes"
-fi
+case ${CROSS} in
+no)
+    if [ $LIMIT = $ROOT ]; then
+        printf "\nPhase 2: Select repeated tests\n\n"
+        printf "%-36.36s%-12.12s%-12.12s\n" "Directory" "Test" "Iterations"
+        printf '=%.0s' {1..60}
+        printf '\n'
+        repeat "${ROOT}/apps/e-bandwidth-test"  100 || err="yes"
+        repeat "${ROOT}/apps/matmul-16"         100 || err="yes"
+        repeat "${ROOT}/dma/dma_slave"          100 || err="yes"
+        repeat "${ROOT}/test/e-mem-test"         10 || err="yes"
+    fi
 
 
 #printf "\nPhase 3: Build and run all tests once (RANDOM ORDER)\n\n"
-#printf "%-40.40s%-10.10s%-10.10s\n" "Directory" "Build" "Test"
+#printf "%-36.36s%-12.12s%-12.12s\n" "Directory" "Build" "Test"
 #printf '=%.0s' {1..60}
 #printf '\n'
 #
@@ -209,6 +223,14 @@ fi
 #    test_example $dir || err="yes"
 #done
 
+    ;;
+
+yes)
+    echo Cross compilation detected: Skipping repeated tests.
+
+    ;;
+
+esac
 
 printf "\n\n"
 printf '=%.0s' {1..60}

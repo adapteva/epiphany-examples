@@ -1,5 +1,9 @@
 2015-04-06  Ola Jeppsson  <ola@adapteva.com>
 
+	* test/e-mesh-test/build.sh: Satisfy runtime dependencies.
+
+2015-04-06  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/fft2d/run.sh: Add missing Epiphany elf parameter.
 	* apps/fft2d/test.sh: Likewise.
 

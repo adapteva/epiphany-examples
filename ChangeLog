@@ -1,5 +1,10 @@
 2015-04-06  Ola Jeppsson  <ola@adapteva.com>
 
+	* apps/fft2d/run.sh: Add missing Epiphany elf parameter.
+	* apps/fft2d/test.sh: Likewise.
+
+2015-04-06  Ola Jeppsson  <ola@adapteva.com>
+
 	* apps/e-bandwidth-test/build.sh: Don't build srec file
 	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c: Use .elf
 	instead of srec.

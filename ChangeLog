@@ -1,5 +1,20 @@
 2015-04-06  Ola Jeppsson  <ola@adapteva.com>
 
+	* apps/matmul-16/build.sh: Detect cross compilation and pass
+	cross compiler to make if so.
+	* apps/matmul-64/build.sh: Likewise.
+	* apps/matmul-16/host/Debug/makefile: Use $(CC) instead of
+	gcc.
+	* apps/matmul-16/host/Debug/src/subdir.mk: Likewise.
+	* apps/matmul-16/host/Release/makefile: Likewise.
+	* apps/matmul-16/host/Release/src/subdir.mk: Likewise.
+	* apps/matmul-64/host/Debug/makefile: Likewise.
+	* apps/matmul-64/host/Debug/src/subdir.mk: Likewise.
+	* apps/matmul-64/host/Release/makefile: Likewise.
+	* apps/matmul-64/host/Release/src/subdir.mk: Likewise.
+
+2015-04-06  Ola Jeppsson  <ola@adapteva.com>
+
 	* test/e-mesh-test/build.sh: Satisfy runtime dependencies.
 
 2015-04-06  Ola Jeppsson  <ola@adapteva.com>

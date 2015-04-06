@@ -41,6 +41,22 @@ fi
 EINCS="${EPIPHANY_HOME}/tools/host/include"
 ELIBS="${EPIPHANY_HOME}/tools/host/lib"
 
+
+CROSS_PREFIX=
+case $(uname -p) in
+	arm*)
+		# Use native arm compiler (no cross prefix)
+		CROSS_PREFIX=
+		;;
+	   *)
+		# Use cross compiler
+		CROSS_PREFIX="arm-linux-gnueabihf-"
+		;;
+esac
+
+CC=${CROSS_PREFIX}gcc
+
+
 if [[ "${BUILD_HOST}" == "yes" ]]; then
 
 
@@ -50,7 +66,7 @@ if [[ "${BUILD_HOST}" == "yes" ]]; then
 		make clean
 	fi
 	if [[ "${MK_ALL}" == "yes" ]]; then
-		make --warn-undefined-variables BuildConfig=${Config} all
+		make CC=${CC} --warn-undefined-variables BuildConfig=${Config} all
 	fi
 	popd >& /dev/null
 fi

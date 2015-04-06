@@ -29,7 +29,7 @@ all: matmul.elf
 matmul.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L ${EPIPHANY_HOME}/tools/host/lib \
+	$(CC) -L ${EPIPHANY_HOME}/tools/host/lib \
 	      -o "matmul.elf" \
 	      $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'

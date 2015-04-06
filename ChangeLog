@@ -1,5 +1,10 @@
 2015-04-06  Ola Jeppsson  <ola@adapteva.com>
 
+	* .travis.yml: New file.
+	* README.md: Add travis status image
+
+2015-04-06  Ola Jeppsson  <ola@adapteva.com>
+
 	* scripts/build_and_test_all.sh: Filter out apps/fft2d when
 	cross compilation is detected. It is hard to satisfy library
 	requirements.

@@ -27,10 +27,7 @@ case $(uname -p) in
 esac
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread -lrt
+${CROSS_PREFIX}gcc -Wall src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread -lrt
 
 # Build DEVICE side program
 e-gcc -O3  -T ${ELDF} src/e-bandwidth-test-device.c -o bin/e-bandwidth-test-device.elf -le-lib -lm -ffast-math
-
-# Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e-bandwidth-test-device.elf bin/e_bandwidth-test-device.srec

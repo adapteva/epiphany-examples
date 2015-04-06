@@ -36,10 +36,10 @@ typedef struct {
 	e_bool_t reset_target;
 	e_bool_t run_target;
 	e_loader_diag_t verbose;
-	char srecFile[4096];
+	char elf_file[4096];
 } args_t;
 
-args_t ar = {E_TRUE, E_TRUE, E_FALSE, L_D0, "bin/e_bandwidth-test-device.srec"};
+args_t ar = {E_TRUE, E_TRUE, E_FALSE, L_D0, "bin/e-bandwidth-test-device.elf"};
 
 e_epiphany_t Epiphany, *pEpiphany;
 e_mem_t      ERAM,     *pERAM;
@@ -64,17 +64,16 @@ FILE *fd;
 
 int main(int argc, char *argv[])
 {
-  char    elfFile[4096];
-  //arguments  
-  strcpy(elfFile, argv[1]);
-
-  int result, fail;
+  int fail;
 
   fd = stderr;
-  
+
   pEpiphany = &Epiphany;
   pERAM     = &ERAM;
-  
+
+  if (argc > 1)
+    strcpy(ar.elf_file, argv[1]);
+
   e_set_host_verbosity(H_D0);
 
   if ( E_OK != e_init(NULL) ) {
@@ -99,32 +98,27 @@ int main(int argc, char *argv[])
       fprintf(stderr, "\nERROR: Can't establish connection to Epiphany device!\n\n");
       exit(1);
   }
-  
-  
+
+
   fail = 0;
-  
-  
+
+
   printf("------------------------------------------------------------\n");
   //////////////////////////////
   // Test Host-Device throughput
   fail += SRAM_speed();
   fail += ERAM_speed();
   fail += DRAM_speed();
-  
+
   /////////////////////////////
   // Test eCore-ERAM throughput
-  
-  //Run program
-  e_load_group(elfFile, pEpiphany,0,0,1,1, E_TRUE);
   fail += EPI_speed();
 
   //Finalize
   e_close(pEpiphany);
   e_free(pERAM);
   e_finalize();
-  
-  /////////////////////////////
-  //For now, always pass
+
   printf("------------------------------------------------------------\n");
   if(!fail){
     printf( "TEST \"e-bandwidth-test\" PASSED\n");
@@ -142,19 +136,19 @@ struct timespec timer[2];
 #define SRAM_BUF_SZ_KB 32
 #define SRAM_BUF_SZ    (SRAM_BUF_SZ_KB * 1024)
 char    sbuf[SRAM_BUF_SZ];
-
-
 int SRAM_speed(){
   double tdiff, rate;
-  int err = 0;
-  
+  int err = 0, i;
+
   clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[0]);
-  e_write(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
+  /* Do a couple of iterations to get more stable results */
+  for (i = 0; i < 512; i++)
+    e_write(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
   clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[1]);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000000.0);
-  rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
-  printf("ARM Host    --> eCore(0,0) write spead       = %7.2f MB/s\n", rate);
+  rate  = (double) SRAM_BUF_SZ_KB / (1024.0/512.0) / tdiff;
 
+  printf("ARM Host    --> eCore(0,0) write speed       = %7.2f MB/s", rate);
 
   if (rate < 30.0) {
     printf(" (TOO SLOW)");
@@ -163,11 +157,13 @@ int SRAM_speed(){
   putchar('\n');
 
   clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[0]);
-  e_read(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
+  /* Do a couple of iterations to get more stable results */
+  for (i = 0; i < 8; i++)
+    e_read(pEpiphany, 0, 0, (off_t) 0, sbuf, SRAM_BUF_SZ);
   clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[1]);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000000.0);
-  rate  = (double) SRAM_BUF_SZ_KB / 1024.0 / tdiff;
-  
+  rate  = (double) SRAM_BUF_SZ_KB / (1024.0/8.0) / tdiff;
+
   printf("ARM Host    --> eCore(0,0) read speed        = %7.2f MB/s", rate);
 
   if (rate < 4.0) {
@@ -218,9 +214,8 @@ int DRAM_speed(){
   clock_gettime(CLOCK_THREAD_CPUTIME_ID, &timer[1]);
   tdiff = ((double) (timer[1].tv_sec - timer[0].tv_sec)) + ((double) (timer[1].tv_nsec - timer[0].tv_nsec) / 1000000000.0);
   rate  = (double) DRAM_BUF_SZ_MB / tdiff;
-  
+
   printf("ARM Host    <-> DRAM: Copy speed             = %7.2f MB/s\n", rate);
-  //printf("eCore (0,0) --> eCore(1,0) write speed (DMA) = %7.2f MB/s\n", rate);
   return 0;
 }
 
@@ -229,8 +224,11 @@ int EPI_speed(){
   unsigned int clocks;
   double       rate;
   int          result;
-  int row=0;
-  int col=0;
+  int row = 0;
+  int col = 0;
+
+  //Run program
+  e_load_group(ar.elf_file, pEpiphany, row, col,1,1, E_TRUE);
 
   //Lazy way of waiting till finished
   sleep(2);
@@ -239,19 +237,19 @@ int EPI_speed(){
   e_read(pEpiphany, row, col, 0x7000, &clocks, sizeof(clocks));
   rate = (double) _BUF_SZ / (double) clocks * (eMHz * 1000000) / (1024*1024);
   printf("eCore (0,0) --> eCore(1,0) write speed (DMA) = %7.2f MB/s\n", rate);
-  
+
   e_read(pEpiphany, row, col, 0x7004, &clocks, sizeof(clocks));
   rate = (double) _BUF_SZ / (double) clocks * (eMHz * 1000000) / (1024*1024);
   printf("eCore (0,0) <-- eCore(1,0) read speed (DMA)  = %7.2f MB/s\n", rate);
-  
+
   e_read(pEpiphany, row, col, 0x7008, &clocks, sizeof(clocks));
   rate = (double) _BUF_SZ / (double) clocks * (eMHz * 1000000) / (1024*1024);
   printf("eCore (0,0) --> ERAM write speed (DMA)       = %7.2f MB/s\n", rate);
-  
+
   e_read(pEpiphany, row, col, 0x700c, &clocks, sizeof(clocks));
   rate = (double) _BUF_SZ / (double) clocks * (eMHz * 1000000) / (1024*1024);
   printf("eCore (0,0) <-- ERAM read speed (DMA)        = %7.2f MB/s\n", rate);
-  
+
   e_read(pEpiphany, row, col, 0x7010, &result, sizeof(result));
 
   /* Return anything but 0 on error */

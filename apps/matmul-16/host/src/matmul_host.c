@@ -40,7 +40,8 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
-#include "e-hal.h"
+#include <e-hal.h>
+#include <e-loader.h>
 #include "matlib.h"
 #include "matmul.h"
 #include "common_buffers.h"
@@ -92,18 +93,16 @@ int main(int argc, char *argv[])
 	float        seed;
 	unsigned int addr; //, clocks;
 	size_t       sz;
-	double       tdiff[3];
-	int          result, rerval;
 	int          verbose=0;
 	double       tdiff[3];
 	int          result, retval = 0;
-	
+
 	pEpiphany = &Epiphany;
 	pDRAM     = &DRAM;
 	msize     = 0x00400000;
-	
+
 	get_args(argc, argv);
-	
+
 
 	fo = stderr;
 	fi = stdin;

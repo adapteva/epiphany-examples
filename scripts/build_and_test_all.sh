@@ -89,7 +89,7 @@ test_example () {
         build_status="SKIP"
         if (echo $dir | grep -qE $BUILD_SKIP_REGEX); then
             true
-        elif ! [ "$x${CROSS}" = "xyes" ]; then
+        elif [ "x${CROSS}" = "xyes" ]; then
             if (echo $dir | grep -qE $CROSS_BUILD_SKIP_REGEX); then
                 build_status="CROSS_SKIP"
             else

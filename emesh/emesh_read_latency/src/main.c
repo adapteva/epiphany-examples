@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 			fault = 0x0;
 			for (k=0;k<16;k++)
 			{
-				if ((result[k]<result[k]*0.9)||(result[k]>=result[k]*1.1))
+				if ((result[k]<result[k+16]*0.9)||(result[k]>=result[k+16]*1.1))
 				{
 					fault++;
 					fprintf(stderr, "Read from core (%2d,%2d) spent %d cycles, expecting %d cycles!\n",(k/4),(k%4),result[k],result[k+16]);

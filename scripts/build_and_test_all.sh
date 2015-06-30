@@ -24,7 +24,8 @@ CROSS_BUILD_SKIP_REGEX="/apps/fft2d"
 # Problematic/unreliable/too slow examples we don't want to test goes here.
 TEST_SKIP_REGEX=\
 "/apps/eprime|/apps/erm|/apps/matmul-64|/labs/hardware_loops|"\
-"/test/e-loopback-test|/cpu/ctimer|/labs/|/io/|/test/e-standby-test"
+"/test/e-loopback-test|/cpu/ctimer|/labs/|/io/|/test/e-standby-test|"\
+"/apps/e-dump-regs"
 
 [[ "x$(uname -m)" =~ xarm.* ]] && CROSS=no || CROSS=yes
 

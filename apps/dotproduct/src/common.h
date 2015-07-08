@@ -1,2 +1,2 @@
-#define N     4096
+#define N     64
 #define CORES 16

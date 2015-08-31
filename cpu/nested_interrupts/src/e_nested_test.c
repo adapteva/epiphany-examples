@@ -30,34 +30,34 @@ along with this program, see the file COPYING. If not, see
 #include "e_lib.h"
 
 char outbuf[8192] SECTION("shared_dram");
-void inter_higher0_isr(int signum);
-void inter_lower0_isr(int signum);
-void inter_higher1_isr(int signum);
-void inter_lower1_isr(int signum);
-void inter_higher2_isr(int signum);
-void inter_lower2_isr(int signum);
-void inter_higher3_isr(int signum);
-void inter_lower3_isr(int signum);
-void inter_higher4_isr(int signum);
-void inter_lower4_isr(int signum);
-void inter_higher5_isr(int signum);
-void inter_lower5_isr(int signum);
-void inter_higher6_isr(int signum);
-void inter_lower6_isr(int signum);
-void inter_higher7_isr(int signum);
-void inter_lower7_isr(int signum);
-void inter_higher8_isr(int signum);
-void inter_lower8_isr(int signum);
-void inter_higher9_isr(int signum);
-void inter_lower9_isr(int signum);
-void inter_higher10_isr(int signum);
-void inter_lower10_isr(int signum);
-void inter_higher11_isr(int signum);
-void inter_lower11_isr(int signum);
-void inter_higher12_isr(int signum);
-void inter_lower12_isr(int signum);
-void inter_higher13_isr(int signum);
-void inter_lower13_isr(int signum);
+void inter_higher0_isr();
+void inter_lower0_isr();
+void inter_higher1_isr();
+void inter_lower1_isr();
+void inter_higher2_isr();
+void inter_lower2_isr();
+void inter_higher3_isr();
+void inter_lower3_isr();
+void inter_higher4_isr();
+void inter_lower4_isr();
+void inter_higher5_isr();
+void inter_lower5_isr();
+void inter_higher6_isr();
+void inter_lower6_isr();
+void inter_higher7_isr();
+void inter_lower7_isr();
+void inter_higher8_isr();
+void inter_lower8_isr();
+void inter_higher9_isr();
+void inter_lower9_isr();
+void inter_higher10_isr();
+void inter_lower10_isr();
+void inter_higher11_isr();
+void inter_lower11_isr();
+void inter_higher12_isr();
+void inter_lower12_isr();
+void inter_higher13_isr();
+void inter_lower13_isr();
 
 int main(void)
 {
@@ -555,7 +555,7 @@ int main(void)
 	return 0;
 }
 
-void __attribute__((interrupt)) inter_higher0_isr(int signum)
+void __attribute__((interrupt)) inter_higher0_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000004);
@@ -563,21 +563,21 @@ void __attribute__((interrupt)) inter_higher0_isr(int signum)
 	return;
 }	
 
-void __attribute__((interrupt)) inter_lower0_isr(int signum)
+void __attribute__((interrupt)) inter_lower0_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_MEM_FAULT with lower priority!\n\n");
 
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher1_isr(int signum)
+void __attribute__((interrupt)) inter_higher1_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_DMA1_INT with higher priority!\n");
 
 	return;
 }	
 
-void __attribute__((interrupt)) inter_lower1_isr(int signum)
+void __attribute__((interrupt)) inter_lower1_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000080);
@@ -585,12 +585,12 @@ void __attribute__((interrupt)) inter_lower1_isr(int signum)
 	return;
 }	
 
-void __attribute__((interrupt)) inter_higher2_isr(int signum)
+void __attribute__((interrupt)) inter_higher2_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_SW_EXPECTION with higher priority!\n");
 }
 
-void __attribute__((interrupt)) inter_lower2_isr(int signum)
+void __attribute__((interrupt)) inter_lower2_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000002);
@@ -598,7 +598,7 @@ void __attribute__((interrupt)) inter_lower2_isr(int signum)
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher3_isr(int signum)
+void __attribute__((interrupt)) inter_higher3_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000008);
@@ -606,18 +606,18 @@ void __attribute__((interrupt)) inter_higher3_isr(int signum)
 	return;	
 }
 
-void __attribute__((interrupt)) inter_lower3_isr(int signum)
+void __attribute__((interrupt)) inter_lower3_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_TIMER0_INT with lower priority!\n\n");
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher4_isr(int signum)
+void __attribute__((interrupt)) inter_higher4_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_MEM_FAULT with higher priority!\n");
 }
 
-void __attribute__((interrupt)) inter_lower4_isr(int signum)
+void __attribute__((interrupt)) inter_lower4_isr()
 {
 	// Set the ILAT for the interrupt with higher priority
 	e_reg_write(E_REG_ILATST, 0x00000004);
@@ -625,7 +625,7 @@ void __attribute__((interrupt)) inter_lower4_isr(int signum)
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher5_isr(int signum)
+void __attribute__((interrupt)) inter_higher5_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000010);
@@ -633,18 +633,18 @@ void __attribute__((interrupt)) inter_higher5_isr(int signum)
 	return;	
 }
 
-void __attribute__((interrupt)) inter_lower5_isr(int signum)
+void __attribute__((interrupt)) inter_lower5_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_TIMER1_INT with lower priority!\n\n");
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher6_isr(int signum)
+void __attribute__((interrupt)) inter_higher6_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_TIMER0_INT with higher priority!\n");
 }
 
-void __attribute__((interrupt)) inter_lower6_isr(int signum)
+void __attribute__((interrupt)) inter_lower6_isr()
 {
 	// Set the ILAT for the interrupt with higher priority
 	e_reg_write(E_REG_ILATST, 0x00000008);
@@ -652,7 +652,7 @@ void __attribute__((interrupt)) inter_lower6_isr(int signum)
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher7_isr(int signum)
+void __attribute__((interrupt)) inter_higher7_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000020);
@@ -660,18 +660,18 @@ void __attribute__((interrupt)) inter_higher7_isr(int signum)
 	return;	
 }
 
-void __attribute__((interrupt)) inter_lower7_isr(int signum)
+void __attribute__((interrupt)) inter_lower7_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_MESSAGE_INT with lower priority!\n\n");
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher8_isr(int signum)
+void __attribute__((interrupt)) inter_higher8_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_TIMER1_INT with higher priority!\n");
 }
 
-void __attribute__((interrupt)) inter_lower8_isr(int signum)
+void __attribute__((interrupt)) inter_lower8_isr()
 {
 	// Set the ILAT for the interrupt with higher priority
 	e_reg_write(E_REG_ILATST, 0x00000010);
@@ -679,7 +679,7 @@ void __attribute__((interrupt)) inter_lower8_isr(int signum)
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher9_isr(int signum)
+void __attribute__((interrupt)) inter_higher9_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000040);
@@ -687,18 +687,18 @@ void __attribute__((interrupt)) inter_higher9_isr(int signum)
 	return;	
 }
 
-void __attribute__((interrupt)) inter_lower9_isr(int signum)
+void __attribute__((interrupt)) inter_lower9_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_DMA0_INT with lower priority!\n\n");
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher10_isr(int signum)
+void __attribute__((interrupt)) inter_higher10_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_MESSAGE_INT with higher priority!\n");
 }
 
-void __attribute__((interrupt)) inter_lower10_isr(int signum)
+void __attribute__((interrupt)) inter_lower10_isr()
 {
 	// Set the ILAT for the interrupt with higher priority
 	e_reg_write(E_REG_ILATST, 0x00000020);
@@ -706,7 +706,7 @@ void __attribute__((interrupt)) inter_lower10_isr(int signum)
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher11_isr(int signum)
+void __attribute__((interrupt)) inter_higher11_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000080);
@@ -714,18 +714,18 @@ void __attribute__((interrupt)) inter_higher11_isr(int signum)
 	return;	
 }
 
-void __attribute__((interrupt)) inter_lower11_isr(int signum)
+void __attribute__((interrupt)) inter_lower11_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_DMA1_INT with lower priority!\n\n");
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher12_isr(int signum)
+void __attribute__((interrupt)) inter_higher12_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_DMA0_INT with higher priority!\n");
 }
 
-void __attribute__((interrupt)) inter_lower12_isr(int signum)
+void __attribute__((interrupt)) inter_lower12_isr()
 {
 	// Set the ILAT for the interrupt with higher priority
 	e_reg_write(E_REG_ILATST, 0x00000040);
@@ -733,7 +733,7 @@ void __attribute__((interrupt)) inter_lower12_isr(int signum)
 	return;
 }
 
-void __attribute__((interrupt)) inter_higher13_isr(int signum)
+void __attribute__((interrupt)) inter_higher13_isr()
 {
 	// Set the ILAT for the interrupt with lower priority
 	e_reg_write(E_REG_ILATST, 0x00000200);
@@ -741,7 +741,7 @@ void __attribute__((interrupt)) inter_higher13_isr(int signum)
 	return;	
 }
 
-void __attribute__((interrupt)) inter_lower13_isr(int signum)
+void __attribute__((interrupt)) inter_lower13_isr()
 {
 	sprintf(outbuf + strlen(outbuf),"I am interrupt E_USER_INT with lower priority!\n\n");
 	return;

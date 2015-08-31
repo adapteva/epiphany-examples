@@ -30,7 +30,7 @@ along with this program, see the file COPYING. If not, see
 
 #include "e_lib.h"
 
-void int_isr(int signum);
+void int_isr();
 unsigned *mailbox, *mailbox1;
 
 int main(void)
@@ -67,7 +67,7 @@ int main(void)
 	return 0;
 }
 
-void __attribute__((interrupt)) int_isr(int signum)
+void __attribute__((interrupt)) int_isr()
 {
 	mailbox[0] = 0xdeadbeef;
 	return;

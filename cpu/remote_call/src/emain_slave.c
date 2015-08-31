@@ -38,13 +38,13 @@
 
 
 
-void swexception_isr(int signum);
-void memfault_isr(int signum);
-void timer0_isr(int signum);
-void timer1_isr(int signum);
-void dma0_isr(int signum);
-void dma1_isr(int signum);
-void user_isr(int signum);
+void swexception_isr();
+void memfault_isr();
+void timer0_isr();
+void timer1_isr();
+void dma0_isr();
+void dma1_isr();
+void user_isr();
 unsigned fibonacci();
 
 unsigned *result;
@@ -102,45 +102,45 @@ unsigned fibonacci()
 }
 
 
-void __attribute__((interrupt)) swexception_isr(int signum)
+void __attribute__((interrupt)) swexception_isr()
 {
 	result[0] = fibonacci();
 	return;
 }
 
-void __attribute__((interrupt)) memfault_isr(int signum)
+void __attribute__((interrupt)) memfault_isr()
 {
 	result[1] = fibonacci();
 	return;
 }
 
-void __attribute__((interrupt)) timer0_isr(int signum)
+void __attribute__((interrupt)) timer0_isr()
 {
 	result[2] = fibonacci();
 	return;
 }
 
-void __attribute__((interrupt)) timer1_isr(int signum)
+void __attribute__((interrupt)) timer1_isr()
 {
 	result[3] = fibonacci();
 	return;
 }
 
-void __attribute__((interrupt)) dma0_isr(int signum)
+void __attribute__((interrupt)) dma0_isr()
 {
 	result[4] = fibonacci();
 	return;
 }
 
 
-void __attribute__((interrupt)) dma1_isr(int signum)
+void __attribute__((interrupt)) dma1_isr()
 {
 	result[5] = fibonacci();
 	return;
 }
 
 
-void __attribute__((interrupt)) user_isr(int signum)
+void __attribute__((interrupt)) user_isr()
 {
 	result[6] = fibonacci();
 	return;

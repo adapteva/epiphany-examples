@@ -35,8 +35,10 @@
 
 #define E_WAND_INT (0x8)
 
+#define NBARRIERS 0xfff
 
-void __attribute__((interrupt)) wand_isr();
+/* wand isr is implemented in wand-isr.S */
+extern void wand_isr();
 
 unsigned state;
 volatile unsigned *result;
@@ -44,16 +46,16 @@ volatile unsigned *result;
 /* Sync point between first core in group and host */
 volatile uint32_t *pause;
 
-
-int main(void) {
+int main(void)
+{
 	//initialize
 	int i;
 	unsigned row, col, delay, num;
 	unsigned *ivt;
 
-	e_irq_global_mask(E_FALSE);
 	e_irq_attach(E_WAND_INT, wand_isr);
 	e_irq_mask(E_WAND_INT, E_FALSE);
+	e_irq_global_mask(E_FALSE);
 
 	row     = e_group_config.core_row;
 	col     = e_group_config.core_col;
@@ -67,7 +69,7 @@ int main(void) {
 
 	*result = 0xdeadbeef;
 
-	for(i=0; i<0x10000; i++)
+	for(i = 0; i <= NBARRIERS; i++)
 	{
 		*result = i;
 		e_wait(E_CTIMER_0, delay);
@@ -75,25 +77,9 @@ int main(void) {
 		if (num == 0)
 			while ((*pause));
 
-
 		__asm__ __volatile__("wand");
 		__asm__ __volatile__("idle");
-
-		// clear wand bit
-		state = e_reg_read(E_REG_STATUS);
-		state = state & (~0x8);
-		e_reg_write(E_REG_FSTATUS, state);
 	}
 
 	return EXIT_SUCCESS;
 }
-
-
-void __attribute__((interrupt)) wand_isr()
-{
-//	e_wait(E_CTIMER_1, 0x100);
-
-	return;
-}
-
-

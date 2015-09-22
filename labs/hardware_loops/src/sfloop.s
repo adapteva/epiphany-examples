@@ -24,10 +24,10 @@ sfloop:
 	lsr   r0,  r0, 0x1
 	mov	  r45, r0
 
-	mov	  r0,  A		;A[N] defined in emain.c
-	movt	r0,  A
-	mov	  r1,  B		;B[N] defined in emain.c
-	movt	r1,  B
+	mov	  r0,  %low(A)  ;A[N] defined in emain.c
+	movt  r0,  %high(A)
+	mov	  r1,  %low(B)		;B[N] defined in emain.c
+	movt  r1,  %high(B)
 	mov	  r44, 0x0		;sum = 0
 	
 loop_start:	

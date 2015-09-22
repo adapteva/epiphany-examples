@@ -33,48 +33,44 @@
 #include <stdlib.h>
 #include <e_lib.h>
 
-#define N 1026
+#define N 1024
 #define ctype E_CTIMER_CLK
 
 int A[N], B[N];
-extern int A[N], B[N];
 void init_array();
 int comloop();
 int hwloop(int);
-
-
 
 int sfloop(int);
 
 int main(void) {
 	int *result;
 	unsigned *time;
+	unsigned *flag;
 	unsigned time_s, time_e;
 	unsigned ctimer;
-	int row, col;
 
 	init_array();
-	result = (unsigned *)0x5100;
-	time   = (unsigned *)0x5200;
-	//sprintf(outbuf,"\t");
+	result = (unsigned *)0x8f801000;
+	time   = (unsigned *)0x8f802000;
+	flag   = (unsigned *)0x8f803000;
 
-	row = e_group_config.core_row;
-	col = e_group_config.core_col;
-	ctimer = (unsigned)e_get_global_address(row,col,(void *)0xf0438);
+	result[0] = 0;
+	result[1] = 0;
+	result[2] = 0;
+	result[3] = 0;
 
 	result[4] = 0x0;
 
+	e_ctimer_stop(E_CTIMER_0);
+
 	//test the comloop
 	e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX);
-	e_ctimer_start(E_CTIMER_0, ctype);
-	__asm__ __volatile__("ldr %0, [%1]":"=r"(time_s):"r"(ctimer):);
-
+	time_s = e_ctimer_start(E_CTIMER_0, ctype);
 
 	result[0] = comloop();
 
-
-	__asm__ __volatile__("ldr %0, [%1]":"=r"(time_e):"r"(ctimer):);
-	e_ctimer_stop(E_CTIMER_0);
+	time_e = e_ctimer_stop(E_CTIMER_0);
 	time[0] = time_s - time_e;
 
 
@@ -85,11 +81,10 @@ int main(void) {
 	time_e = e_ctimer_stop(E_CTIMER_0);
 	time[1] = time_s - time_e;
 
-	time_s = e_ctimer_start(E_CTIMER_0, ctype);
-	
-	hwloop(2048);
-	time_e = e_ctimer_stop(E_CTIMER_0);
-	time[1] = (time_s - time_e) - time[1];
+	//time_s = e_ctimer_start(E_CTIMER_0, ctype);
+	//hwloop(2048);
+	//time_e = e_ctimer_stop(E_CTIMER_0);
+	//time[1] = (time_e - time_s) - time[1];
 
 
 	//test the sfloop
@@ -99,13 +94,12 @@ int main(void) {
 	time_e = e_ctimer_stop(E_CTIMER_0);
 	time[2] = time_s - time_e;
 
-	time_s = e_ctimer_start(E_CTIMER_0, ctype);
-
-	sfloop(2048);
-	time_e = e_ctimer_stop(E_CTIMER_0);
-	time[2] = (time_s - time_e) - time[2];
-
-	
+	//time_s = e_ctimer_start(E_CTIMER_0, ctype);
+	//sfloop(2048);
+	//time_e = e_ctimer_stop(E_CTIMER_0);
+	//time[2] = (time_e - time_s) - time[2];
+    //
+	*flag = 1;
 
 	return EXIT_SUCCESS;
 }

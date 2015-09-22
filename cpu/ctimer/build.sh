@@ -5,7 +5,8 @@ set -e
 ESDK=${EPIPHANY_HOME}
 ELIBS="-L ${ESDK}/tools/host/lib"
 EINCS="-I ${ESDK}/tools/host/include"
-ELDF=${ESDK}/bsps/current/fast.ldf
+#ELDF=${ESDK}/bsps/current/legacy.ldf
+ELDF=${ESDK}/bsps/current/legacy.ldf
 
 # Create the binaries directory
 mkdir -p bin/
@@ -32,7 +33,7 @@ ${CROSS_PREFIX}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-load
          -mfp-mode=round-nearest \
          -ffp-contract=fast \
          -funroll-loops \
-         -T ${EPIPHANY_HOME}/bsps/current/legacy.ldf \
+         -T ${ELDF} \
          -o bin/emain.elf \
          src/emain.c -le-lib
 

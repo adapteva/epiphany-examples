@@ -27,7 +27,7 @@ ${CROSS_PREFIX}gcc src/main.c -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le-loa
 
 # Build DEVICE side program
 OPT=0
-e-gcc -T ${ELDF} -O${OPT} src/emain.c -o bin/emain.elf -le-lib
+e-gcc -T ${ELDF} -O${OPT} src/emain.c src/wand-isr.S -o bin/emain.elf -le-lib
 
 # Convert ebinary to SREC file
 e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec

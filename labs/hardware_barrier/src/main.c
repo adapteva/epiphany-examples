@@ -43,6 +43,8 @@
 #define _BufSize   (4 * _MAX_CORES)
 #define _BufOffset (0x01000000)
 
+#define NBARRIERS 0xfff
+
 int main(int argc, char *argv[])
 {
 	unsigned rows, cols, ncores, coreid, i, j;
@@ -51,7 +53,7 @@ int main(int argc, char *argv[])
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t emem;
-	int fault;
+	int fault, highest;
 
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
@@ -77,8 +79,8 @@ int main(int argc, char *argv[])
 	ncores = rows * cols;
 	printf("num-cores = %4d\n", ncores);
 	fault = 0x0;
-	for (i=0; i<=0x400; i++)
-	{
+	for (i=0; i < 0x10000; i++) {
+
 		/* Pause leader core so we can read without races */
 		e_write(&dev, 0, 0, 0x7000, &one, sizeof(one));
 
@@ -94,26 +96,31 @@ int main(int argc, char *argv[])
 		/* Resume */
 		e_write(&dev, 0, 0, 0x7000, &zero, sizeof(zero));
 
-		for (j=0; j<ncores; j++)
-		{
-			if (result[j] != result[0])
+		highest = result[0];
+		for (j=0; j<ncores; j++) {
+			if (result[j] != result[0]) {
 				fault++;
+				if (highest < result[j])
+					highest = result[j];
+			}
 		}
 
 		/* Don't print every iteration */
 		if (i % 0x10)
 			continue;
 
-		printf("[%3x] ", i);
+		printf("[%03x] ", i);
 		for (j=0;j<ncores;j++)
 			printf("%04x ", result[j]);
 		printf("\n");
 
-		/* Do a small wait so it is easy to see that the E cores are
-		 * running */
-		usleep(4000);
-	}
+		if (highest >= NBARRIERS)
+			break;
 
+		/* Do a small wait so it is easy to see that the E cores are
+		 * running independently. */
+		usleep(10000);
+	}
 
 	//print the success/error message duel to the number of fault
 	if (fault == 0)

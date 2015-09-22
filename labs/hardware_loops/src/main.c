@@ -42,12 +42,12 @@
 
 int main(int argc, char *argv[])
 {
-	unsigned rows, cols, coreid, i, j;
+	unsigned rows, cols, coreid, i, j, flag, fail = 0;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t emem;
 	unsigned time[sizeN];
-	int result[sizeN];
+	unsigned result[sizeN];
 
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
@@ -56,13 +56,15 @@ int main(int argc, char *argv[])
 	e_reset_system();
 	e_get_platform_info(&platform);
 
+	e_alloc(&emem, 0x01800000, 0x4000);
+
 	//open the workgroup
 	rows = platform.rows;
 	cols = platform.cols;
 	e_open(&dev, 0, 0, rows, cols);
 
 	//load the device program on the board
-	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
+	e_load_group("emain.elf", &dev, 0, 0, rows, cols, E_FALSE);
 
 	for (i=0; i<rows; i++)
 	{
@@ -70,17 +72,22 @@ int main(int argc, char *argv[])
 		{
 			coreid = (i + platform.row) * 64 + j + platform.col;
 			fprintf(stderr, "Message from eCore 0x%03x (%2d,%2d): \n", coreid, i, j);
+
+			flag = 0;
+			e_write(&emem, 0, 0, 0x3000, &flag, sizeof(flag));
+
 			e_start(&dev, i, j);
 
 			//wait for core to execute the program
-			usleep(200000);
-			
-			//check results
-			e_read(&dev, 0, 0, 0x5100, &result[0], sizeN*sizeof(int));
-			e_read(&dev, 0, 0, 0x5200, &time[0], sizeN*sizeof(unsigned));
+			while (!flag) {
+				e_read(&emem, 0, 0, 0x3000, &flag, sizeof(flag));
+				usleep(1000);
+			}
 
-			
-			
+			//check results
+			e_read(&emem, 0, 0, 0x1000, &result[0], sizeN*sizeof(unsigned));
+			e_read(&emem, 0, 0, 0x2000, &time[0], sizeN*sizeof(unsigned));
+
 			if ((result[1] == result[0]) && (result[1] == result[2]) && (time[1]<time[0]) && (time[1]<time[2]))
 				fprintf(stderr, "\ntest hardware_loop passed!\n\n");
 			else
@@ -88,11 +95,11 @@ int main(int argc, char *argv[])
 				fprintf(stderr, "\ntest hardware_loop failed!\n");
 				fprintf(stderr, "result:\tauto =  %10d   hw =  %10d   sf =  %10d \n", result[0],result[1],result[2]);
 				fprintf(stderr, "time:  \tauto = %5d cycles  hw = %5d cycles  sf = %5d cycles \n\n", time[0],time[1],time[2]);
+				fail++;
 			}
-			
-		}	
-	}	
 
+		}
+	}
 
 	// Release the allocated buffer and finalize the
 	// e-platform connection.
@@ -100,8 +107,6 @@ int main(int argc, char *argv[])
 	e_free(&emem);
 	e_finalize();
 
-	
-
-	return 0;
+	return !(fail == 0);
 }
 

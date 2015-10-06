@@ -1,9 +1,9 @@
 #define WAND_MASK    #0xfffffff7
 
-.type _wand_isr,%function
-.global _wand_isr
+.type wand_isr,%function
+.global wand_isr
 .align 3
-_wand_isr:
+wand_isr:
 	str	r0,[sp,#-1]
 	str	r1,[sp,#-2]
 	movfs	r0,status
@@ -14,4 +14,4 @@ _wand_isr:
 	ldr	r0,[sp,#-1]
 	ldr	r1,[sp,#-2]
 	rti
-.size _wand_isr, .-_wand_isr
+.size wand_isr, .-wand_isr

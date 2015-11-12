@@ -217,13 +217,13 @@ void bigmatmul()
 					// Swap A banks horizontally
 					src = me.bank_A[me.pingpong];
 					dst = me.tgt_A[me.pingpong];
-					if (kc <= (_Nside - 1)) 
+					if (kc < (_Nside - 1)) 
 						data_copy(&dma_desc[1], dst, src);
 
 					// Swap B banks vertically
 					src = me.bank_B[me.pingpong];
 					dst = me.tgt_B[me.pingpong];
-					if (kc <= (_Nside - 1))
+					if (kc < (_Nside - 1))
 						data_copy(&dma_desc[1], dst, src);
 
 					me.pingpong = 1 - me.pingpong;

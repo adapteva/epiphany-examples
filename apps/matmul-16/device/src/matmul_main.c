@@ -27,6 +27,11 @@
 //
 // Aug-2013, YS.
 
+/* Don't use DMACOPY */
+#undef DMACOPY
+
+#include <stdint.h>
+#include <string.h>
 
 #include "matlib.h"
 #include "matmul.h"
@@ -254,7 +259,7 @@ void bigmatmul()
 	return;
 }
 
-
+#if DMACOPY
 // Use DMA to copy data blocks from src to dst
 void data_copy(e_dma_desc_t *dma_desc, void *dst, void *src)
 {
@@ -270,4 +275,125 @@ void data_copy(e_dma_desc_t *dma_desc, void *dst, void *src)
 
 	return;
 }
+#else
+union dma_config {
+  uint32_t reg;
+  struct {
+    unsigned dmaen:1;
+    unsigned master:1;
+    unsigned chainmode:1;
+    unsigned startup:1;
+    unsigned irqen:1;
+    unsigned datasize:2;
+    unsigned _rsvd1:3;
+    unsigned msgmode:1;
+    unsigned _rsvd2:1;
+    unsigned shift_src_in:1;
+    unsigned shift_dst_in:1;
+    unsigned shift_src_out:1;
+    unsigned shift_dst_out:1;
+    uint16_t next_ptr;
+  } __attribute__((packed));
+} __attribute__((packed));
+
+union dma_count {
+  uint32_t reg;
+  struct {
+    uint16_t inner_count;
+    uint16_t outer_count;
+  } __attribute__((packed));
+} __attribute__((packed));
+
+union dma_status {
+  uint32_t reg;
+  struct {
+    unsigned dmastate:4;
+    unsigned _rsv1:12;
+    uint16_t curr_ptr;
+  } __attribute__((packed));
+} __attribute__((packed));
+
+union dma_stride {
+  uint32_t reg;
+  struct {
+    uint16_t src_stride;
+    uint16_t dst_stride;
+  } __attribute__((packed));
+} __attribute__((packed));
+
+struct epiphany_dma_regs {
+  union dma_config	config;
+  union dma_stride	stride;
+  union dma_count	count;
+  uint32_t		src_addr;
+  uint32_t		dst_addr;
+  uint32_t		auto0;
+  uint32_t		auto1;
+  union dma_status	status;
+} __attribute__((packed));
+
+struct epiphany_dma_descriptor {
+  union dma_config	config;
+  union dma_stride	inner_stride;
+  union dma_count	count;
+  union dma_stride	outer_stride;
+  uint32_t		src_addr;
+  uint32_t		dst_addr;
+} __attribute__((packed));
+
+
+/* Use memcpy to copy data */
+void data_copy(e_dma_desc_t *dma_desc, void *dst, void *src)
+{
+	struct epiphany_dma_descriptor desc;
+	uint32_t shift_dst, shift_src, inner_count, outer_count, src_addr, dst_addr;
+	union dma_stride stride;
+
+	dma_desc->src_addr = src;
+	dma_desc->dst_addr = dst;
+
+	memcpy((void *) &desc, (void *) dma_desc, sizeof(desc));
+
+	inner_count = desc.count.inner_count;
+	outer_count = desc.count.outer_count;
+	src_addr    = desc.src_addr;
+	dst_addr    = desc.dst_addr;
+
+	while (outer_count) {
+		switch (desc.config.datasize) {
+		case 0: /* byte */
+			*(uint8_t *) dst_addr = *(uint8_t *) src_addr;
+			break;
+		case 1: /* half-word */
+			*(uint16_t *) dst_addr = *(uint16_t *) src_addr;
+			break;
+		case 2: /* word */
+			*(uint32_t *) dst_addr = *(uint32_t *) src_addr;
+			break;
+		case 3: /* double-word */
+			/* split into two transcations */
+			*(uint32_t *) dst_addr     = *(uint32_t *) src_addr;
+			*(uint32_t *) (dst_addr+4) = *(uint32_t *) (src_addr+4);
+			break;
+		default:
+			abort();
+		}
+
+		inner_count--;
+		if (inner_count) {
+			stride    = desc.inner_stride;
+			shift_src = desc.config.shift_src_in ? 16 : 0;
+			shift_dst = desc.config.shift_dst_in ? 16 : 0;
+		} else {
+			outer_count--;
+			inner_count = desc.count.inner_count;
+			stride      = desc.outer_stride;
+			shift_src   = desc.config.shift_src_out ? 16 : 0;
+			shift_dst   = desc.config.shift_dst_out ? 16 : 0;
+		}
+		src_addr += (stride.src_stride << shift_src);
+		dst_addr += (stride.dst_stride << shift_dst);
+	}
+}
+#endif
 

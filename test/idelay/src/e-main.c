@@ -18,12 +18,12 @@
 
 // Epiphany system registers
 typedef enum {
-	E_SYS_RESET		= 0xF0200,
+	E_SYS_RESET	= 0xF0200,
 	E_SYS_CLKCFG	= 0xF0204,
 	E_SYS_CHIPID	= 0xF0208,
 	E_SYS_VERSION	= 0xF020c,
-	E_SYS_TXCFG		= 0xF0210,
-	E_SYS_RXCFG		= 0xF0300,
+	E_SYS_TXCFG	= 0xF0210,
+	E_SYS_RXCFG	= 0xF0300,
 	E_SYS_RXDMACFG	= 0xF0500,
 } e_sys_reg_id_t;
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]){
   int i,j;
   unsigned result[N];
   unsigned data = 0xDEADBEEF;
-  unsigned tmp;
+  unsigned tmp,fail;
   int idelay[TAPS]={0x00000000,0x00000000,//0
 		  0x11111111,0x00000001,//1
 		  0x22222222,0x00000002,//2
@@ -172,7 +172,7 @@ int main(int argc, char *argv[]){
     ee_write_esys(0xF0318, idelay[i]);
     ee_write_esys(0xF031c, idelay[i+1]);
     printf ("DELAY=%08x ",idelay[i]);
-    
+    usleep(100000); 
     //e_write(pdram, 0, 0, 0x0, (void *) &(data), size);    
     //e_read(pdram, 0, 0, 0x0, (void *) &(result), size);        
     //usleep(100000);
@@ -190,12 +190,23 @@ int main(int argc, char *argv[]){
     }
     //check result
     usleep(100000);   
-    e_read(pdram, 0, 0, 0x0, (void *) &tmp, sizeof(int));     
-    if(tmp==0x12345678){
+    unsigned int status;
+    unsigned int failures=0xDEADBEEF;
+    unsigned int write_failures=0;
+    for (j=2;j<N;j++){
+      e_read(pdram, 0, 0, 4*j, (void *) &tmp, sizeof(int));      
+      if(tmp!=0x55555555){
+	write_failures++;
+      }
+    }
+    e_read(pdram, 0, 0, 0, (void *) &status, sizeof(int));     
+    e_read(pdram, 0, 0, 4, (void *) &failures, sizeof(int));     
+   
+    if((status==0x12345678) & (write_failures==0)){
       printf("PASS\n");
     }
       else{
-	printf ("FAIL-->%08x\n",tmp);
+	printf ("READ-FAILS=%08x, WRITE-FAILS=%d\n",failures,write_failures );
       }    
   }
   

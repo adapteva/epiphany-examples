@@ -30,7 +30,7 @@ esac
 ${CROSS_PREFIX}gcc src/e-main.c -o bin/e-main.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -Os -T ${ELDF} src/e-task.c -o bin/e-task.elf -le-lib -lm -ffast-math
+e-gcc -O0 -T ${ELDF} src/e-task.c -o bin/e-task.elf -le-lib -lm -ffast-math
 
 # Convert ebinary to SREC file
 e-objcopy --srec-forceS3 --output-target srec bin/e-task.elf bin/e-task.srec

@@ -15,8 +15,8 @@
 int main(void){
 
   int *dram   = (int*)0x8e000000;  
-  int *local  = (int*)0x4000;  
-  int *result = (int*)0x6000;  
+  int *local  = (int*)0x2000;  
+  int *result = (int*)0x4000;  
   int *pass   = (int*)0x8e000000;    //overwrite the sync ivt entry on exit
   int i;
 
@@ -26,7 +26,7 @@ int main(void){
   }
   //EXPECTED RESULTS
   for (i=0;i<N;i++){
-    *(local+i) =0x55555555;
+    *(local+i) =0x55550000+i;
   }
   //WRITE TO DRAM  
   e_memcopy(dram, local, N*sizeof(int));
@@ -36,11 +36,12 @@ int main(void){
 
   int fail=0;
   for (i=0;i<N;i++){
-    if(*(result+i)!=0x55555555){
+    if(*(result+i)!=(0x55550000+i)){
       fail=fail+1;
     }
   }
-  if(!fail){
+  
+  if(fail==0){
     //PRINT SUCCESS IF PASSED
     *pass = 0x12345678;
   }

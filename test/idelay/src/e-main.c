@@ -14,7 +14,7 @@
 #include <stdint.h>
 #include <assert.h>
 
-#define TAPS 64
+#define TAPS 8
 
 // Epiphany system registers
 typedef enum {
@@ -167,10 +167,12 @@ int main(int argc, char *argv[]){
     //reset system
     my_reset_system();
     //write/read register 
-    a=idelay[i];
-    b=idelay[i+1];
+    a=0x0;
     ee_write_esys(0xF0318, idelay[i]);
     ee_write_esys(0xF031c, idelay[i+1]);
+    ee_write_esys(0xF0214, a);//TXSTATUS
+    ee_write_esys(0xF021C, a);//TXMONITOR
+    ee_write_esys(0xF0304, a);//RXSTATUS
     printf ("DELAY=%08x ",idelay[i]);
     usleep(100000); 
     //e_write(pdram, 0, 0, 0x0, (void *) &(data), size);    
@@ -182,32 +184,32 @@ int main(int argc, char *argv[]){
       //printf("input[%d]=%08x\n", j,tmp);
     }
     //load program
-    e_load_group(elfFile, &dev, 0, 0, 1, 1, E_TRUE);    
-    usleep(100000);   
+    e_load_group(elfFile, &dev, 0, 0, 1, 1, E_FALSE);    
+    ee_write_esys(0xF021C, a);//clear monitor
+    e_start_group(&dev);        
+    usleep(1000000);   
     for (j=0;j<N;j++){
       e_read(pdram, 0, 0, 4*j, (void *) &tmp, sizeof(int));      
-      //printf("result[%d]=%08x\n", j,tmp);
+      printf("result[%d]=%08x\n", j,tmp);
     }
     //check result
     usleep(100000);   
     unsigned int status;
     unsigned int failures=0xDEADBEEF;
     unsigned int write_failures=0;
-    for (j=2;j<N;j++){
-      e_read(pdram, 0, 0, 4*j, (void *) &tmp, sizeof(int));      
-      if(tmp!=0x55555555){
-	write_failures++;
-      }
-    }
     e_read(pdram, 0, 0, 0, (void *) &status, sizeof(int));     
     e_read(pdram, 0, 0, 4, (void *) &failures, sizeof(int));     
-   
+    int txstatus  = ee_read_esys(0xF0214);//TXSTATUS
+    int txmonitor = ee_read_esys(0xF021c);//TXMONITOR
+    int packet    = ee_read_esys(0xF0220);//TXPACKET
+    int rxstatus  = ee_read_esys(0xF0304);//RXSTATUS
+    printf("TXMON=%d TXSTAT=0x%08x RXSTAT=0x%08x PACKET=0x%08x", txmonitor, txstatus, rxstatus, packet);
     if((status==0x12345678) & (write_failures==0)){
-      printf("PASS\n");
+      printf(" PASS\n");
     }
       else{
-	printf ("READ-FAILS=%08x, WRITE-FAILS=%d\n",failures,write_failures );
-      }    
+	printf (" FAIL (%d)\n",failures);
+      }
   }
   
   //Close down Epiphany device
@@ -292,7 +294,7 @@ int my_reset_system(void)
 	if (sizeof(int) != ee_write_esys(E_SYS_TXCFG, txcfg.reg))
 	  goto cleanup_platform;
 	
-	divider = 0; /* Divide by 4, see data sheet */
+	divider = 1; /* Divide by 4, see data sheet */
 	//divider = 0; /* Divide by 2, see data sheet */
 	usleep(1000);
 	if (sizeof(int) != e_write(&dev, 0, 0, E_REG_LINKCFG, &divider, sizeof(int)))

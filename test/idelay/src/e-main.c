@@ -14,7 +14,7 @@
 #include <stdint.h>
 #include <assert.h>
 
-#define TAPS 8
+#define TAPS 64
 
 // Epiphany system registers
 typedef enum {
@@ -168,8 +168,8 @@ int main(int argc, char *argv[]){
     my_reset_system();
     //write/read register 
     a=0x0;
-    ee_write_esys(0xF0318, idelay[i]);
-    ee_write_esys(0xF031c, idelay[i+1]);
+    ee_write_esys(0xF0310, idelay[i]);
+    ee_write_esys(0xF0314, idelay[i+1]);
     ee_write_esys(0xF0214, a);//TXSTATUS
     ee_write_esys(0xF021C, a);//TXMONITOR
     ee_write_esys(0xF0304, a);//RXSTATUS
@@ -190,7 +190,7 @@ int main(int argc, char *argv[]){
     usleep(1000000);   
     for (j=0;j<N;j++){
       e_read(pdram, 0, 0, 4*j, (void *) &tmp, sizeof(int));      
-      printf("result[%d]=%08x\n", j,tmp);
+      //printf("result[%d]=%08x\n", j,tmp);
     }
     //check result
     usleep(100000);   
@@ -294,7 +294,7 @@ int my_reset_system(void)
 	if (sizeof(int) != ee_write_esys(E_SYS_TXCFG, txcfg.reg))
 	  goto cleanup_platform;
 	
-	divider = 1; /* Divide by 4, see data sheet */
+	divider = 0; /* Divide by 4, see data sheet */
 	//divider = 0; /* Divide by 2, see data sheet */
 	usleep(1000);
 	if (sizeof(int) != e_write(&dev, 0, 0, E_REG_LINKCFG, &divider, sizeof(int)))

@@ -1,2 +1,2 @@
-#define N    8
+#define N    1024
 

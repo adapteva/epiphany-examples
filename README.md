@@ -1,4 +1,4 @@
-applications: Complete applications and utilities  
+apps:         Complete applications and utilities  
 board:        Various board tests  
 cpu:          Various "howto" examples  
 dma:          DMA examples  

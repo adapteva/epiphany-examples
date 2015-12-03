@@ -20,3 +20,11 @@
 # Log files
 *.log
 
+#######################
+# Misc.
+.DS_Store
+
+#######################
+# Eclipse
+.project
+.cproject

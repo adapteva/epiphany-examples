@@ -30,7 +30,5 @@ e-gcc -O3 -T ${ELDF} src/e_math_test.c -o bin/e_math_test.elf -mfp-mode=round-ne
 e-gcc -O3 -T ${ELDF} src/e_math_test1.c -o bin/e_math_test1.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_math_test.elf bin/e_math_test.srec
-e-objcopy --srec-forceS3 --output-target srec bin/e_math_test1.elf bin/e_math_test1.srec
 
 

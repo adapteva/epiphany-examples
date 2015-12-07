@@ -34,5 +34,4 @@ ${CROSS_PREFIX}gcc src/host.c -o bin/noc_fifo.elf ${EINCS} ${ELIBS} \
 e-gcc -Os -T ${ELDF} src/e_loadstore.c -o bin/e_loadstore.elf -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_loadstore.elf bin/e_loadstore.srec
 

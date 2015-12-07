@@ -33,7 +33,5 @@ e-gcc -T ${ELDF} src/emain_slave.c -o bin/emain_slave.elf -le-lib
 
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/emain_slave.elf bin/emain_slave.srec
-e-objcopy --srec-forceS3 --output-target srec bin/emain_master.elf bin/emain_master.srec
 
 

@@ -29,6 +29,5 @@ ${CROSS_PREFIX}gcc src/link_lowpower_mode.c -o bin/link_lowpower_mode.elf ${EINC
 e-gcc -T ${ELDF} src/e_link_lowpower_mode.c -o bin/e_link_lowpower_mode.elf -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_link_lowpower_mode.elf bin/e_link_lowpower_mode.srec
 
 

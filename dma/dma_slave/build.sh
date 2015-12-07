@@ -30,7 +30,5 @@ e-gcc -O0 -T ${ELDF} src/e_dma_slave_test.c -o bin/e_dma_slave_test.elf -le-lib
 e-gcc -O0 -T ${ELDF} src/e_dma_slave_test1.c -o bin/e_dma_slave_test1.elf -le-lib 
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_dma_slave_test.elf bin/e_dma_slave_test.srec
-e-objcopy --srec-forceS3 --output-target srec bin/e_dma_slave_test1.elf bin/e_dma_slave_test1.srec
 
 

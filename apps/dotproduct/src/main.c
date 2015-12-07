@@ -75,7 +75,7 @@ int main(int argc, char *argv[]){
     }
   }
   //Load program to cores and run
-  e_load_group("e_task.srec", &dev, 0, 0, platform.rows, platform.cols, E_TRUE);
+  e_load_group("e_task.elf", &dev, 0, 0, platform.rows, platform.cols, E_TRUE);
   
   //Check if all cores are done
   while(1){    

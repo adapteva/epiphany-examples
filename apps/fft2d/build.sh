@@ -22,10 +22,7 @@ if [[ "${BUILD_DEVICE}" == "yes" ]]; then
 	fi
 	popd >& /dev/null
 
-	echo "*** Creating srec file"
-	rm -rf device/${Config}/e_fft2d.*.srec
 	pushd device/${Config} >& /dev/null
-	e-objcopy --srec-forceS3 --output-target srec e_fft2d.elf e_fft2d.srec
 	popd >& /dev/null
 fi
 

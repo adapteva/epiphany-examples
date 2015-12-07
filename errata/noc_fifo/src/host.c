@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 	
 	// Load device program		
-	e_load("e_loadstore.srec",&dev, 0, 0, E_TRUE);
+	e_load("e_loadstore.elf",&dev, 0, 0, E_TRUE);
 
 	//Waiting for finish
 	usleep(500000);

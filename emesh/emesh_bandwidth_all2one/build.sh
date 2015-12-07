@@ -35,7 +35,5 @@ e-gcc -O0 -T ${ELDF} src/e_mesh_one1.c -o bin/e_mesh_one1.elf -le-lib
 
     
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_one.elf bin/e_mesh_one.srec
-e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_one1.elf bin/e_mesh_one1.srec
 
 

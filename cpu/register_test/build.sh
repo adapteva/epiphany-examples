@@ -30,6 +30,4 @@ e-gcc -T ${ELDF} src/e-register-test2.c -o bin/e-register-test2.elf -le-lib
 e-gcc -T ${ELDF} src/e-register-test3.c -o bin/e-register-test3.elf -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e-register-test2.elf bin/e-register-test2.srec
-e-objcopy --srec-forceS3 --output-target srec bin/e-register-test3.elf bin/e-register-test3.srec
 

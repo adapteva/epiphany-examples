@@ -67,7 +67,7 @@ typedef struct {
 	e_bool_t broadcast;
 	e_bool_t run_target;
 	e_hal_diag_t verbose;
-	char srecFile[4096];
+	char elfFile[4096];
 } args_t;
 
 args_t ar = {E_TRUE, E_FALSE, E_TRUE, H_D0, ""};
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
 
 	printf("Loading program on Epiphany chip...\n");
 	e_set_loader_verbosity(ar.verbose);
-	result = e_load_group(ar.srecFile, pEpiphany, 0, 0, pEpiphany->rows, pEpiphany->cols, ar.run_target);
+	result = e_load_group(ar.elfFile, pEpiphany, 0, 0, pEpiphany->rows, pEpiphany->cols, ar.run_target);
 	if (result == E_ERR) {
 		printf("Error loading Epiphany program.\n");
 		exit(1);
@@ -376,7 +376,7 @@ void get_args(int argc, char *argv[])
 {
 	int n;
 
-	strcpy(ar.srecFile, "");
+	strcpy(ar.elfFile, "");
 
 	for (n=1; n<argc; n++)
 	{
@@ -417,11 +417,11 @@ void get_args(int argc, char *argv[])
 			exit(0);
 		}
 
-		strcpy(ar.srecFile, argv[n]);
+		strcpy(ar.elfFile, argv[n]);
 	}
 
-	if (!strcmp(ar.srecFile, ""))
-		strcpy(ar.srecFile, "matmul-16.srec");
+	if (!strcmp(ar.elfFile, ""))
+		strcpy(ar.elfFile, "matmul-16.elf");
 
 	return;
 }

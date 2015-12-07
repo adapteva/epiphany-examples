@@ -36,6 +36,5 @@ e-gcc -T ${ELDF} src/emain.c -o bin/emain.elf -le-lib
 
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec
 
 

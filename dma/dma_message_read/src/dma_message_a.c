@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 	
 	
 	// Load the device program 
-	e_load("e_dma_message_a.srec", &dev, mas_row, mas_col, E_TRUE);
+	e_load("e_dma_message_a.elf", &dev, mas_row, mas_col, E_TRUE);
 
 	// Wait for core program execution to finish
 	usleep(1000000);

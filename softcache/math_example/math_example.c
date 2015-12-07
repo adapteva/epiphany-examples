@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 
 	// To test
-	e_load_group("e_math_example.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+	e_load_group("e_math_example.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
 	for (i=0; i<platform.rows ; i++)
 	{

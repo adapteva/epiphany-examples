@@ -41,5 +41,4 @@ ${CROSS_PREFIX}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-load
 
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec
 

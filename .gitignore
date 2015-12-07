@@ -6,10 +6,6 @@
 *.d
 
 ######################
-# Loader files
-*.srec
-
-######################
 # Emacs/vim/gedit backup files
 *~
 .#*

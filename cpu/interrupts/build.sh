@@ -30,7 +30,6 @@ e-gcc -O3 -T ${ELDF} src/e_interrupt_test.c -o bin/e_interrupt_test.elf -mfp-mod
 
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_interrupt_test.elf bin/e_interrupt_test.srec
 
 
 

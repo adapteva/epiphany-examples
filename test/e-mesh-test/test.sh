@@ -10,7 +10,7 @@ SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
 
-$EXEPATH/../e-test/bin/e-test.elf $EROW0 $ECOL0 $EROWS $ECOLS 0 $EXEPATH/bin/e-task.srec > e-matmul-test.log
+$EXEPATH/../e-test/bin/e-test.elf $EROW0 $ECOL0 $EROWS $ECOLS 0 $EXEPATH/bin/e-task.elf > e-matmul-test.log
 
 retval=$?
 

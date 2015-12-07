@@ -37,16 +37,12 @@ e_matmul.elf: $(OBJS) $(USER_OBJS)
 	      -Wl,--gc-sections \
 	      -o "e_matmul.elf" \
 	      $(OBJS) $(USER_OBJS) $(LIBS)
-	@echo 'Creating srec file:'
-	rm -rf e_matmul.srec
-	e-objcopy --srec-forceS3 --output-target srec e_matmul.elf e_matmul.srec
-	chmod -x e_matmul.srec
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) e_matmul.elf e_matmul.srec
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) e_matmul.elf
 	-@echo ' '
 
 .PHONY: all clean dependents

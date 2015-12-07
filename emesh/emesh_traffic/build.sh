@@ -34,7 +34,5 @@ e-gcc -O0 -T ${ELDF} src/e_mesh_transmitter.c -o bin/e_mesh_transmitter.elf -le-
 e-gcc -O0 -T ${ELDF} src/e_mesh_receiver.c -o bin/e_mesh_receiver.elf -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_transmitter.elf bin/e_mesh_transmitter.srec
-e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_receiver.elf bin/e_mesh_receiver.srec
 
 

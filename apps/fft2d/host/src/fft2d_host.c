@@ -73,7 +73,6 @@
 typedef struct {
   int  run_target;
   e_hal_diag_t verbose;
-  char srecFile[4096];
   char ifname[255];
   char ofname[255];
   char elfFile[4096];

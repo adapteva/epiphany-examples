@@ -35,7 +35,6 @@ e-gcc -O3 -T ${ELDF} src/e_mesh_bandwidth_near.c -o bin/e_mesh_bandwidth_near.el
 
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_bandwidth_near.elf bin/e_mesh_bandwidth_near.srec
 
 
 

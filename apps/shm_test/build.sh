@@ -34,5 +34,4 @@ ${CROSS_PREFIX}gcc src/shm_test.c -g -O0 -o bin/shm_test.elf ${EINCS} ${ELIBS} -
 e-gcc -T ${ELDF} src/e_shm_test.c -o bin/e_shm_test.elf -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_shm_test.elf bin/e_shm_test.srec
 

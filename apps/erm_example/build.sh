@@ -35,5 +35,4 @@ ${CROSS_PREFIX}gcc src/main.c ${ERM}/src/ermlib.c -o bin/main.elf -I ${ERMI} ${E
 e-gcc -O0 -T ${ELDF} src/e_demo.c -o bin/e_demo.elf -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_demo.elf bin/e_demo.srec
 

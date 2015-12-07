@@ -30,7 +30,5 @@ e-gcc -O3 -T ${ELDF} src/e_mutex_test0.c -o bin/e_mutex_test0.elf -le-lib
 e-gcc -O3 -T ${ELDF} src/e_mutex_test.c -o bin/e_mutex_test.elf -le-lib 
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_mutex_test0.elf bin/e_mutex_test0.srec
-e-objcopy --srec-forceS3 --output-target srec bin/e_mutex_test.elf bin/e_mutex_test.srec
 
 

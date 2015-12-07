@@ -30,5 +30,4 @@ ${CROSS_PREFIX}gcc src/hello_world.c -o Debug/hello_world.elf ${EINCS} ${ELIBS} 
 e-gcc -T ${ELDF} src/e_hello_world.c -o Debug/e_hello_world.elf -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec Debug/e_hello_world.elf Debug/e_hello_world.srec
 

@@ -30,7 +30,5 @@ e-gcc -O3 -T ${ELDF} src/e_dma_message_test.c -o bin/e_dma_message_test.elf -le-
 e-gcc -O3 -T ${ELDF} src/e_dma_message_slave_test.c -o bin/e_dma_message_slave_test.elf -le-lib 
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_dma_message_test.elf bin/e_dma_message_test.srec
-e-objcopy --srec-forceS3 --output-target srec bin/e_dma_message_slave_test.elf bin/e_dma_message_slave_test.srec
 
 

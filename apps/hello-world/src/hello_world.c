@@ -88,8 +88,8 @@ int main(int argc, char *argv[])
 
 		// Load the device program onto the selected eCore
 		// and launch after loading.
-		if ( E_OK != e_load("e_hello_world.srec", &dev, 0, 0, E_TRUE) ) {
-			fprintf(stderr, "Failed to load e_hello_world.srec\n");
+		if ( E_OK != e_load("e_hello_world.elf", &dev, 0, 0, E_TRUE) ) {
+			fprintf(stderr, "Failed to load e_hello_world.elf\n");
 			return EXIT_FAILURE;
 		}
 

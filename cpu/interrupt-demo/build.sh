@@ -27,6 +27,4 @@ e-gcc -O0 -T ${ELDF} e-int-test.master.c -o e-int-test.master.elf -le-lib
 e-gcc -O0 -T ${ELDF} e-int-test.slave.c  -o e-int-test.slave.elf  -le-lib
 
 # Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec e-int-test.master.elf e-int-test.master.srec
-e-objcopy --srec-forceS3 --output-target srec e-int-test.slave.elf  e-int-test.slave.srec
 

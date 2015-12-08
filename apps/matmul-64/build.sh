@@ -42,19 +42,20 @@ EINCS="${EPIPHANY_HOME}/tools/host/include"
 ELIBS="${EPIPHANY_HOME}/tools/host/lib"
 
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
-CC=${CROSS_PREFIX}gcc
+CC=${CROSS_COMPILE}gcc
 
 
 if [[ "${BUILD_HOST}" == "yes" ]]; then

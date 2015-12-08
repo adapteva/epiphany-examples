@@ -14,20 +14,21 @@ cd $EXEPATH
 # Create the binaries directory
 mkdir -p bin/
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
 # Build HOST side application
-${CROSS_PREFIX}gcc -Wall src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread -lrt
+${CROSS_COMPILE}gcc -Wall src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread -lrt
 
 # Build DEVICE side program
 e-gcc -O3  -T ${ELDF} src/e-bandwidth-test-device.c -o bin/e-bandwidth-test-device.elf -le-lib -lm -ffast-math

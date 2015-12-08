@@ -10,20 +10,21 @@ ELDF=${ESDK}/bsps/current/fast.ldf
 # Create the binaries directory
 mkdir -p bin/
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/mutex_test.c -o bin/mutex_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_COMPILE}gcc src/mutex_test.c -o bin/mutex_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -O3 -T ${ELDF} src/e_mutex_test0.c -o bin/e_mutex_test0.elf -le-lib 

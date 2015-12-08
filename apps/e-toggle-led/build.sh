@@ -15,20 +15,21 @@ cd $EXEPATH
 # Create the binaries directory
 mkdir -p bin/
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
     arm*)
         # Use native arm compiler (no cross prefix)
-        CROSS_PREFIX=
+        CROSS_COMPILE=
         ;;
        *)
         # Use cross compiler
-        CROSS_PREFIX="arm-linux-gnueabihf-"
+        CROSS_COMPILE="arm-linux-gnueabihf-"
         ;;
 esac
+fi
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_COMPILE}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -T ${ELDF} src/device-e-toggle-led.c -o bin/device-e-toggle-led.elf -le-lib

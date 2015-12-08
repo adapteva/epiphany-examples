@@ -11,23 +11,24 @@ SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 cd $EXEPATH
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
 #
-#${CROSS_PREFIX}gcc -O3 -o test_host src/test_host.c src/isprime.c -lm
+#${CROSS_COMPILE}gcc -O3 -o test_host src/test_host.c src/isprime.c -lm
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/prime.c -o prime.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
+${CROSS_COMPILE}gcc src/prime.c -o prime.elf -I ${EINCS} -L ${ELIBS} -le-hal -le-loader
 
 # Build DEVICE side program
 e-gcc -O2 -T ${ELDF} src/isprime.c src/e_prime.c -o e_prime.elf -le-lib -lm

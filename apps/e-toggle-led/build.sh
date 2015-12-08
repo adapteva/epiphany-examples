@@ -33,6 +33,5 @@ ${CROSS_PREFIX}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf ${EINCS} ${ELIBS} 
 # Build DEVICE side program
 e-gcc -T ${ELDF} src/device-e-toggle-led.c -o bin/device-e-toggle-led.elf -le-lib
 
-# Convert ebinary to SREC file
 
 

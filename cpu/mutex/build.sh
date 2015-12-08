@@ -29,6 +29,5 @@ ${CROSS_PREFIX}gcc src/mutex_test.c -o bin/mutex_test.elf ${EINCS} ${ELIBS} -le-
 e-gcc -O3 -T ${ELDF} src/e_mutex_test0.c -o bin/e_mutex_test0.elf -le-lib 
 e-gcc -O3 -T ${ELDF} src/e_mutex_test.c -o bin/e_mutex_test.elf -le-lib 
 
-# Convert ebinary to SREC file
 
 

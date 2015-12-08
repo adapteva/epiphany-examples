@@ -32,5 +32,4 @@ e-gcc -T ${ELDF} src/emain.c -o bin/emain.elf -le-lib
 
 
 
-# Convert ebinary to SREC file
 

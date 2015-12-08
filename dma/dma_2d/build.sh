@@ -28,7 +28,6 @@ ${CROSS_PREFIX}gcc src/dma_2d_test.c -o bin/dma_2d_test.elf  ${EINCS} ${ELIBS} -
 # Build DEVICE side program
 e-gcc -O3 -T ${ELDF} src/e_dma_2d_test.c -o bin/e_dma_2d_test.elf -le-lib 
 
-# Convert ebinary to SREC file
 
 
 

@@ -28,7 +28,6 @@ ${CROSS_PREFIX}gcc src/dma_chain_test.c -o bin/dma_chain_test.elf ${EINCS} ${ELI
 # Build DEVICE side program
 e-gcc -O3 -T ${ELDF} src/e_dma_chain_test.c -o bin/e_dma_chain_test.elf -le-lib 
 
-# Convert ebinary to SREC file
 
 
 

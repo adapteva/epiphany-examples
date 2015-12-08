@@ -33,6 +33,5 @@ ${CROSS_PREFIX}gcc src/mesh_traffic.c -o bin/mesh_traffic.elf ${EINCS} ${ELIBS} 
 e-gcc -O0 -T ${ELDF} src/e_mesh_transmitter.c -o bin/e_mesh_transmitter.elf -le-lib
 e-gcc -O0 -T ${ELDF} src/e_mesh_receiver.c -o bin/e_mesh_receiver.elf -le-lib
 
-# Convert ebinary to SREC file
 
 

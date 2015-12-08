@@ -29,5 +29,4 @@ ${CROSS_PREFIX}gcc src/register-test.c -o bin/register-test.elf ${EINCS} ${ELIBS
 e-gcc -T ${ELDF} src/e-register-test2.c -o bin/e-register-test2.elf -le-lib
 e-gcc -T ${ELDF} src/e-register-test3.c -o bin/e-register-test3.elf -le-lib
 
-# Convert ebinary to SREC file
 

@@ -28,6 +28,5 @@ ${CROSS_PREFIX}gcc src/link_lowpower_mode.c -o bin/link_lowpower_mode.elf ${EINC
 # Build DEVICE side program
 e-gcc -T ${ELDF} src/e_link_lowpower_mode.c -o bin/e_link_lowpower_mode.elf -le-lib
 
-# Convert ebinary to SREC file
 
 

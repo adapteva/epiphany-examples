@@ -29,5 +29,4 @@ ${CROSS_PREFIX}gcc src/hello_world.c -o Debug/hello_world.elf ${EINCS} ${ELIBS} 
 # Build DEVICE side program
 e-gcc -T ${ELDF} src/e_hello_world.c -o Debug/e_hello_world.elf -le-lib
 
-# Convert ebinary to SREC file
 

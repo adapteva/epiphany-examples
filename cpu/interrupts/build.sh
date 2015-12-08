@@ -29,7 +29,6 @@ ${CROSS_PREFIX}gcc src/interrupt_test.c -o bin/interrupt_test.elf ${EINCS} ${ELI
 e-gcc -O3 -T ${ELDF} src/e_interrupt_test.c -o bin/e_interrupt_test.elf -mfp-mode=round-nearest -le-lib 
 
 
-# Convert ebinary to SREC file
 
 
 

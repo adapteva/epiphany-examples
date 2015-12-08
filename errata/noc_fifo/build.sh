@@ -33,5 +33,4 @@ ${CROSS_PREFIX}gcc src/host.c -o bin/noc_fifo.elf ${EINCS} ${ELIBS} \
 # Build DEVICE side program
 e-gcc -Os -T ${ELDF} src/e_loadstore.c -o bin/e_loadstore.elf -le-lib
 
-# Convert ebinary to SREC file
 

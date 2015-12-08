@@ -29,6 +29,5 @@ ${CROSS_PREFIX}gcc src/math_test.c -o bin/math_test.elf ${EINCS} ${ELIBS} -le-ha
 e-gcc -O3 -T ${ELDF} src/e_math_test.c -o bin/e_math_test.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math
 e-gcc -O3 -T ${ELDF} src/e_math_test1.c -o bin/e_math_test1.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math
 
-# Convert ebinary to SREC file
 
 

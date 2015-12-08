@@ -34,6 +34,5 @@ e-gcc -O0 -T ${ELDF} src/e_mesh_one.c -o bin/e_mesh_one.elf -le-lib
 e-gcc -O0 -T ${ELDF} src/e_mesh_one1.c -o bin/e_mesh_one1.elf -le-lib
 
     
-# Convert ebinary to SREC file
 
 

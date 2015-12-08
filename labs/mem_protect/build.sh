@@ -31,5 +31,4 @@ OPT=0
 e-gcc -T ${ELDF} src/emain.c -O$OPT -o bin/emain.elf -le-lib
 #e-gcc src/emain.c -S -O$OPT -o bin/emain.O$OPT.s
 
-# Convert ebinary to SREC file
 

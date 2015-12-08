@@ -29,6 +29,5 @@ ${CROSS_PREFIX}gcc src/dma_slave_test.c -o bin/dma_slave_test.elf ${EINCS} ${ELI
 e-gcc -O0 -T ${ELDF} src/e_dma_slave_test.c -o bin/e_dma_slave_test.elf -le-lib 
 e-gcc -O0 -T ${ELDF} src/e_dma_slave_test1.c -o bin/e_dma_slave_test1.elf -le-lib 
 
-# Convert ebinary to SREC file
 
 

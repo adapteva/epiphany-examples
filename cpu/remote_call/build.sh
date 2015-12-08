@@ -32,6 +32,5 @@ e-gcc -T ${ELDF} src/emain_slave.c -o bin/emain_slave.elf -le-lib
 
 
 
-# Convert ebinary to SREC file
 
 

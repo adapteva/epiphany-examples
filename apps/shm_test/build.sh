@@ -33,5 +33,4 @@ ${CROSS_PREFIX}gcc src/shm_test.c -g -O0 -o bin/shm_test.elf ${EINCS} ${ELIBS} -
 # Build DEVICE side program
 e-gcc -T ${ELDF} src/e_shm_test.c -o bin/e_shm_test.elf -le-lib
 
-# Convert ebinary to SREC file
 

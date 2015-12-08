@@ -412,7 +412,7 @@ void get_args(int argc, char *argv[])
 
 		if (!strcmp(argv[n], "-h") || !strcmp(argv[n], "--help"))
 		{
-			printf("Usage: matmul-16_host.elf [-no-reset] [-broadcast] [-no-run] [-verbose N] [-h | --help] [SREC_file]\n");
+			printf("Usage: matmul-16_host.elf [-no-reset] [-broadcast] [-no-run] [-verbose N] [-h | --help] [ELF_file]\n");
 			printf("       N: available levels of diagnostics\n");
 			exit(0);
 		}

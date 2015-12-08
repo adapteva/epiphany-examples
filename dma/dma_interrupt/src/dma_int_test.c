@@ -36,7 +36,7 @@ along with this program, see the file COPYING. If not, see
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i, j, m, n, k;
-	int err;
+	int err = 0;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	unsigned flag;

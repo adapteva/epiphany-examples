@@ -38,17 +38,17 @@ endif
 
 .PHONY: all clean
 
-all: math_example
+all: math_example e_math_example
 
 math_example: math_example.c
 	$(HOST_CC) $(HOST_CFLAGS) -o $@ $< -I$(HOST_EINCS) -L$(HOST_ELIBS) $(HOST_LDFLAGS)
 
 
-ifeq ($(WITH_CACHE), yes)
-e_math_example: e_math_example.c cachemanager.S
-else
+#ifeq ($(WITH_CACHE), yes)
+#e_math_example: e_math_example.c cachemanager.S
+#else
 e_math_example: e_math_example.c
-endif
+#endif
 	$(TARGET_CC) $(TARGET_CFLAGS) -o $@ $^ -T $(LDSCRIPT) $(TARGET_LDFLAGS) $(TARGET_ELIBS)
 
 clean:

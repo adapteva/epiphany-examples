@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 	e_epiphany_t dev;
 	e_mem_t emem;
 	char emsg[_BufSize];
+	int errors = 0;
 
 
 	srand(1);
@@ -64,7 +65,7 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 
 	// To test
-	e_load_group("e_math_example.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+	e_load_group("e_math_example", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
 	for (i=0; i<platform.rows ; i++)
 	{
@@ -85,6 +86,10 @@ int main(int argc, char *argv[])
 
 				// Print the message and close the workgroup.
                                 fprintf(stdout, "First call: %d. Second call: %d\n", result[0], result[1]);
+
+				if (result[0] <= result[1])
+					errors++;
+
 				//Only print out messages on core 0
 				if(i==0 & j==0){
 				  fprintf(stderr, "%s\n", emsg);
@@ -100,5 +105,5 @@ int main(int argc, char *argv[])
 	e_free(&emem);
 	e_finalize();
 
-	return 0;
+	return errors;
 }

@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
 	e_epiphany_t dev;
 	e_mem_t emem;
 	char emsg[_BufSize];
+	int errors = 0;
 
 
 	srand(1);
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
 	//e_load_group("e_math_test.elf", &dev, 0, 0, platform.rows,  platform.cols, E_FALSE);
 
 	// To test
-	e_load_group("e_math_test.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+	e_load_group("e_math_test", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
 	for (i=0; i<platform.rows ; i++)
 	{
@@ -110,6 +111,7 @@ int main(int argc, char *argv[])
 
                                 } else {
                                   fprintf(stderr,"FAIL! %d\n", flag[20]);
+								  errors++;
                                 }
 				//Only print out messages on core 0
 				if(i==0 & j==0){
@@ -126,5 +128,5 @@ int main(int argc, char *argv[])
 	e_free(&emem);
 	e_finalize();
 
-	return 0;
+	return errors;
 }

@@ -380,10 +380,10 @@ SECTIONS
   .gnu.attributes 0 : { KEEP (*(.gnu.attributes)) }
 
   PROVIDE (__stack_start_ = ORIGIN(INTERNAL_RAM) + LENGTH(INTERNAL_RAM) - 0x10);
-  .stack __stack_start_ : { ___stack = .; *(.stack) }
-  PROVIDE (___heap_start = ORIGIN(EXTERNAL_DRAM_1) + __HEAP_SIZE_FOR_CORE_ * __CORE_NUM_);
+  .stack __stack_start_ : { __stack = .; *(.stack) }
+  PROVIDE (__heap_start = ORIGIN(EXTERNAL_DRAM_1) + __HEAP_SIZE_FOR_CORE_ * __CORE_NUM_);
   /*.heap_start __heap_start_ :  { _heap_start_ = .; *(.heap_start) } */
-  PROVIDE (___heap_end   = ORIGIN(EXTERNAL_DRAM_1) + __HEAP_SIZE_FOR_CORE_ * __CORE_NUM_ + __HEAP_SIZE_FOR_CORE_ - 4);
+  PROVIDE (__heap_end   = ORIGIN(EXTERNAL_DRAM_1) + __HEAP_SIZE_FOR_CORE_ * __CORE_NUM_ + __HEAP_SIZE_FOR_CORE_ - 4);
   /* .heap_end __heap_end_ : { _heap_end_ = .; *(.heap_end) } */
 
   /DISCARD/ : { *(.note.GNU-stack) *(.gnu_debuglink) *(.gnu.lto_*) }

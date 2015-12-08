@@ -12,4 +12,4 @@ then
 else
     echo "$SCRIPT PASSED"
 fi
-
+exit $retval

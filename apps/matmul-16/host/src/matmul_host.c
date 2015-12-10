@@ -131,10 +131,9 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	// Initialize Epiphany "Ready" state
-	addr = offsetof(shared_buf_t, core.ready);
-	Mailbox.core.ready = 0;
-	e_write(pDRAM, 0, 0, addr, &Mailbox.core.ready, sizeof(Mailbox.core.ready));
+	// Clear mailbox contents
+	memset(&Mailbox, 0, sizeof(Mailbox));
+	e_write(pDRAM, 0, 0, 0, &Mailbox, sizeof(Mailbox));
 
 	if(verbose){
 	  printf("Loading program on Epiphany chip...\n");
@@ -295,25 +294,31 @@ int main(int argc, char *argv[])
 // Call (invoke) the matmul() function
 int matmul_go(e_mem_t *pDRAM)
 {
-	unsigned int addr;
-	
+	//const unsigned int addr = offsetof(shared_buf_t, core.go);
+
 	// Wait until cores finished previous calculation
 	if (ar.verbose > 0) printf( "Waiting for Epiphany to be ready...\n");
-	addr = offsetof(shared_buf_t, core.go);
-	Mailbox.core.go = 1;
-	while (Mailbox.core.go != 0)
-		e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
+
+	while (!Mailbox.core.ready) {
+		e_read(pDRAM, 0, 0, offsetof(shared_buf_t, core.ready),
+			   &Mailbox.core.ready, sizeof(Mailbox.core.ready));
+	}
 
 	// Signal cores to start crunching
-	addr = offsetof(shared_buf_t, core.go);
-	Mailbox.core.go = _MAX_MEMBER_;
-	e_write(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
-	// Wait until cores finished calculation
-	addr = offsetof(shared_buf_t, core.go);
+	if (ar.verbose > 0) printf( "Sending the go ...\n");
+
 	Mailbox.core.go = 1;
-	while (Mailbox.core.go != 0){
-	  e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
+	e_write(pDRAM, 0, 0, offsetof(shared_buf_t, core.go),
+			&Mailbox.core.go, sizeof(Mailbox.core.go));
+
+	// Wait until cores finished calculation
+	if (ar.verbose > 0) printf( "Waiting for Epiphany to be done...\n");
+
+	while (!Mailbox.core.done) {
+		e_read(pDRAM, 0, 0, offsetof(shared_buf_t, core.done),
+			   &Mailbox.core.done, sizeof(Mailbox.core.done));
 	}
+
 	return 0;
 }
 

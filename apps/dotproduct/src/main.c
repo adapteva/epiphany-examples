@@ -63,7 +63,10 @@ int main(int argc, char *argv[]){
     a[i] = 1;
     b[i] = 1;	  
   }
-    
+
+  //Load program to cores
+  e_load_group("e_task.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+
   //1. Copy data (N/CORE points) from host to Epiphany local memory
   //2. Clear the "done" flag for every core
   for (i=0; i<platform.rows; i++){
@@ -74,9 +77,10 @@ int main(int argc, char *argv[]){
 
     }
   }
-  //Load program to cores and run
-  e_load_group("e_task.elf", &dev, 0, 0, platform.rows, platform.cols, E_TRUE);
-  
+
+  // start cores
+  e_start_group(&dev);
+
   //Check if all cores are done
   while(1){    
     all_done=0;

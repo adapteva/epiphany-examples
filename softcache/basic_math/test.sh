@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 

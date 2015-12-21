@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 
 		// Wait for core program execution to finish, then
 		// read message from shared buffer.
-		usleep(10000);
+		usleep(100000);
 
 		e_read(&mbuf, 0, 0, 0, buf, ShmSize);
 

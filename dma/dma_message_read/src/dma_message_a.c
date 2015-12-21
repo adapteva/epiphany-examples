@@ -26,6 +26,7 @@ along with this program, see the file COPYING. If not, see
 // will be busy until the last data arrives. 
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -44,9 +45,8 @@ int main(int argc, char *argv[])
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t emem;
-	unsigned flag1 = 0x00000000;
-	unsigned flag2 = 0x00000000;
-	unsigned test = 0x00000000;
+	uint32_t flag1 = 0x00000000;
+	uint32_t flag2 = 0x00000000;
 	srand(1);
 
 	// initialize system, read platform params from
@@ -85,11 +85,12 @@ int main(int argc, char *argv[])
 	e_read(&dev, row, col, 0x6004, &flag2, sizeof(flag2));
 
 	// Print the message and close the workgroup.
-	if((flag1 == (unsigned) 0x87654321)&&(flag2 != (unsigned) 0x87654321))
+	if((flag1 == 0x87654321) && (flag2 != 0x87654321))
 	{
 		fprintf(stderr, "PASS!\n");
 	}else
 	{
+        fprintf(stderr, "flag1=%#x flag2=%#x\n", flag1, flag2);
 		fprintf(stderr, "FAIL!\n");
 		err = 1;
 	}

@@ -59,19 +59,22 @@ int main(int argc, char *argv[])
 	e_load_group("e_mesh_bi.elf", &dev, 1, 0, (platform.rows-1), 1, E_TRUE);
 	e_load_group("e_mesh_bi1.elf", &dev, 0, 1, platform.rows, 1, E_TRUE);
 	
-	usleep(10000);
+	usleep(100000);
 	
 	// Sent the signal to start transfer
 	e_write(&dev, 0, 0, 0x6100, &signal, sizeof(signal));	
 	
-	usleep(1000000);
+	usleep(2000000);
 			
 	// Read message from shared buffer
 
 	e_read(&dev, 0, 0, 0x5000, &time, sizeof(time));
 		
 	// Calculate the bandwidth
-	result1 = (37500000)/time;
+	if (time == 0)
+		result1 = 0;
+	else
+		result1 = (37500000)/time;
 	
 	// Print the message and close the workgroup
 	fprintf(stderr, "0x%08x!\n", time);

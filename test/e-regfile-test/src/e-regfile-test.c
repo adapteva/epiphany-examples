@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
     for (j=col0; j<(col0+cols); j++) {   
       printf("Running host register file test for core (%d,%d)\n", i,j);      
       for(k=0;k<REGS;k++){
-	addr=0xF0000+k;
+	addr=0xF0000+(k*4);
 	//high pattern
 	e_write(&dev, i, j, addr, &high_pattern,  sizeof(int));
 	e_read(&dev, i, j, addr, &result, sizeof(int));

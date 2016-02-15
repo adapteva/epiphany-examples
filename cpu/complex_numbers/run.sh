@@ -7,4 +7,5 @@ arg=
 if [ $have_mem_arg -eq 0 ]; then
     arg="--e-core-mem 1M"
 fi
-e-run ${arg} bin/complex_numbers.elf
+
+e-run --e-coreid 0x808 --e-rows 1 --e-cols 1 ${arg} bin/complex_numbers.elf

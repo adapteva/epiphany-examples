@@ -147,7 +147,6 @@ int main(int argc, char *argv[])
 	// Prepare device
 	e_set_host_verbosity(ar.verbose);
 	e_init(NULL);
-	e_reset_system();
 	e_get_platform_info(&platform);
 	if (e_open(pEpiphany, 0, 0, platform.rows, platform.cols))
 	{

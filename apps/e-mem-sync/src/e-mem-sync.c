@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
 
   e_set_host_verbosity(H_D0);
   e_init(NULL);
-  e_reset_system();
   e_get_platform_info(&platform);
   
   // Allocate a buffer in shared external memory

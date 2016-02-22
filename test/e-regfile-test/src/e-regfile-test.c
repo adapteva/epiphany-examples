@@ -40,10 +40,13 @@ int main(int argc, char *argv[]){
   }
   //Open
   e_init(NULL);
-  e_reset_system();
   e_get_platform_info(&platform);
   e_open(&dev, 0, 0, platform.rows, platform.cols);
-  
+
+  /* Cores must be halted before writing to GPRS */
+  for (i = row0; i < (row0 + rows); i++)
+    for (j = col0; i < (col0 + cols); i++)
+      e_halt(&dev, i, j);
 
   printf("-------------------------------------------------------\n");  
 
@@ -55,14 +58,15 @@ int main(int argc, char *argv[]){
 	//high pattern
 	e_write(&dev, i, j, addr, &high_pattern,  sizeof(int));
 	e_read(&dev, i, j, addr, &result, sizeof(int));
-	printf("res=%x\n",result);
 	if(result!=high_pattern){
+	  printf("ERROR: res=%x expect=%x\n",result, high_pattern);
 	  status=0;
 	}
 	//low pattern
 	e_write(&dev, i, j, addr, &low_pattern,  sizeof(int));
 	e_read(&dev, i, j, addr, &result, sizeof(int));
 	if(result!=low_pattern){
+	  printf("ERROR: res=%x expect=%x\n", result, low_pattern);
 	  status=0;
 	}
       }

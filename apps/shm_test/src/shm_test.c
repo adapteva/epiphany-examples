@@ -34,7 +34,7 @@
 #include <errno.h>
 
 #include <e-hal.h>
-#include <a_trace.h>
+#include <e-trace.h>
 
 const unsigned ShmSize = 128;
 const char ShmName[] = "test_shm";
@@ -58,12 +58,6 @@ int main(int argc, char *argv[])
 	if ( E_OK != e_init(NULL) ) {
 		fprintf(stderr, "Epiphany HAL initialization failed\n");
 		return EXIT_FAILURE;
-	}
-
-	if ( E_OK != e_reset_system() ) {
-		fprintf(stderr, "Epiphany system reset failed\n");
-		retval = EXIT_FAILURE;
-		goto err_out3;
 	}
 
 	fprintf(stderr, "Getting platform info\n");
@@ -113,10 +107,10 @@ int main(int argc, char *argv[])
 		if ( tbl ) {
 			for ( i = 0; i < MAX_SHM_REGIONS; ++i ) {
 				if ( tbl->regions[i].valid ) {
-					printf("region %d: name = %s, paddr = %p, length=%d\n",
+					printf("region %d: name = %s, paddr = %p, length=%llu\n",
 						   i, tbl->regions[i].shm_seg.name,
 						   tbl->regions[i].shm_seg.paddr,
-						   tbl->regions[i].shm_seg.size);
+						   (unsigned long long) tbl->regions[i].shm_seg.size);
 				}
 			}
 		}
@@ -172,4 +166,3 @@ int main(int argc, char *argv[])
 
 	return retval;
 }
-

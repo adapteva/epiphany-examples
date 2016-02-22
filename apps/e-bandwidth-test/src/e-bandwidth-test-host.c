@@ -81,10 +81,6 @@ int main(int argc, char *argv[])
       exit(1);
   }
 
-  if (E_OK != e_reset_system() ) {
-      fprintf(stderr, "\nWARNING: epiphinay system rest failed!\n\n");
-  }
-
   // prepare ERAM
   if (E_OK != e_alloc(pERAM, 0x00000000, e_platform.emem[0].size))
   {

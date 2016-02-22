@@ -50,7 +50,6 @@ int main(int argc, char *argv[]){
 
   //Initalize Epiphany device
   e_init(NULL);                      
-  e_reset_system();                                      //reset Epiphany
   e_get_platform_info(&platform);                          
   e_open(&dev, 0, 0, platform.rows, platform.cols); //open all cores
 

@@ -118,7 +118,6 @@ int main(int argc, char *argv[])
 	// Prepare device
 	e_set_host_verbosity(H_D0);
 	e_init(NULL);
-	e_reset_system();
 
 	if (e_alloc(pDRAM, 0x00000000, msize))
 	{

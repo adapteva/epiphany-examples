@@ -11,7 +11,7 @@ int main(int argc, char *argv[]){
 
   //Open
   e_init(NULL);
-  e_reset_system();
+  /* e_reset_system(); */
   e_finalize();  
   printf("TEST \"e-reset\" PASSED\n");
   return EXIT_SUCCESS;

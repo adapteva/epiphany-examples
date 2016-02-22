@@ -33,7 +33,6 @@ int main(int argc, char *argv[]){
     //Initalize Epiphany device
     e_init(NULL);
 
-    e_reset_system();
     e_get_platform_info(&platform);                          
     //e_set_host_verbosity(H_D3);
     e_open(&dev, 0, 0, platform.rows, platform.cols); //open all cores

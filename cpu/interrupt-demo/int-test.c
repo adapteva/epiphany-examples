@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform.
 	e_init(NULL);
-	e_reset_system();
 
 	// Open the first and second cores for master and slave programs, resp.
 	e_open(&dev, 0, 0, 1, 2);

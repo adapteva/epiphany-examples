@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
 	e_init(NULL);
 
 	// Reset the system
-	e_reset_system();
 
 	// Get the platform information
 	e_get_platform_info(&platform);

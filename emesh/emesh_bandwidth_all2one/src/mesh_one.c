@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
   // initialize system, read platform params from
   // default HDF. Then, reset the platform and
   e_init(NULL);
-  e_reset_system();
   e_get_platform_info(&platform);
   
   // Open a workgroup

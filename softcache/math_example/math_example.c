@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
 	// default HDF. Then, reset the platform and
 	// get the actual system parameters.
 	e_init(NULL);
-	e_reset_system();
 	e_get_platform_info(&platform);
 
 	// Allocate a buffer in shared external memory
@@ -91,7 +90,7 @@ int main(int argc, char *argv[])
 					errors++;
 
 				//Only print out messages on core 0
-				if(i==0 & j==0){
+				if(i==0 & j==0 && emsg[0] != '\0'){
 				  fprintf(stderr, "%s\n", emsg);
 				}
 		}

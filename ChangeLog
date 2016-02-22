@@ -1,3 +1,58 @@
+2016-02-22  Ola Jeppsson  <ola@adapteva.com>
+
+	* apps/dotproduct/src/e_task.c (main): Remove call to
+	e_reset_system().
+	* apps/dotproduct/src/main.c: Likewise.
+	* apps/e-bandwidth-test/src/e-bandwidth-test-host.c: Likewise.
+	* apps/e-dump-mem/src/e-dump-mem.c: Likewise.
+	* apps/e-fill-mem/src/e-fill-mem.c: Likewise.
+	* apps/e-mem-sync/src/e-mem-sync.c: Likewise.
+	* apps/e-toggle-led/src/e-toggle-led.c: Likewise.
+	* apps/eprime/src/prime.c: Likewise.
+	* apps/erm/src/main.c (erm_init): Likewise.
+	* apps/fft2d/host/src/fft2d_host.c: Likewise.
+	* apps/hello-world/src/hello_world.c: Likewise.
+	* apps/matmul-16/host/src/matmul_host.c: Likewise.
+	* apps/matmul-64/host/src/matmul_host.c: Likewise.
+	* apps/shm_test/src/shm_test.c: Likewise.
+	* cpu/arithmode/src/main.c: Likewise.
+	* cpu/assembly/src/main.c: Likewise.
+	* cpu/basic_math/src/math_test.c: Likewise.
+	* cpu/ctimer/src/main.c: Likewise.
+	* cpu/interrupt-demo/int-test.c: Likewise.
+	* cpu/interrupts/src/interrupt_test.c: Likewise.
+	* cpu/mutex/src/mutex_test.c: Likewise.
+	* cpu/nested_interrupts/src/interrupt_test.c: Likewise.
+	* cpu/register_test/src/register-test.c: Likewise.
+	* cpu/remote_call/src/main.c: Likewise.
+	* dma/dma_2d/src/dma_2d_test.c: Likewise.
+	* dma/dma_chain/src/dma_chain_test.c: Likewise.
+	* dma/dma_interrupt/src/dma_int_test.c: Likewise.
+	* dma/dma_message_read/src/dma_message_a.c: Likewise.
+	* dma/dma_message_write/src/dma_message_test.c: Likewise.
+	* dma/dma_slave/src/dma_slave_test.c: Likewise.
+	* emesh/emesh_bandwidth_all2one/src/mesh_one.c: Likewise.
+	* emesh/emesh_bandwidth_bisection/src/mesh_bi.c: Likewise.
+	* emesh/emesh_bandwidth_neighbour/src/mesh_bandwidth.c: Likewise.
+	* emesh/emesh_read_latency/src/main.c: Likewise.
+	* emesh/emesh_traffic/src/mesh_traffic.c: Likewise.
+	* errata/noc_fifo/src/host.c: Likewise.
+	* io/link_lowpower_mode/src/link_lowpower_mode.c: Likewise.
+	* labs/clockgating_mode/src/clockgating_mode.c: Likewise.
+	* labs/hardware_barrier/src/main.c: Likewise.
+	* labs/hardware_loops/src/main.c: Likewise.
+	* labs/mem_protect/src/main.c: Likewise.
+	* softcache/basic_math/math_test.c: Likewise.
+	* softcache/math_example/math_example.c: Likewise.
+	* test/e-mem-test/src/e-mem-test.c: Likewise.
+	* test/e-read-buf/src/e-read-buf.c: Likewise.
+	* test/e-read-word/src/e-read-word.c: Likewise.
+	* test/e-regfile-test/src/e-regfile-test.c: Likewise.
+	* test/e-reset/src/e-reset.c: Likewise.
+	* test/e-test/src/e-test.c: Likewise.
+	* test/e-write-buf/src/e-write-buf.c: Likewise.
+	* test/e-write-word/src/e-write-word.c: Likewise.
+
 2015-05-22  Ola Jeppsson  <ola@adapteva.com>
 
 	* test/e-free-resource-leak-test/build.sh: New file

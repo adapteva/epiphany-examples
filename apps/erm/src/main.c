@@ -83,7 +83,6 @@ int erm_init(unsigned *rowSize, unsigned *colSize)
 	
 	// set up the board
 	e_init(NULL);
-	e_reset_system();
 	e_get_platform_info(&platform);
 	
 	// open workgroup

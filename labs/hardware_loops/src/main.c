@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
 	// default HDF. Then, reset the platform and
 	// get the actual system parameters.
 	e_init(NULL);
-	e_reset_system();
 	e_get_platform_info(&platform);
 
 	e_alloc(&emem, 0x01800000, 0x4000);

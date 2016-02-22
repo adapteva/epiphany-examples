@@ -53,7 +53,5 @@ int main(void)
   //Raising "done" flag
   (*(d)) = 0x00000001;
 
-  //Put core in idle state
-  __asm__ __volatile__("idle");
 }
 

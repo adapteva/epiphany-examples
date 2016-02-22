@@ -13,7 +13,6 @@ int main(int argc, char *argv[]){
 
   //Open
   e_init(NULL);
-  e_reset_system();
   e_open(&dev, 0, 0, 1, 1);
   e_write(&dev, 0, 0, 0, &data_in, sizeof(data_in));
   e_close(&dev);

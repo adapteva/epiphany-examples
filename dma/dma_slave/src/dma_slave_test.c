@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
 	// get the actual system parameters.
 
 	e_init(NULL);
-	e_reset_system();
 	e_get_platform_info(&platform);
 
 

@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 	}
 	
 	// Load the device program onto all the eCores
-	e_load_group("e_interrupt_test.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+	e_load_group("e_interrupt_test.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
 	// Select one core to work 
 	for (i=0; i<platform.rows; i++)

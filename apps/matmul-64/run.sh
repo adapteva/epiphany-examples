@@ -11,7 +11,7 @@ fi
 
 cd host/${Config}
 
-./matmul.elf $@ ../../device/${Config}/e_matmul.srec
+./matmul.elf $@ ../../device/${Config}/e_matmul.elf
 
 cd ../../
 

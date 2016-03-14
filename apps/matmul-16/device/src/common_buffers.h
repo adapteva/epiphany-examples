@@ -32,7 +32,7 @@ shared_buf_t Mailbox;
 #endif // __HOST__
 
 //volatile shared_buf_t Mailbox SECTION(".shared_dram");
-extern const unsigned _SHARED_DRAM_;
+extern const uint32_t _SHARED_DRAM_;
 #define SHARED_DRAM   ((unsigned)(&_SHARED_DRAM_))
 
 #endif // __COMMON_BUFFERS_H__

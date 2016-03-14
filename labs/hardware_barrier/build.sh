@@ -10,25 +10,24 @@ ELDF=${ESDK}/bsps/current/internal.ldf
 # Create the binaries directory
 mkdir -p bin/
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/main.c -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_COMPILE}gcc src/main.c -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 OPT=0
 e-gcc -T ${ELDF} -O${OPT} src/emain.c src/wand-isr.S -o bin/emain.elf -le-lib
 
-# Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec
 

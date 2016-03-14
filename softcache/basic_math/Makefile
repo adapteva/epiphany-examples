@@ -38,21 +38,18 @@ endif
 
 .PHONY: all clean
 
-all: e_math_test.srec math_test
+all: math_test e_math_test
 
 math_test: math_test.c
 	$(HOST_CC) $(HOST_CFLAGS) -o $@ $< -I$(HOST_EINCS) -L$(HOST_ELIBS) $(HOST_LDFLAGS)
 
 
-ifeq ($(WITH_CACHE), yes)
-e_math_test: e_math_test.c cachemanager.S
-else
+#ifeq ($(WITH_CACHE), yes)
+#e_math_test: e_math_test.c cachemanager.S
+#else
 e_math_test: e_math_test.c
-endif
+#endif
 	$(TARGET_CC) $(TARGET_CFLAGS) -o $@ $^ -T $(LDSCRIPT) $(TARGET_LDFLAGS) $(TARGET_ELIBS)
 
-e_math_test.srec: e_math_test
-	$(TARGET_OBJCOPY) --srec-forceS3 --output-target srec $< $@
-
 clean:
-	rm -f e_math_test e_math_test.srec math_test *.o
+	rm -f e_math_test math_test *.o

@@ -36,7 +36,7 @@ along with this program, see the file COPYING. If not, see
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i, j, m, n, k;
-	int err;
+	int err = 0;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	unsigned flag;
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	
 	
 	// Load the device program onto core (0,0)
-	e_load_group("e_dma_int_test.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+	e_load_group("e_dma_int_test.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
 	// Launch to each core
 	for (i=0; i<platform.rows; i++)

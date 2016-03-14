@@ -6,7 +6,7 @@ SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
 
-$EXEPATH/../e-test/bin/e-test.elf 0 0 1 1 0 $EXEPATH/bin/e-task.srec > e-loopback-test.log
+$EXEPATH/../e-test/bin/e-test.elf 0 0 1 1 0 $EXEPATH/bin/e-task.elf > e-loopback-test.log
 
 retval=$?
 

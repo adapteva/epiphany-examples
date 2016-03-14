@@ -48,39 +48,36 @@ int main(int argc, char *argv[])
 	// Initialize data structures - mainly target pointers
 	init();
 
+	// Init the host-accelerator sync signals
+	if (me.corenum == 0)
+		Mailbox.pCore->ready = 1;
+
 	// Initialize the barriers
 	e_barrier_init(barriers, tgt_bars);
-	
-	do {
-		if (me.corenum == 0)
-		{
-			// Wait for matmul() call from host. When a rising
-			// edge is detected in the mailbox, the loop is
-			// terminated and a call to the actual matmul()
-			// function is initiated.
-			while (Mailbox.pCore->go == 0) {};
 
-			Mailbox.pCore->ready = 0;
-		}
+	if (me.corenum == 0) {
+		// Wait for matmul() call from host. When a '2'
+		// is detected in the mailbox, the loop is
+		// terminated and a call to the actual matmul()
+		// function is initiated.
+		while (!Mailbox.pCore->go) {};
+	}
 
-		// Sync with all other cores
-		e_barrier(barriers, tgt_bars);
+	// Sync with all other cores
+	e_barrier(barriers, tgt_bars);
 
-		// Calculate. During this time, the host polls the
-		// shared mailbox, waiting for a falling edge that
-		// indicates the end of the calculation.
-		bigmatmul();
+	// Calculate. During this time, the host polls the
+	// shared mailbox, waiting for a '3' that
+	// indicates the end of the calculation.
+	bigmatmul();
 
-		// Sync with all other cores
-		e_barrier(barriers, tgt_bars);
+	// Sync with all other cores
+	e_barrier(barriers, tgt_bars);
 
-		if (me.corenum == 0)
-		{
-			// Signal End-Of-Calculation to the host.
-			Mailbox.pCore->go    = 0;
-			Mailbox.pCore->ready = 1;
-		}
-	} while (0);
+	if (me.corenum == 0) {
+		// Signal End-Of-Calculation to the host.
+		Mailbox.pCore->done = 1;
+	}
 
 	return status;
 }
@@ -105,7 +102,7 @@ void init()
 	Mailbox.pCore = Mailbox.pBase + offsetof(shared_buf_t, core);
 
 	// Initialize per-core parameters - core data structure
-	
+
 	// Initialize pointers to the operand matrices ping-pong arrays
 	me.bank_A[_PING] = (void *) &(AA[_PING][0][0]);
 	me.bank_A[_PONG] = (void *) &(AA[_PONG][0][0]);
@@ -141,13 +138,6 @@ void init()
 	// Clear the inter-core DMA sync signals
 	e_mutex_init(0, 0, &mutex, MUTEXATTR_NULL);
 
-	// Init the host-accelerator sync signals
-	if (me.corenum == 0)
-	{
-		Mailbox.pCore->go    = 0;
-		Mailbox.pCore->ready = 1;
-	}
-	
 	return;
 }
 

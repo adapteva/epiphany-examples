@@ -14,28 +14,26 @@ cd $EXEPATH
 # Create the binaries directory
 mkdir -p bin/
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/mesh_one.c -o bin/mesh_one.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
+${CROSS_COMPILE}gcc src/mesh_one.c -o bin/mesh_one.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
 e-gcc -O0 -T ${ELDF} src/e_mesh_one.c -o bin/e_mesh_one.elf -le-lib 
 e-gcc -O0 -T ${ELDF} src/e_mesh_one1.c -o bin/e_mesh_one1.elf -le-lib
 
     
-# Convert ebinary to SREC file
-e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_one.elf bin/e_mesh_one.srec
-e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_one1.elf bin/e_mesh_one1.srec
 
 

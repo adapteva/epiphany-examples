@@ -123,7 +123,7 @@ int main(int argc, char *argv[]){
   if(stage==0 || stage==2 ){
      my_reset_system();
     printf("Testing elink from core (0,0)\n");
-    e_load_group("bin/test_elink.srec", &dev, 0, 0, 1, 1, E_TRUE);
+    e_load_group("bin/test_elink.elf", &dev, 0, 0, 1, 1, E_TRUE);
     e_check_test(&dev, 0, 0, &status);
   }
   //##############################
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]){
     my_reset_system();
     printf("Running simple memory test for all cores\n");
 
-    e_load_group("bin/test_memory_simple.srec", &dev, 0, 0, rows, cols, E_TRUE);
+    e_load_group("bin/test_memory_simple.elf", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<platform.rows; i++) {
       for (j=0; j<platform.cols; j++) {           
 	e_check_test(&dev, i, j, &status);
@@ -149,7 +149,7 @@ int main(int argc, char *argv[]){
     //Running test, all in parallel
     for (i=0; i<rows; i=i+4) {
       for (j=0; j<cols; j=j+4) {   
-	e_load_group("bin/test_memory_march.srec", &dev, i, j, 1, 1, E_TRUE); 
+	e_load_group("bin/test_memory_march.elf", &dev, i, j, 1, 1, E_TRUE); 
       }
     }
     //Checking results one by one
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]){
     my_reset_system();
     printf("Running simple matmul test for all cores\n");
 
-    e_load_group("bin/test_matmul.srec", &dev, 0, 0, rows, cols, E_TRUE);
+    e_load_group("bin/test_matmul.elf", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<platform.rows; i++) {
       for (j=0; j<platform.cols; j++) {           
 	e_check_test(&dev, i, j, &status);
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]){
     my_reset_system();
     printf("Running emesh test for all cores\n");
 
-    e_load_group("bin/test_emesh.srec", &dev, 0, 0, rows, cols, E_TRUE);
+    e_load_group("bin/test_emesh.elf", &dev, 0, 0, rows, cols, E_TRUE);
     for (i=0; i<rows; i++) {
       for (j=0; j<cols; j++) {           
 	e_check_test(&dev, i, j, &status);
@@ -201,7 +201,7 @@ int main(int argc, char *argv[]){
     //Testing row 0
      for (i=0; i<1; i++) {
 	for (j=0; j<cols; j++) {      
-	  e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
+	  e_load_group("bin/test_memory_dram.elf", &dev, i, j, 1, 1, E_TRUE);
 	  e_check_test(&dev, i, j, &status);
 	}
      }
@@ -212,7 +212,7 @@ int main(int argc, char *argv[]){
     else{
       for (i=1; i<3; i++) {
 	for (j=0; j<cols; j++) {           
-	  e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
+	  e_load_group("bin/test_memory_dram.elf", &dev, i, j, 1, 1, E_TRUE);
 	  e_check_test(&dev, i, j, &status);
 	}
       }
@@ -220,7 +220,7 @@ int main(int argc, char *argv[]){
     //Row 3-4 (or 3-7)            
     for (i=3; i<rows; i++) {
       for (j=0; j<cols; j++) {           
-	e_load_group("bin/test_memory_dram.srec", &dev, i, j, 1, 1, E_TRUE);
+	e_load_group("bin/test_memory_dram.elf", &dev, i, j, 1, 1, E_TRUE);
 	e_check_test(&dev, i, j, &status);
       }
     }

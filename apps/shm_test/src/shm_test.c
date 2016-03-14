@@ -142,15 +142,15 @@ int main(int argc, char *argv[])
 
 		// Load the device program onto the selected eCore
 		// and launch after loading.
-		if ( E_OK != e_load("./e_shm_test.srec", &dev, 0, 0, E_TRUE) ) {
-			fprintf(stderr, "Failed to load e_shm_test.srec\n");
+		if ( E_OK != e_load("./e_shm_test.elf", &dev, 0, 0, E_TRUE) ) {
+			fprintf(stderr, "Failed to load e_shm_test.elf\n");
 			retval = EXIT_FAILURE;
 			goto err_out;
 		}
 
 		// Wait for core program execution to finish, then
 		// read message from shared buffer.
-		usleep(10000);
+		usleep(100000);
 
 		e_read(&mbuf, 0, 0, 0, buf, ShmSize);
 

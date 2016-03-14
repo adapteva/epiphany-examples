@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 	
 	// Load the device program onto core (0,0)
-	e_load_group("e_mesh_bandwidth_near.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+	e_load_group("e_mesh_bandwidth_near.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
 	// Launch to each core in every loop
 	for (i=0; i<platform.rows; i++)

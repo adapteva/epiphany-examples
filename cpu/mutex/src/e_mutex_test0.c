@@ -30,7 +30,7 @@ along with this program, see the file COPYING. If not, see
 #include <string.h>
 #include <stdint.h>
 
-#include "e_lib.h"
+#include <e-lib.h>
 
 int main(void)
 {

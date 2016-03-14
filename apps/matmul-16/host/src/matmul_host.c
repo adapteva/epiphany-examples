@@ -68,8 +68,8 @@ typedef struct {
 	e_bool_t     broadcast;
 	e_bool_t     run_target;
 	e_hal_diag_t verbose;
-        int          row;
-	char srecFile[4096];
+	int          row;
+	char         elfFile[4096];
 } args_t;
 
 args_t ar = {E_TRUE, E_FALSE, E_TRUE, H_D0, 0 , ""};
@@ -131,16 +131,15 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	// Initialize Epiphany "Ready" state
-	addr = offsetof(shared_buf_t, core.ready);
-	Mailbox.core.ready = 0;
-	e_write(pDRAM, 0, 0, addr, &Mailbox.core.ready, sizeof(Mailbox.core.ready));
+	// Clear mailbox contents
+	memset(&Mailbox, 0, sizeof(Mailbox));
+	e_write(pDRAM, 0, 0, 0, &Mailbox, sizeof(Mailbox));
 
 	if(verbose){
 	  printf("Loading program on Epiphany chip...\n");
 	}
 	e_set_loader_verbosity(ar.verbose);
-	result = e_load_group(ar.srecFile, pEpiphany, ar.row, 0, 4, 4, ar.run_target);
+	result = e_load_group(ar.elfFile, pEpiphany, ar.row, 0, 4, 4, ar.run_target);
 	if (result == E_ERR) {
 		fprintf(stderr, "Error loading Epiphany program.\n");
 		exit(1);
@@ -295,25 +294,31 @@ int main(int argc, char *argv[])
 // Call (invoke) the matmul() function
 int matmul_go(e_mem_t *pDRAM)
 {
-	unsigned int addr;
-	
+	//const unsigned int addr = offsetof(shared_buf_t, core.go);
+
 	// Wait until cores finished previous calculation
 	if (ar.verbose > 0) printf( "Waiting for Epiphany to be ready...\n");
-	addr = offsetof(shared_buf_t, core.go);
-	Mailbox.core.go = 1;
-	while (Mailbox.core.go != 0)
-		e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
+
+	while (!Mailbox.core.ready) {
+		e_read(pDRAM, 0, 0, offsetof(shared_buf_t, core.ready),
+			   &Mailbox.core.ready, sizeof(Mailbox.core.ready));
+	}
 
 	// Signal cores to start crunching
-	addr = offsetof(shared_buf_t, core.go);
-	Mailbox.core.go = _MAX_MEMBER_;
-	e_write(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
-	// Wait until cores finished calculation
-	addr = offsetof(shared_buf_t, core.go);
+	if (ar.verbose > 0) printf( "Sending the go ...\n");
+
 	Mailbox.core.go = 1;
-	while (Mailbox.core.go != 0){
-	  e_read(pDRAM, 0, 0, addr, &Mailbox.core.go, sizeof(Mailbox.core.go));
+	e_write(pDRAM, 0, 0, offsetof(shared_buf_t, core.go),
+			&Mailbox.core.go, sizeof(Mailbox.core.go));
+
+	// Wait until cores finished calculation
+	if (ar.verbose > 0) printf( "Waiting for Epiphany to be done...\n");
+
+	while (!Mailbox.core.done) {
+		e_read(pDRAM, 0, 0, offsetof(shared_buf_t, core.done),
+			   &Mailbox.core.done, sizeof(Mailbox.core.done));
 	}
+
 	return 0;
 }
 
@@ -384,7 +389,7 @@ void get_args(int argc, char *argv[])
 {
 	int n;
 
-	strcpy(ar.srecFile, "");
+	strcpy(ar.elfFile, "");
 	for (n=1; n<argc; n++)
 	{
 		if (!strcmp(argv[n], "-no-reset"))
@@ -423,16 +428,16 @@ void get_args(int argc, char *argv[])
 
 		if (!strcmp(argv[n], "-h") || !strcmp(argv[n], "--help"))
 		{
-			fprintf(stderr, "Usage: matmul-16_host.elf [-no-reset] [-64] [-broadcast] [-no-run] [-verbose N] [-h | --help] [SREC_file]\n");
+			fprintf(stderr, "Usage: matmul-16_host.elf [-no-reset] [-64] [-broadcast] [-no-run] [-verbose N] [-h | --help] [ELF_file]\n");
 			fprintf(stderr, "       N: available levels of diagnostics\n");
 			exit(0);
 		}
 
-		strcpy(ar.srecFile, argv[n]);
+		strcpy(ar.elfFile, argv[n]);
 	}
 
-	if (!strcmp(ar.srecFile, ""))
-		strcpy(ar.srecFile, "matmul-16.srec");
+	if (!strcmp(ar.elfFile, ""))
+		strcpy(ar.elfFile, "matmul-16.elf");
 
 	return;
 }

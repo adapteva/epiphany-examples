@@ -15,20 +15,21 @@ cd $EXEPATH
 # Create the binaries directory
 mkdir -p bin/
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-mem-sync.c -o bin/e-mem-sync.elf ${EINCS} ${ELIBS} -le-hal -lpthread
+${CROSS_COMPILE}gcc src/e-mem-sync.c -o bin/e-mem-sync.elf ${EINCS} ${ELIBS} -le-hal -lpthread
 
 
 

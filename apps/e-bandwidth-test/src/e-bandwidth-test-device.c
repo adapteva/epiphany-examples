@@ -94,6 +94,8 @@ int main(void){
   e_memcopy(dst, src, _BUF_SZ);
   me->eram_clocks_read -= e_ctimer_get(E_CTIMER_0);
   
+  e_ctimer_stop(E_CTIMER_0);
+
   me->eot = 5;
   
   return EXIT_SUCCESS;

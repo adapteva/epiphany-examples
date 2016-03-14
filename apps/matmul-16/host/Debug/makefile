@@ -43,9 +43,6 @@ clean:
 	-@echo ' '
 
 post-build:
-#	@echo 'Creating srec file:'
-#	e-objcopy --srec-forceS3 --output-target srec e_matmul.elf e_matmul.srec
-#	chmod -x e_matmul.srec
 
 .PHONY: all clean dependents
 .SECONDARY: post-build

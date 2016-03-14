@@ -14,16 +14,17 @@ cd $EXEPATH
 # Create the binaries directory
 mkdir -p bin/
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
-${CROSS_PREFIX}gcc -Wall src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loader
+${CROSS_COMPILE}gcc -Wall src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loader

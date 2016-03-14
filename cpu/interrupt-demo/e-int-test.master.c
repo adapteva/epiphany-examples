@@ -27,7 +27,7 @@
 #define B_OPCODE      0x000000e8 // OpCode of the B<*> instruction
 
 
-void timer_isr(int signum);
+void timer_isr();
 
 unsigned volatile M[5] SECTION("shared_dram");
 
@@ -82,7 +82,7 @@ int main(void)
 }
 
 
-void __attribute__((interrupt)) timer_isr(int signum)
+void __attribute__((interrupt)) timer_isr()
 {
 	// This ISR is called when the respective event occured (IOW, when
 	// the event it was attached to by e_irq_attach() is raised). Upon

@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 	
 	
 	// Load the device program onto core (0,0)
-	e_load_group("e_dma_chain_test.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+	e_load_group("e_dma_chain_test.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
 	// Launch to each core
 	for (i=0; i<platform.rows; i++)

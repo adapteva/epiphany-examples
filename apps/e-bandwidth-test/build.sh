@@ -28,7 +28,7 @@ esac
 fi
 
 # Build HOST side application
-${CROSS_COMPILE}gcc -Wall src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread -lrt
+${CROSS_COMPILE}gcc -O3 -Wall src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread -lrt
 
 # Build DEVICE side program
 e-gcc -O3  -T ${ELDF} src/e-bandwidth-test-device.c -o bin/e-bandwidth-test-device.elf -le-lib -lm -ffast-math

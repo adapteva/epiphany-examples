@@ -1,0 +1,1 @@
+Test linker script symbols.

@@ -22,7 +22,7 @@
 // This is the DEVICE side of the Hello World example.
 // The host may load this program to any eCore. When
 // launched, the program queries the CoreID and prints
-// a message identifying itself to the shared external
+// a message identifying it.srec to the shared external
 // memory buffer.
 
 #include <stdio.h>

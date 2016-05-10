@@ -36,3 +36,5 @@ e-gcc -O0 -T ${ELDF} src/e_mesh_receiver.c -o bin/e_mesh_receiver.elf -le-lib
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_receiver.elf bin/e_mesh_receiver.srec
+e-objcopy --srec-forceS3 --output-target srec bin/e_mesh_transmitter.elf bin/e_mesh_transmitter.srec

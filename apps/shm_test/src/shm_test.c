@@ -142,8 +142,8 @@ int main(int argc, char *argv[])
 
 		// Load the device program onto the selected eCore
 		// and launch after loading.
-		if ( E_OK != e_load("./e_shm_test.elf", &dev, 0, 0, E_TRUE) ) {
-			fprintf(stderr, "Failed to load e_shm_test.elf\n");
+		if ( E_OK != e_load("./e_shm_test.srec", &dev, 0, 0, E_TRUE) ) {
+			fprintf(stderr, "Failed to load e_shm_test.srec\n");
 			retval = EXIT_FAILURE;
 			goto err_out;
 		}

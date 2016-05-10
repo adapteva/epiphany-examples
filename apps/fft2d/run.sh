@@ -17,7 +17,7 @@ fi
 
 cd host/${Config}
 
-./fft2d_host.elf ${Img} ../../device/Release/e_fft2d.elf
+./fft2d_host.elf ${Img} ../../device/Release/e_fft2d.srec
 
 cd ../../
 

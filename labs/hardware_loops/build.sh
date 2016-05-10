@@ -26,4 +26,7 @@ fi
 ${CROSS_COMPILE}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loader
 
 # Build DEVICE side program
+
 e-gcc -T ${ELDF} -O0 src/emain.c src/hwloop.s src/sfloop.s -o bin/emain.elf -le-lib
+
+e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec

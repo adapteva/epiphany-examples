@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 
 	//Turn off the LVDS Links from the a core program 
-	e_load("e_link_lowpower_mode.elf", &dev, 0, 0, E_TRUE);
+	e_load("e_link_lowpower_mode.srec", &dev, 0, 0, E_TRUE);
 	
 	// Close the workgroup
 	e_close(&dev);

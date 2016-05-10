@@ -31,3 +31,4 @@ OPT=0
 e-gcc -T ${ELDF} -O${OPT} src/emain.c src/wand-isr.S -o bin/emain.elf -le-lib
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec

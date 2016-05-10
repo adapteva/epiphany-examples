@@ -19,3 +19,4 @@ e-gcc -T ${ELDF} src/${TEST}.c src/test_common.c -o bin/$TEST.elf
 done
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/${TEST}.elf bin/${TEST}.srec

@@ -34,3 +34,4 @@ e-gcc -T ${ELDF} src/emain.c -o bin/emain.elf -le-lib
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec

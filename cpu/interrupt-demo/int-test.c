@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
 	e_alloc(&emem, _BufOffset, sizeof(M));
 
 	// Load programs on cores.
-	e_load("e-int-test.master.elf", &dev, 0, 0, E_FALSE);
-	e_load("e-int-test.slave.elf",  &dev, 0, 1, E_FALSE);
+	e_load("e-int-test.master.srec", &dev, 0, 0, E_FALSE);
+	e_load("e-int-test.slave.srec",  &dev, 0, 1, E_FALSE);
 
 	// clear mailbox.
 	e_write(&emem, 0, 0, (off_t) (0x0000), (void *) &(M[0]), sizeof(M));

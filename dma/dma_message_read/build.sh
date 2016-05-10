@@ -33,3 +33,4 @@ e-gcc -O3 -T ${ELDF} src/e_dma_message_a.c -o bin/e_dma_message_a.elf -le-lib
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/e_dma_message_a.elf bin/e_dma_message_a.srec

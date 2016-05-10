@@ -72,4 +72,6 @@ if [[ "${BUILD_HOST}" == "yes" ]]; then
 	popd >& /dev/null
 fi
 
+e-objcopy --srec-forceS3 --output-target srec device/Release/e_matmul.elf device/Release/e_matmul.srec
+
 exit

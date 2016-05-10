@@ -61,11 +61,11 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 
 	// Load the device program onto core (0,0)
-	e_load("e_mutex_test0.elf", &dev, 0, 0, E_FALSE);
+	e_load("e_mutex_test0.srec", &dev, 0, 0, E_FALSE);
 
 	// Load the device program onto all the other eCores
-	e_load_group("e_mutex_test.elf", &dev, 0, 1, 1, 3, E_FALSE);
-	e_load_group("e_mutex_test.elf", &dev, 1, 0, 3, 4, E_FALSE);
+	e_load_group("e_mutex_test.srec", &dev, 0, 1, 1, 3, E_FALSE);
+	e_load_group("e_mutex_test.srec", &dev, 1, 0, 3, 4, E_FALSE);
 
 	usleep(1000);
 

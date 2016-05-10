@@ -32,3 +32,5 @@ e-gcc -O0 -T ${ELDF} src/e_dma_slave_test1.c -o bin/e_dma_slave_test1.elf -le-li
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/e_dma_slave_test1.elf bin/e_dma_slave_test1.srec
+e-objcopy --srec-forceS3 --output-target srec bin/e_dma_slave_test.elf bin/e_dma_slave_test.srec

@@ -31,4 +31,7 @@ fi
 ${CROSS_COMPILE}gcc -O3 -Wall src/e-bandwidth-test-host.c -o bin/e-bandwidth-test-host.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread -lrt
 
 # Build DEVICE side program
+
 e-gcc -O3  -T ${ELDF} src/e-bandwidth-test-device.c -o bin/e-bandwidth-test-device.elf -le-lib -lm -ffast-math
+
+e-objcopy --srec-forceS3 --output-target srec bin/e-bandwidth-test-device.elf bin/e-bandwidth-test-device.srec

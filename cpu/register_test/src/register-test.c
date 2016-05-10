@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 	
 	// Load the device program onto all the eCores
-	e_load_group("e-register-test2.elf", &dev, 0, 0, platform.rows, platform.cols, E_TRUE);
+	e_load_group("e-register-test2.srec", &dev, 0, 0, platform.rows, platform.cols, E_TRUE);
 	
 	// Let all cores initialize
 	usleep(10000);
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 	}
 	
 	// Load the device program onto all the eCores
-	e_load_group("e-register-test3.elf", &dev, 0, 0,  platform.rows,  platform.cols, E_TRUE);
+	e_load_group("e-register-test3.srec", &dev, 0, 0,  platform.rows,  platform.cols, E_TRUE);
 	
 	
 	for (i=0; i< platform.rows; i++)

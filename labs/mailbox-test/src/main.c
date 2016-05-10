@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, rows, cols);
 
 	//load the device program on the board
-	e_load_group("emain.elf", &dev, 0, 0, 1, 1, E_FALSE);
+	e_load_group("emain.srec", &dev, 0, 0, 1, 1, E_FALSE);
 
 
 	e_write(&dev, 0, 0, STOP_ADDR, &zero, sizeof(zero));

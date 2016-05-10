@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   e_write(&dev, 0, 0, 0x6000, &led_state, sizeof(led_state));
 
   //Running "tooggle LED program" from core (0,0)
-  e_load("device-e-toggle-led.elf", &dev, 0, 0, E_TRUE);
+  e_load("device-e-toggle-led.srec", &dev, 0, 0, E_TRUE);
   
   // Close the workgroup
   e_close(&dev);

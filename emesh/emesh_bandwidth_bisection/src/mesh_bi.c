@@ -54,10 +54,10 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, platform.rows, platform.cols);
 	
 	// Load the device program onto core (0,0)
-	e_load("e_mesh_bi00.elf", &dev, 0, 0, E_TRUE);
+	e_load("e_mesh_bi00.srec", &dev, 0, 0, E_TRUE);
 	usleep(1000);
-	e_load_group("e_mesh_bi.elf", &dev, 1, 0, (platform.rows-1), 1, E_TRUE);
-	e_load_group("e_mesh_bi1.elf", &dev, 0, 1, platform.rows, 1, E_TRUE);
+	e_load_group("e_mesh_bi.srec", &dev, 1, 0, (platform.rows-1), 1, E_TRUE);
+	e_load_group("e_mesh_bi1.srec", &dev, 0, 1, platform.rows, 1, E_TRUE);
 	
 	usleep(100000);
 	

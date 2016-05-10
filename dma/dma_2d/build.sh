@@ -32,3 +32,4 @@ e-gcc -O3 -T ${ELDF} src/e_dma_2d_test.c -o bin/e_dma_2d_test.elf -le-lib
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/e_dma_2d_test.elf bin/e_dma_2d_test.srec

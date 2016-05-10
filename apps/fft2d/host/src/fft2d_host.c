@@ -75,7 +75,7 @@ typedef struct {
   e_hal_diag_t verbose;
   char ifname[255];
   char ofname[255];
-  char elfFile[4096];
+  char srecFile[4096];
 } args_t;
 
 args_t ar = {TRUE, H_D0, ""};
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 
 	//get_args(argc, argv);
 	strcpy(ar.ifname,argv[1]);
-	strcpy(ar.elfFile,argv[2]);
+	strcpy(ar.srecFile,argv[2]);
 	strcpy(ar.ofname, ar.ifname);
 	printf("------------------------------------------------------------\n");
 	fo = fopen("matprt.m", "w");
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 	Mailbox.core.ready = 0;
 	e_write(pDRAM, 0, 0, addr, (void *) &(Mailbox.core.ready), sizeof(Mailbox.core.ready));
 
-	result = e_load_group(ar.elfFile, pEpiphany, 0, 0, platform.rows, platform.cols, (e_bool_t) (ar.run_target));
+	result = e_load_group(ar.srecFile, pEpiphany, 0, 0, platform.rows, platform.cols, (e_bool_t) (ar.run_target));
 	if (result == E_ERR) {
 		printf("Error loading Epiphany program.\n");
 		exit(1);

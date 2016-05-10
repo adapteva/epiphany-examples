@@ -67,7 +67,7 @@ int main(int argc, char *argv[]){
   }
 
   //Load program to cores
-  e_load_group("e_task.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+  e_load_group("e_task.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
   //1. Copy data (N/CORE points) from host to Epiphany local memory
   //2. Clear the "done" flag for every core

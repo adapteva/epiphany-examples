@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
 
 
 			//use core(i,j) to remote call all other cores
-			e_load_group("emain_slave.elf", &dev, 0, 0, rows, cols, E_FALSE);
-			e_load("emain_master.elf", &dev, i, j, E_FALSE);
+			e_load_group("emain_slave.srec", &dev, 0, 0, rows, cols, E_FALSE);
+			e_load("emain_master.srec", &dev, i, j, E_FALSE);
 
 			coreid = (i + platform.row) * 64 + j + platform.col;
 			fprintf(stderr, "Message from eCore 0x%03x (%2d,%2d): \n", coreid, i, j);

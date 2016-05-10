@@ -32,3 +32,5 @@ e-gcc -O3 -T ${ELDF} src/e_math_test1.c -o bin/e_math_test1.elf -mfp-mode=round-
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/e_math_test1.elf bin/e_math_test1.srec
+e-objcopy --srec-forceS3 --output-target srec bin/e_math_test.elf bin/e_math_test.srec

@@ -214,7 +214,7 @@ int main(int argc, char *argv[]){
   e_close(&dev);
   e_finalize();
 
-  //Self Check
+  //.srec Check
   if(status){
     printf("TEST \"e-mem-test\" PASSED\n");
     return EXIT_SUCCESS;

@@ -42,3 +42,4 @@ ${CROSS_COMPILE}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loa
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/emain.elf bin/emain.srec

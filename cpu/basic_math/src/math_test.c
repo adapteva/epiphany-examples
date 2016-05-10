@@ -64,10 +64,10 @@ int main(int argc, char *argv[])
 
 	// Load the device program onto all the eCores
 	// To get the verified values
-	//e_load_group("e_math_test.elf", &dev, 0, 0, platform.rows,  platform.cols, E_FALSE);
+	//e_load_group("e_math_test.srec", &dev, 0, 0, platform.rows,  platform.cols, E_FALSE);
 
 	// To test 
-	e_load_group("e_math_test1.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
+	e_load_group("e_math_test1.srec", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 	
 	for (i=0; i<platform.rows ; i++)
 	{	

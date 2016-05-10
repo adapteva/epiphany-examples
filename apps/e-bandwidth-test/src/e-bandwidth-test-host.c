@@ -36,10 +36,10 @@ typedef struct {
 	e_bool_t reset_target;
 	e_bool_t run_target;
 	e_loader_diag_t verbose;
-	char elf_file[4096];
+	char srec_file[4096];
 } args_t;
 
-args_t ar = {E_TRUE, E_TRUE, E_FALSE, L_D0, "bin/e-bandwidth-test-device.elf"};
+args_t ar = {E_TRUE, E_TRUE, E_FALSE, L_D0, "bin/e-bandwidth-test-device.srec"};
 
 e_epiphany_t Epiphany, *pEpiphany;
 e_mem_t      ERAM,     *pERAM;
@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
   pERAM     = &ERAM;
 
   if (argc > 1)
-    strcpy(ar.elf_file, argv[1]);
+    strcpy(ar.srec_file, argv[1]);
 
   e_set_host_verbosity(H_D0);
 
@@ -228,7 +228,7 @@ int EPI_speed(){
   int col = 0;
 
   //Run program
-  e_load_group(ar.elf_file, pEpiphany, row, col,1,1, E_TRUE);
+  e_load_group(ar.srec_file, pEpiphany, row, col,1,1, E_TRUE);
 
   //Lazy way of waiting till finished
   sleep(2);

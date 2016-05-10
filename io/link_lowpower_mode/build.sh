@@ -31,3 +31,4 @@ e-gcc -T ${ELDF} src/e_link_lowpower_mode.c -o bin/e_link_lowpower_mode.elf -le-
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/e_link_lowpower_mode.elf bin/e_link_lowpower_mode.srec

@@ -33,3 +33,4 @@ e-gcc -O3 -T ${ELDF} src/e_nested_test.c -o bin/e_nested_test.elf -le-lib
 
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/e_nested_test.elf bin/e_nested_test.srec

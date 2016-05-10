@@ -36,3 +36,4 @@ ${CROSS_COMPILE}gcc src/main.c ${ERM}/src/ermlib.c -o bin/main.elf -I ${ERMI} ${
 e-gcc -O0 -T ${ELDF} src/e_demo.c -o bin/e_demo.elf -le-lib
 
 
+e-objcopy --srec-forceS3 --output-target srec bin/e_demo.elf bin/e_demo.srec

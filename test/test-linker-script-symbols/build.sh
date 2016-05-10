@@ -35,3 +35,7 @@ e-gcc -T ${ELDF} src/e_hello_world.c -o bin/e_hello_world.elf -le-lib
 
 # Test internal.ldf (compile only)
 e-gcc -T ${ELDF_INTERNAL} src/symbols_internal.c -o bin/symbols_internal.elf
+
+e-objcopy --srec-forceS3 --output-target srec bin/e_hello_world.elf bin/e_hello_world.srec
+e-objcopy --srec-forceS3 --output-target srec bin/symbols_internal.elf bin/symbols_internal.srec
+

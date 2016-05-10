@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 		{
 			if((i!=mas_row)|(j!=mas_col))
 			{
-				e_load("e_dma_message_slave_test.elf", &dev, i, j, E_TRUE);
+				e_load("e_dma_message_slave_test.srec", &dev, i, j, E_TRUE);
 			}
 		}
 	} 
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 	// Send the coordinate of the transmitter to the receiver
 	e_write(&dev, mas_row, mas_col, 0x6500, &mail0, sizeof(mail0));
 	e_write(&dev, mas_row, mas_col, 0x6600, &mail1, sizeof(mail1));
-	e_load("e_dma_message_test.elf", &dev, mas_row, mas_col, E_TRUE);
+	e_load("e_dma_message_test.srec", &dev, mas_row, mas_col, E_TRUE);
 	
 	// Wait for core program execution to finish
 	usleep(1000000);

@@ -78,4 +78,4 @@ ${CROSS_COMPILE}g++ \
 #	-lfftw3f \
 #	-lm
 
-
+e-objcopy --srec-forceS3 --output-target srec device/Release/e_fft2d.elf device/Release/e_fft2d.srec

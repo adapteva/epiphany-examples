@@ -35,4 +35,4 @@ ${CROSS_COMPILE}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf ${EINCS} ${ELIBS}
 e-gcc -T ${ELDF} src/device-e-toggle-led.c -o bin/device-e-toggle-led.elf -le-lib
 
 
-
+e-objcopy --srec-forceS3 --output-target srec bin/device-e-toggle-led.elf bin/device-e-toggle-led.srec

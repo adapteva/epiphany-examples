@@ -33,3 +33,4 @@ ${CROSS_COMPILE}gcc src/prime.c -o prime.elf -I ${EINCS} -L ${ELIBS} -le-hal -le
 # Build DEVICE side program
 e-gcc -O2 -T ${ELDF} src/isprime.c src/e_prime.c -o e_prime.elf -le-lib -lm
 
+e-objcopy --srec-forceS3 --output-target srec e_prime.elf e_prime.srec

@@ -69,7 +69,7 @@ typedef struct {
 	e_bool_t     run_target;
 	e_hal_diag_t verbose;
 	int          row;
-	char         elfFile[4096];
+	char        srecFile[4096];
 } args_t;
 
 args_t ar = {E_TRUE, E_FALSE, E_TRUE, H_D0, 0 , ""};
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 	  printf("Loading program on Epiphany chip...\n");
 	}
 	e_set_loader_verbosity(ar.verbose);
-	result = e_load_group(ar.elfFile, pEpiphany, ar.row, 0, 4, 4, ar.run_target);
+	result = e_load_group(ar.srecFile, pEpiphany, ar.row, 0, 4, 4, ar.run_target);
 	if (result == E_ERR) {
 		fprintf(stderr, "Error loading Epiphany program.\n");
 		exit(1);
@@ -389,7 +389,7 @@ void get_args(int argc, char *argv[])
 {
 	int n;
 
-	strcpy(ar.elfFile, "");
+	strcpy(ar.srecFile, "");
 	for (n=1; n<argc; n++)
 	{
 		if (!strcmp(argv[n], "-no-reset"))
@@ -428,16 +428,16 @@ void get_args(int argc, char *argv[])
 
 		if (!strcmp(argv[n], "-h") || !strcmp(argv[n], "--help"))
 		{
-			fprintf(stderr, "Usage: matmul-16_host.elf [-no-reset] [-64] [-broadcast] [-no-run] [-verbose N] [-h | --help] [ELF_file]\n");
+			fprintf(stderr, "Usage: matmul-16_host.srec [-no-reset] [-64] [-broadcast] [-no-run] [-verbose N] [-h | --help] [ELF_file]\n");
 			fprintf(stderr, "       N: available levels of diagnostics\n");
 			exit(0);
 		}
 
-		strcpy(ar.elfFile, argv[n]);
+		strcpy(ar.srecFile, argv[n]);
 	}
 
-	if (!strcmp(ar.elfFile, ""))
-		strcpy(ar.elfFile, "matmul-16.elf");
+	if (!strcmp(ar.srecFile, ""))
+		strcpy(ar.srecFile, "matmul-16.srec");
 
 	return;
 }

@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 		
 			// Load the program
 			fprintf(fo, "\tLoad program onto workgroup...\n");
-			e_load_group("e_demo.elf", &dev, 0, 0, ROWS, COLS, E_FALSE);
+			e_load_group("e_demo.srec", &dev, 0, 0, ROWS, COLS, E_FALSE);
 			
 			for (i=0; i<ROWS; i++)
 			{

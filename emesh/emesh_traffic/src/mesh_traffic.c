@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 	
 	// Load device program onto the receiver
 		
-	e_load("e_mesh_receiver.elf",&dev, mas_row, mas_col, E_TRUE);
+	e_load("e_mesh_receiver.srec",&dev, mas_row, mas_col, E_TRUE);
 	
 	
 	// Load device program onto the transmitter
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 		{
 			if((i!=mas_row)|(j!=mas_col))
 			{
-				e_load("e_mesh_transmitter.elf",&dev, i, j, E_TRUE);
+				e_load("e_mesh_transmitter.srec",&dev, i, j, E_TRUE);
 			}
 		}
 	}

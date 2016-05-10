@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, rows, cols);
 
 	//load the device program on the board
-	e_load_group("emain.elf", &dev, 0, 0, rows, cols, E_FALSE);
+	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
 
 	for (i=0; i<rows; i++)
 	{

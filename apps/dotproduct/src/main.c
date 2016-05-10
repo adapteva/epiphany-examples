@@ -37,6 +37,8 @@ result.
 #include <e-hal.h>
 #include "common.h"
 
+#define RESULT 85344 //recognize /Sum_{i=0}^{n-1} i^2 = \frac{N(N-1)(2N-1)}{6}
+
 int main(int argc, char *argv[]){
   e_platform_t platform;
   e_epiphany_t dev;
@@ -45,11 +47,11 @@ int main(int argc, char *argv[]){
   int done[CORES],all_done;
   int sop;
   int i,j;
-  unsigned clr;
-  clr = (unsigned)0x00000000;
+  int sections = N/CORES; //assumes N % CORES = 0
+  unsigned clr = 0;
 
   //Calculation being done
-  printf("Calculating sum of products of two integer vectors of length %d initalized to all 0x1's using %d Ccores.\n",N,CORES);
+  printf("Calculating sum of products of two integer vectors of length %d initalized from (0..%d) using %d Cores.\n",N,N-1,CORES);
   printf("........\n");
 
   //Initalize Epiphany device
@@ -60,8 +62,8 @@ int main(int argc, char *argv[]){
 
   //Initialize a/b input vectors on host side  
   for (i=0; i<N; i++){
-    a[i] = 1;
-    b[i] = 1;	  
+    a[i] = i;
+    b[i] = i;	  
   }
 
   //Load program to cores
@@ -71,10 +73,9 @@ int main(int argc, char *argv[]){
   //2. Clear the "done" flag for every core
   for (i=0; i<platform.rows; i++){
     for (j=0; j<platform.cols;j++){
-      e_write(&dev, i, j, 0x2000, &a, (N/CORES)*sizeof(int));
-      e_write(&dev, i, j, 0x4000, &b, (N/CORES)*sizeof(int));
+      e_write(&dev, i, j, 0x2000, &a[(i*platform.cols+j)*sections], sections*sizeof(int));
+      e_write(&dev, i, j, 0x4000, &b[(i*platform.cols+j)*sections], sections*sizeof(int));
       e_write(&dev, i, j, 0x7000, &clr, sizeof(clr));
-
     }
   }
 
@@ -90,7 +91,7 @@ int main(int argc, char *argv[]){
 	all_done+=done[i*platform.cols+j];
       }
     }
-    if(all_done==16){
+    if(all_done==CORES){
       break;
     }
   }
@@ -110,12 +111,11 @@ int main(int argc, char *argv[]){
 
   //Print out result
   printf("Sum of Product Is %d!\n",sop);
-  fflush(stdout);
   //Close down Epiphany device
   e_close(&dev);
   e_finalize();
 
-  if(sop==4096){
+  if(sop==RESULT){
     return EXIT_SUCCESS;
   }
   else{

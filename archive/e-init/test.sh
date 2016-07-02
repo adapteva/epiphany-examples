@@ -5,7 +5,6 @@ set -e
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-e-reset
 
 $EXEPATH/bin/e-init.elf 5
 

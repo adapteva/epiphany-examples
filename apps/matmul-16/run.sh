@@ -9,4 +9,4 @@ LOG=$PWD/matmul_demo.log
 
 cd $EXEPATH/host/Release
 
-./matmul.elf $@ ../../device/Release/e_matmul.srec
+./matmul.elf $@ ../../device/Release/e_matmul.elf

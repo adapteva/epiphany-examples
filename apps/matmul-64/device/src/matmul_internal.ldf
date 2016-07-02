@@ -404,7 +404,8 @@ SECTIONS
 
   /**/
   PROVIDE (__stack_start_ = ORIGIN(INTERNAL_RAM) + LENGTH(INTERNAL_RAM) - 0x10);
-  .stack __stack_start_ : { ___stack = .; *(.stack) }
+  .stack __stack_start_ : { __stack = .; *(.stack) }
+  PROVIDE (___stack = __stack);
   PROVIDE (___heap_start = ORIGIN(EXTERNAL_DRAM_1) + __HEAP_SIZE_FOR_CORE_ * __CORE_NUM_);
   /*.heap_start __heap_start_ :  { _heap_start_ = .; *(.heap_start) } */
   PROVIDE (___heap_end   = ORIGIN(EXTERNAL_DRAM_1) + __HEAP_SIZE_FOR_CORE_ * __CORE_NUM_ + __HEAP_SIZE_FOR_CORE_ - 4);

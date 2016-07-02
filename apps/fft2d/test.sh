@@ -8,7 +8,7 @@ LOG=$PWD/fft2d.log
 
 cd $EXEPATH/host/Release
 
-./fft2d_host.elf $EXEPATH/lenna.jpg > $LOG
+./fft2d_host.elf $EXEPATH/lenna.jpg ../../device/Release/e_fft2d.elf> $LOG
 
 retval=$?
 

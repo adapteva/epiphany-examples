@@ -9,7 +9,6 @@ ECOLS=${ECOLS:-4}
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
-e-reset
 
 $EXEPATH/bin/e-dump-regs.elf $EROW0 $ECOL0 $EROWS $ECOLS > e-dump-regs.log
 

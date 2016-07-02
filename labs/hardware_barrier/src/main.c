@@ -39,19 +39,27 @@
 
 #include <e-hal.h>
 
+#include <stdbool.h>
+
 #define _MAX_CORES 64
 #define _BufSize   (4 * _MAX_CORES)
 #define _BufOffset (0x01000000)
 
+#define MAX_RETRIES 8
+
+#define NBARRIERS 0x7ff
+
 int main(int argc, char *argv[])
 {
-	unsigned rows, cols, ncores, coreid, i, j;
+	unsigned rows, cols, ncores, coreid, i, j, retries;
 	const uint32_t one = 1, zero = 0;
 	int result[_MAX_CORES];
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t emem;
-	int fault;
+	int fault, highest;
+	bool fault_here;
+	useconds_t sleeptime;
 
 	// initialize system, read platform params from
 	// default HDF. Then, reset the platform and
@@ -70,50 +78,69 @@ int main(int argc, char *argv[])
 	e_open(&dev, 0, 0, rows, cols);
 
 	//load the device program on the board
-	e_load_group("emain.srec", &dev, 0, 0, rows, cols, E_FALSE);
+	e_load_group("emain.elf", &dev, 0, 0, rows, cols, E_FALSE);
 	e_start_group(&dev);
 	usleep(100000);
 
 	ncores = rows * cols;
 	printf("num-cores = %4d\n", ncores);
 	fault = 0x0;
-	for (i=0; i<=0x400; i++)
-	{
+	for (i=0; i < 0x10000; i++) {
+
 		/* Pause leader core so we can read without races */
 		e_write(&dev, 0, 0, 0x7000, &one, sizeof(one));
 
-		/* Lazily assume cores will be paused and writes from all cores
-		 * to ERAM have propagated after below sleep. This must be
-		 * calibrated w.r.t Epiphany chip clock frequency and delay
-		 * cycles in the device code */
-		usleep(1000);
+		sleeptime = 2048;
+		for (retries = 0; retries < MAX_RETRIES; retries++) {
+			fault_here = false;
 
-		/* read the results */
-		e_read(&emem, 0, 0, 0x0, &result, ncores*sizeof(int));
+			/* Lazily assume cores will be paused and writes from all cores to
+			 * ERAM have propagated after below sleep. If it fails back of with
+			 * factor 2x and retry again */
+			usleep(sleeptime);
 
+			/* read the results */
+			e_read(&emem, 0, 0, 0x0, &result, ncores*sizeof(int));
+
+			highest = result[0];
+			for (j=0; j<ncores; j++) {
+				if (result[j] != result[0]) {
+					fault_here = true;;
+					if (highest < result[j])
+						highest = result[j];
+				}
+			}
+			if (!fault_here)
+				break;
+
+			sleeptime = sleeptime * 2;
+		}
 		/* Resume */
 		e_write(&dev, 0, 0, 0x7000, &zero, sizeof(zero));
 
-		for (j=0; j<ncores; j++)
-		{
-			if (result[j] != result[0])
-				fault++;
-		}
+		if (fault_here)
+			fault++;
 
 		/* Don't print every iteration */
-		if (i % 0x10)
+		if (i % 0x10 && !fault_here)
 			continue;
 
-		printf("[%3x] ", i);
+		printf("[%03x] ", i);
 		for (j=0;j<ncores;j++)
 			printf("%04x ", result[j]);
+
+		if (fault_here)
+			printf("\t\tF");
+
 		printf("\n");
 
-		/* Do a small wait so it is easy to see that the E cores are
-		 * running */
-		usleep(4000);
-	}
+		if (highest >= NBARRIERS)
+			break;
 
+		/* Do a small wait so it is easy to see that the E cores are
+		 * running independently. */
+		usleep(50000);
+	}
 
 	//print the success/error message duel to the number of fault
 	if (fault == 0)

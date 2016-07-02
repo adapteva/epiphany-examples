@@ -43,32 +43,33 @@
 
 
 typedef struct {
-	unsigned coreID;
-	unsigned corenum;
-	unsigned row;
-	unsigned col;
-	unsigned rowh;
-	unsigned colh;
-	unsigned rowv;
-	unsigned colv;
-	unsigned rown;
-	unsigned coln;
+	uint32_t coreID;
+	uint32_t corenum;
+	uint32_t row;
+	uint32_t col;
+	uint32_t rowh;
+	uint32_t colh;
+	uint32_t rowv;
+	uint32_t colv;
+	uint32_t rown;
+	uint32_t coln;
 
 	void  *bank_A[2]; // A Ping Pong Bank local space pointers
 	void  *bank_B[2]; // B Ping Pong Bank local space pointers
 	void  *bank_C;    // C Ping Pong Bank local space pointers
 	void  *tgt_A[2];  // A target Bank for matrix rotate in global space
 	void  *tgt_B[2];  // B target Bank for matrix rotate in global space
-	
-	int    pingpong;  // Ping-Pong bank select indicator
-} core_t;
+
+	uint32_t    pingpong;  // Ping-Pong bank select indicator
+} __attribute__((packed)) core_t;
 
 
 typedef struct {
-	int      go;     // Call for matmul function
-	int      ready;  // Core is ready after reset
-	int      clocks; // Cycle count
-} mbox_t;
+	uint32_t      ready;  // Core is ready after reset
+	uint32_t      go;     // Call for matmul function from host
+	uint32_t      done;   // Core has finished calculation
+	uint32_t      clocks; // Cycle count
+} __attribute__((packed)) mbox_t;
 
 
 typedef struct {
@@ -76,7 +77,7 @@ typedef struct {
 	float  B[_Smtx * _Smtx]; // Global B matrix 
 	float  C[_Smtx * _Smtx]; // Global C matrix 
 	mbox_t core;
-} shared_buf_t;
+} __attribute__((packed)) shared_buf_t;
 
 
 typedef struct {
@@ -85,6 +86,7 @@ typedef struct {
 	float  *pB;      // ptr to global B matrix
 	float  *pC;      // ptr to global C matrix
 	mbox_t *pCore;   // ptr to cores mailbox
+	uint32_t  __pad;
 } shared_buf_ptr_t;
 
 

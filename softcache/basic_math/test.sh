@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
@@ -12,4 +14,4 @@ then
 else
     echo "$SCRIPT PASSED"
 fi
-
+exit $retval

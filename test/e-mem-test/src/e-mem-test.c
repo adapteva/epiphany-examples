@@ -1,24 +1,3 @@
-/*
-e-dump-regs.c
-
-Copyright (C) 2013 Adapteva, Inc.
-Contributed by Andreas Olofsson <support@adapteva.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program, see the file COPYING. If not, see
-<http://www.gnu.org/licenses/>.
-*/
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -68,11 +47,10 @@ int main(int argc, char *argv[]){
   e_open(&dev, 0, 0, platform.rows, platform.cols);
   //e_set_host_verbosity(H_D3);
 
-  printf("-------------------------------------------------------\n");  
-
   for (i=row0; i<(row0+rows); i++) {
     for (j=col0; j<(col0+cols); j++) {   
-      printf("Running host march-C read/write test for core (%d,%d)\n", i,j);      
+      if(verbose){
+	printf("Running host march-C read/write test for core (%d,%d)\n", i,j);      }
       //M0: UP{w0}
       for(k=0;k<(RAM_SIZE);k=k+WORD_SIZE){
 	addr= k;
@@ -238,9 +216,11 @@ int main(int argc, char *argv[]){
 
   //Self Check
   if(status){
+    printf("TEST \"e-mem-test\" PASSED\n");
     return EXIT_SUCCESS;
   }
   else{
+    printf("TEST \"e-mem-test\" FAILED\n");
     return EXIT_FAILURE;
   }   
 }

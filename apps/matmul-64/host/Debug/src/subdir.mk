@@ -20,7 +20,7 @@ C_DEPS += \
 src/matmul_host.o: ../src/matmul_host.c ../../device/src/matlib.h ../../device/src/matmul.h ../../device/src/common_buffers.h
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C Compiler'
-	gcc  -O0 -g \
+	$(CC)  -O0 -g \
 	     -Wall \
 	     -ffast-math \
 	     -D__HOST__ \
@@ -37,7 +37,7 @@ src/matmul_host.o: ../src/matmul_host.c ../../device/src/matlib.h ../../device/s
 src/matlib.o: ../../device/src/matlib.c ../../device/src/matlib.h
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C Compiler'
-	gcc  -O0 -g \
+	$(CC)  -O0 -g \
 	     -Wall \
 	     -ffast-math \
 	     -D__HOST__ \

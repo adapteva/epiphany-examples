@@ -3,14 +3,14 @@
 
 .file "sfloop.s";
 .section .text;
-.type   _sfloop, %function;
-.global _sfloop;
-.extern _A;   A global array A[] defined in one of the C modules
-.extern _B;
-.extern _result;
+.type   sfloop, %function;
+.global sfloop;
+.extern A;   A global array A[] defined in one of the C modules
+.extern B;
+.extern result;
 
 .balign 4;
-_sfloop:
+sfloop:
 
 
 	mov 	r2,  0x0		; change the cal type
@@ -24,10 +24,10 @@ _sfloop:
 	lsr   r0,  r0, 0x1
 	mov	  r45, r0
 
-	mov	  r0,  _A		;A[N] defined in emain.c
-	movt	r0,  _A
-	mov	  r1,  _B		;B[N] defined in emain.c
-	movt	r1,  _B
+	mov	  r0,  %low(A)  ;A[N] defined in emain.c
+	movt  r0,  %high(A)
+	mov	  r1,  %low(B)		;B[N] defined in emain.c
+	movt  r1,  %high(B)
 	mov	  r44, 0x0		;sum = 0
 	
 loop_start:	
@@ -48,6 +48,6 @@ loop_start:
 	rts; return
 
 
-.size _sfloop, .-_sfloop;
+.size sfloop, .-sfloop;
 //------- end -------------
 

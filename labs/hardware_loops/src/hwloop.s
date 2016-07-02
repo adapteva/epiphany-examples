@@ -3,14 +3,14 @@
 
 .file "hwloop.s";
 .section .text;
-.type   _hwloop, %function;
-.global _hwloop;
-.extern _A;   A global array A[] defined in one of the C modules
-.extern _B;
-.extern _result;
+.type   hwloop, %function;
+.global hwloop;
+.extern A;   A global array A[] defined in one of the C modules
+.extern B;
+.extern result;
 
 .balign 4;
-_hwloop:
+hwloop:
 
 	mov 	r2, 0x0		; change the cal type
 	movt	r2, 0x8
@@ -27,12 +27,11 @@ _hwloop:
 	lsr   r0,  r0,  #1
 	movts lc,  r0;
 
-	mov	  r0,  _A		;A[N] defined in emain.c
-	movt	r0,  _A
-	mov	  r1,  _B		;B[N] defined in emain.c
-	movt	r1,  _B
+	mov	  r0,  %low(A)		;A[N] defined in emain.c
+    movt  r0,  %high(A)
+	mov	  r1,  %low(B)		;B[N] defined in emain.c
+	movt  r1,  %high(B)
 	mov	  r44, 0x0	;sum = 0
-	mov   r45, 0x0	;document time
 	
 .balignw 8,0x000001a2;
 
@@ -55,10 +54,10 @@ lend:
 	gie
 
 	mov 	r0, r44		;save the result into r0
-	 
+
 	rts; return
 
 
-.size _hwloop, .-_hwloop;
+.size hwloop, .-hwloop;
 //------- end -------------
 

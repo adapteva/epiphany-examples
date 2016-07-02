@@ -1,12 +1,15 @@
 #!/bin/bash
 
-
+set -e
 
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
 
 
-$EXEPATH/bin/e-main.elf $EXEPATH/bin/e-task.srec > e-main.log
+
+cd $EXEPATH/bin; ./main.elf 0 0 4 4 0x12345678
+
+#> dotproduct.log
 
 retval=$?
 
@@ -18,4 +21,3 @@ else
 fi
 
 exit $retval
-

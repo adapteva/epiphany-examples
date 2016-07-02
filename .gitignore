@@ -6,10 +6,6 @@
 *.d
 
 ######################
-# Loader files
-*.srec
-
-######################
 # Emacs/vim/gedit backup files
 *~
 .#*
@@ -20,3 +16,11 @@
 # Log files
 *.log
 
+#######################
+# Misc.
+.DS_Store
+
+#######################
+# Eclipse
+.project
+.cproject

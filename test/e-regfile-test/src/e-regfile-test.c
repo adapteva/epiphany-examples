@@ -1,24 +1,3 @@
-/*
-e-dump-regs.c
-
-Copyright (C) 2013 Adapteva, Inc.
-Contributed by Andreas Olofsson <support@adapteva.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program, see the file COPYING. If not, see
-<http://www.gnu.org/licenses/>.
-*/
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -72,7 +51,7 @@ int main(int argc, char *argv[]){
     for (j=col0; j<(col0+cols); j++) {   
       printf("Running host register file test for core (%d,%d)\n", i,j);      
       for(k=0;k<REGS;k++){
-	addr=0xF0000+k;
+	addr=0xF0000+(k*4);
 	//high pattern
 	e_write(&dev, i, j, addr, &high_pattern,  sizeof(int));
 	e_read(&dev, i, j, addr, &result, sizeof(int));

@@ -7,26 +7,27 @@ ELIBS="-L ${ESDK}/tools/host/lib"
 EINCS="-I ${ESDK}/tools/host/include"
 ELDF=${ESDK}/bsps/current/internal.ldf
 
-SCRIPT=$(readlink -f "$0")
-EXEPATH=$(dirname "$SCRIPT")
-cd $EXEPATH
-
 # Create the binaries directory
 mkdir -p bin/
 
-CROSS_PREFIX=
+if [ -z "${CROSS_COMPILE+xxx}" ]; then
 case $(uname -p) in
 	arm*)
 		# Use native arm compiler (no cross prefix)
-		CROSS_PREFIX=
+		CROSS_COMPILE=
 		;;
 	   *)
 		# Use cross compiler
-		CROSS_PREFIX="arm-linux-gnueabihf-"
+		CROSS_COMPILE="arm-linux-gnueabihf-"
 		;;
 esac
+fi
 
 # Build HOST side application
-${CROSS_PREFIX}gcc src/e-init.c -o bin/e-init.elf ${EINCS} ${ELIBS} -le-hal -lpthread
+${CROSS_COMPILE}gcc src/main.c -g -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
+
+# Build DEVICE side program
+OPT=3
+e-gcc -funroll-loops -g -T ${ELDF} -O${OPT} src/emain.c -o bin/emain.elf -le-lib
 
 

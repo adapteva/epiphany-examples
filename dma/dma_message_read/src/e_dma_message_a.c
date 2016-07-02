@@ -28,7 +28,7 @@ along with this program, see the file COPYING. If not, see
 #include <stdlib.h>
 #include <string.h>
 
-#include "e_lib.h"
+#include <e-lib.h>
 	
 int main(void)
 {

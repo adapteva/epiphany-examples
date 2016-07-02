@@ -51,15 +51,13 @@ int main(int argc, char *argv[]){
   //Open
   e_init(NULL);
   e_get_platform_info(&platform);
-  e_reset_system();
-
   e_open(&dev, 0, 0, platform.rows, platform.cols);
   //e_set_host_verbosity(H_D3);
   //Put Code here
   printf("CORE  CONFIG      STATUS      PC          CTIMER0     CTIMER1     DMA0STATUS  DMA1STATUS  DEBUG   IRET    IMASK    ILAT    IPEND\n");
   printf("--------------------------------------------------------------------------------------------------------------------------------------------\n");
-  for (i=row0; i<rows; i++) {
-    for (j=col0; j<cols; j++) {     
+  for (i=row0; i<(row0+rows); i++) {
+    for (j=col0; j<(col0+cols); j++) {     
       printf("%02d%02d  ", i,j);
       
       e_read(&dev, i, j, 0xf0400, &data, sizeof(unsigned));//config 
@@ -103,7 +101,6 @@ int main(int argc, char *argv[]){
 
   //Close
   e_close(&dev);
-  e_finalize();
   
   return EXIT_SUCCESS;
 }

@@ -66,8 +66,8 @@ int main(int argc, char *argv[])
 	
 	
 	// Load the device program onto receiver core (1,1) and transmitter core (2,1)
-	e_load("e_dma_slave_test.srec", &dev, r_row, r_col, E_FALSE);
-	e_load("e_dma_slave_test1.srec", &dev, t_row, t_col, E_FALSE);
+	e_load("e_dma_slave_test.elf", &dev, r_row, r_col, E_FALSE);
+	e_load("e_dma_slave_test1.elf", &dev, t_row, t_col, E_FALSE);
 
 	// Start the receiver core
 	

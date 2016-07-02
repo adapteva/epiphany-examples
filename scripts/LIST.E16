@@ -27,7 +27,6 @@ test/e-mem-test/test.sh               all
 #EXHAUSTIVE TESTS
 #####################							       
 test/e-matmul-test/test.sh            all
-apps/e-dump-regs/test.sh              all	
 apps/e-fill-mem/test.sh               all
 apps/e-dump-mem/test.sh               all
 

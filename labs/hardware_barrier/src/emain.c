@@ -35,39 +35,40 @@
 
 #define E_WAND_INT (0x8)
 
+#define NBARRIERS 0x7ff
 
-void __attribute__((interrupt)) wand_isr();
+/* wand isr is implemented in wand-isr.S */
+extern void wand_isr();
 
-unsigned state;
 volatile unsigned *result;
 
 /* Sync point between first core in group and host */
 volatile uint32_t *pause;
 
-
-int main(void) {
+int main(void)
+{
 	//initialize
 	int i;
 	unsigned row, col, delay, num;
 	unsigned *ivt;
 
-	e_irq_global_mask(E_FALSE);
 	e_irq_attach(E_WAND_INT, wand_isr);
 	e_irq_mask(E_WAND_INT, E_FALSE);
+	e_irq_global_mask(E_FALSE);
 
 	row     = e_group_config.core_row;
 	col     = e_group_config.core_col;
 	num     = row * e_group_config.group_cols + col;
 	pause   = (volatile uint32_t *) (0x7000);
 	result  = (volatile unsigned *) (0x8f000000 + 0x4*num);
-	delay   = 0x2000 * num + 0x2000;
+	delay   = 0x2000 * num + 0x27;
 
 	if (num == 0)
 		*pause = 0;
 
 	*result = 0xdeadbeef;
 
-	for(i=0; i<0x10000; i++)
+	for(i = 0; i <= NBARRIERS; i++)
 	{
 		*result = i;
 		e_wait(E_CTIMER_0, delay);
@@ -75,25 +76,13 @@ int main(void) {
 		if (num == 0)
 			while ((*pause));
 
-
-		__asm__ __volatile__("wand");
-		__asm__ __volatile__("idle");
-
-		// clear wand bit
-		state = e_reg_read(E_REG_STATUS);
-		state = state & (~0x8);
-		e_reg_write(E_REG_FSTATUS, state);
+		__asm__ __volatile__(
+			"gid\n\t"
+			"wand\n\t"
+			".balignw 8,0x01a2\n\t" /* nop align gie/idle pair to block */
+			"gie\n\t"               /* spurious interrupts. */
+			"idle");
 	}
 
 	return EXIT_SUCCESS;
 }
-
-
-void __attribute__((interrupt)) wand_isr()
-{
-//	e_wait(E_CTIMER_1, 0x100);
-
-	return;
-}
-
-

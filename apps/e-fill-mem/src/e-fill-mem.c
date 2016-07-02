@@ -92,7 +92,7 @@ void usage(){
   printf("  col   - target core column coordinate\n");
   printf("  rows  - number of rows to dump\n");
   printf("  cols  - number of columns to dump\n");
-  printf("  words - #32 bit words to write\n");
+  printf("  words - number of 32 bit words to write\n");
   printf("  pat   - 32-bit hex pattern starting starting with 0x\n");
   printf("---------------------------------------------------\n");
   return;

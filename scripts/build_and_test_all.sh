@@ -102,7 +102,7 @@ test_example () {
         status "$build_status"
         sync
 
-        if [ "x${CROSS}" = "xyes" ]; then
+        if [ "x${CROSS}" = "xyes" -a "x${RUNTEST}" = "x" ]; then
             true
         elif [ -e "test.sh" ]; then
             test_script="./test.sh"
@@ -113,7 +113,7 @@ test_example () {
         fi
 
         test_status="SKIP"
-        if ! [[ "x$(uname -m)" =~ xarm.* ]]; then
+        if ! [[ "x$(uname -m)" =~ xarm.* ]] && [ "x$RUNTEST" = "x" ]; then
             test_status="CROSS_SKIP"
         elif (echo $dir | grep -qE $BUILD_SKIP_REGEX); then
             test_status="SKIP"
@@ -122,7 +122,7 @@ test_example () {
         elif [ "x" = "x$test_script" ]; then
             test_status="N/A"
         else
-            $test_script >./test.log 2>&1 && test_status="EXIT_OK" || test_status="EXIT_FAIL"
+            $RUNTEST $test_script >./test.log 2>&1 && test_status="EXIT_OK" || test_status="EXIT_FAIL"
         fi
 
         if [ "xEXIT_OK" = "x$test_status" -a -f EXPECTED.txt ]; then

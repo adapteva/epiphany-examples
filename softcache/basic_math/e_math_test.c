@@ -31,6 +31,7 @@ along with this program, see the file COPYING. If not, see
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdint.h>
 
 #include "e_lib.h"
 
@@ -47,7 +48,8 @@ int main(void)
 	unsigned int time_compare;
 	unsigned int index = 0;
         unsigned int count = 0;
-	unsigned *mailbox;
+	uint32_t *mailbox;
+	volatile uint32_t *done;
 	float volatile af;
 	float volatile bf;
 	float volatile cf;
@@ -73,7 +75,8 @@ int main(void)
 	in_sqt = 0.25f;
 	in_ceil = 2.5f;
 	in_log = 100.0f;
-	mailbox = (unsigned *)0x6000;
+	done = (uint32_t *)0x5ffc;
+	mailbox = (uint32_t *)0x6000;
 	mailbox[0] = 0;
 
 	e_ctimer_set(E_CTIMER_0,  E_CTIMER_MAX) ;
@@ -339,7 +342,11 @@ int main(void)
           }
         }
 
+	e_ctimer_stop(E_CTIMER_0);
+
         mailbox[index] = index;
+
+	*done = 1;
 
 	return EXIT_SUCCESS;
 

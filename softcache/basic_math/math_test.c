@@ -28,6 +28,7 @@ along with this program, see the file COPYING. If not, see
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdint.h>
 
 #include <e-hal.h>
 
@@ -40,8 +41,9 @@ int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i,j,m,n,k,l;
         unsigned int acc = 0;
-        unsigned flag[41];
-	unsigned int mask0, mask1;
+        uint32_t flag[41];
+	const uint32_t zero = 0;
+	uint32_t done = 0;
 	e_platform_t platform;
 	e_epiphany_t dev;
 	e_mem_t emem;
@@ -82,11 +84,19 @@ int main(int argc, char *argv[])
 				col=j;
 				coreid = (row + platform.row) * 64 + col + platform.col;
 				//fprintf(stderr,"%3d: Message from eCore 0x%03x (%2d,%2d) : \n",(i*platform.cols+j),coreid,row,col);
+
+				e_write(&dev, i, j, 0x5ffc, &zero, sizeof(zero));
 				e_start(&dev, i, j);
-				usleep(100000);
+
+				done = 0;
+				while (!done) {
+					e_read(&dev, i, j, 0x5ffc, &done, sizeof(done));
+					usleep(1000);
+				}
 
 				// Wait for core program execution to finish
 				// Read message from shared buffer
+				//usleep(100000);
 
 
 				e_read(&emem, 0, 0, 0x0, emsg, _BufSize);

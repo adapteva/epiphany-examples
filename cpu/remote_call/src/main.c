@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 	unsigned result[16];
 	e_platform_t platform;
 	e_epiphany_t dev;
-	e_mem_t emem;
 
 
 			// initialize system, read platform params from
@@ -118,7 +117,6 @@ int main(int argc, char *argv[])
 	}
 
 			e_close(&dev);
-			e_free(&emem);
 			e_finalize();	
 
 

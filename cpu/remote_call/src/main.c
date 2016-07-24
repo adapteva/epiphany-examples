@@ -120,6 +120,6 @@ int main(int argc, char *argv[])
 			e_finalize();	
 
 
-	return 0;
+	return fault ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 

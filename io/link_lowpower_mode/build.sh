@@ -27,7 +27,7 @@ fi
 ${CROSS_COMPILE}gcc src/link_lowpower_mode.c -o bin/link_lowpower_mode.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -T ${ELDF} src/e_link_lowpower_mode.c -o bin/e_link_lowpower_mode.elf -le-lib
+e-gcc -g -T ${ELDF} src/e_link_lowpower_mode.c -o bin/e_link_lowpower_mode.elf -le-lib
 
 
 

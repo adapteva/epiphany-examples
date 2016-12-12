@@ -31,8 +31,8 @@ fi
 ${CROSS_COMPILE}gcc src/mesh_traffic.c -o bin/mesh_traffic.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O0 -T ${ELDF} src/e_mesh_transmitter.c -o bin/e_mesh_transmitter.elf -le-lib
-e-gcc -O0 -T ${ELDF} src/e_mesh_receiver.c -o bin/e_mesh_receiver.elf -le-lib
+e-gcc -g -O0 -T ${ELDF} src/e_mesh_transmitter.c -o bin/e_mesh_transmitter.elf -le-lib
+e-gcc -g -O0 -T ${ELDF} src/e_mesh_receiver.c -o bin/e_mesh_receiver.elf -le-lib
 
 
 

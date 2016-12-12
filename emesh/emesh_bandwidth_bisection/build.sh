@@ -31,9 +31,9 @@ fi
 ${CROSS_COMPILE}gcc src/mesh_bi.c -o bin/mesh_bi.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O0 -T ${ELDF} src/e_mesh_bi00.c -o bin/e_mesh_bi00.elf -le-lib 
-e-gcc -O0 -T ${ELDF} src/e_mesh_bi.c -o bin/e_mesh_bi.elf -le-lib
-e-gcc -O0 -T ${ELDF} src/e_mesh_bi1.c -o bin/e_mesh_bi1.elf -le-lib
+e-gcc -g -O0 -T ${ELDF} src/e_mesh_bi00.c -o bin/e_mesh_bi00.elf -le-lib 
+e-gcc -g -O0 -T ${ELDF} src/e_mesh_bi.c -o bin/e_mesh_bi.elf -le-lib
+e-gcc -g -O0 -T ${ELDF} src/e_mesh_bi1.c -o bin/e_mesh_bi1.elf -le-lib
 
     
 

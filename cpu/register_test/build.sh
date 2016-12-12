@@ -27,7 +27,7 @@ fi
 ${CROSS_COMPILE}gcc src/register-test.c -o bin/register-test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -T ${ELDF} src/e-register-test2.c -o bin/e-register-test2.elf -le-lib
-e-gcc -T ${ELDF} src/e-register-test3.c -o bin/e-register-test3.elf -le-lib
+e-gcc -g -T ${ELDF} src/e-register-test2.c -o bin/e-register-test2.elf -le-lib
+e-gcc -g -T ${ELDF} src/e-register-test3.c -o bin/e-register-test3.elf -le-lib
 
 

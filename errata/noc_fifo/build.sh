@@ -32,6 +32,6 @@ ${CROSS_COMPILE}gcc src/host.c -o bin/noc_fifo.elf ${EINCS} ${ELIBS} \
 	-le-hal -le-loader
 
 # Build DEVICE side program
-e-gcc -Os -T ${ELDF} src/e_loadstore.c -o bin/e_loadstore.elf -le-lib
+e-gcc -g -Os -T ${ELDF} src/e_loadstore.c -o bin/e_loadstore.elf -le-lib
 
 

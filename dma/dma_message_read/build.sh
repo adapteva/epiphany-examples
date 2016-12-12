@@ -27,7 +27,7 @@ fi
 ${CROSS_COMPILE}gcc src/dma_message_a.c -o bin/dma_message_a.elf  ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_dma_message_a.c -o bin/e_dma_message_a.elf -le-lib 
+e-gcc -g -O3 -T ${ELDF} src/e_dma_message_a.c -o bin/e_dma_message_a.elf -le-lib 
 
 
 

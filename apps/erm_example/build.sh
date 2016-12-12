@@ -33,6 +33,6 @@ fi
 ${CROSS_COMPILE}gcc src/main.c ${ERM}/src/ermlib.c -o bin/main.elf -I ${ERMI} ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O0 -T ${ELDF} src/e_demo.c -o bin/e_demo.elf -le-lib
+e-gcc -g -O0 -T ${ELDF} src/e_demo.c -o bin/e_demo.elf -le-lib
 
 

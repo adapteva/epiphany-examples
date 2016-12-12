@@ -32,7 +32,7 @@ ${CROSS_COMPILE}gcc src/mesh_bandwidth.c -o bin/mesh_bandwidth.elf ${EINCS} ${EL
 
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_mesh_bandwidth_near.c -o bin/e_mesh_bandwidth_near.elf -le-lib 
+e-gcc -g -O3 -T ${ELDF} src/e_mesh_bandwidth_near.c -o bin/e_mesh_bandwidth_near.elf -le-lib 
 
 
 

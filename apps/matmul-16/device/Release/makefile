@@ -32,7 +32,7 @@ dependents:
 e_matmul.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Epiphany linker'
-	e-gcc -L"../../device/Release" \
+	e-gcc -g -L"../../device/Release" \
 	      -T ../../device/src/matmul_internal.ldf \
 	      -Wl,--gc-sections \
 	      -o "e_matmul.elf" \

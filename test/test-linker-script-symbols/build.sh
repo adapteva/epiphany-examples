@@ -31,7 +31,7 @@ mkdir -p bin
 ${CROSS_COMPILE}gcc src/hello_world.c -o bin/hello_world.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Test fast.ldf (also device side program)
-e-gcc -T ${ELDF} src/e_hello_world.c -o bin/e_hello_world.elf -le-lib
+e-gcc -g -T ${ELDF} src/e_hello_world.c -o bin/e_hello_world.elf -le-lib
 
 # Test internal.ldf (compile only)
-e-gcc -T ${ELDF_INTERNAL} src/symbols_internal.c -o bin/symbols_internal.elf
+e-gcc -g -T ${ELDF_INTERNAL} src/symbols_internal.c -o bin/symbols_internal.elf

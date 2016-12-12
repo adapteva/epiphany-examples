@@ -27,8 +27,8 @@ fi
 ${CROSS_COMPILE}gcc src/dma_slave_test.c -o bin/dma_slave_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O0 -T ${ELDF} src/e_dma_slave_test.c -o bin/e_dma_slave_test.elf -le-lib 
-e-gcc -O0 -T ${ELDF} src/e_dma_slave_test1.c -o bin/e_dma_slave_test1.elf -le-lib 
+e-gcc -g -O0 -T ${ELDF} src/e_dma_slave_test.c -o bin/e_dma_slave_test.elf -le-lib 
+e-gcc -g -O0 -T ${ELDF} src/e_dma_slave_test1.c -o bin/e_dma_slave_test1.elf -le-lib 
 
 
 

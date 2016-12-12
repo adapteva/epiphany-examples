@@ -27,13 +27,13 @@ fi
 ${CROSS_COMPILE}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -Os -T ${ELDF} src/e_task.c -o bin/e_task.elf -le-lib -lm -ffast-math
+e-gcc -g -Os -T ${ELDF} src/e_task.c -o bin/e_task.elf -le-lib -lm -ffast-math
 
 
 # Build DEVICE side program
-e-gcc -Os -T ${ELDF} src/e_task.c -o bin/e_task.elf -le-lib -lm -ffast-math
+e-gcc -g -Os -T ${ELDF} src/e_task.c -o bin/e_task.elf -le-lib -lm -ffast-math
 
-e-gcc -Os -mfp-mode=int -T ${ELDF} src/e_task.c -o bin/e_task_imode.elf -le-lib -lm -ffast-math
+e-gcc -g -Os -mfp-mode=int -T ${ELDF} src/e_task.c -o bin/e_task_imode.elf -le-lib -lm -ffast-math
 
-e-gcc -Os -mfp-mode=round-nearest -T ${ELDF} src/e_task.c -o bin/e_task_fmode.elf -le-lib -lm -ffast-math
+e-gcc -g -Os -mfp-mode=round-nearest -T ${ELDF} src/e_task.c -o bin/e_task_fmode.elf -le-lib -lm -ffast-math
 

@@ -29,7 +29,7 @@ ${CROSS_COMPILE}gcc src/main.c -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le-lo
 
 # Build DEVICE side program
 OPT=0
-e-gcc -T ${ELDF} src/emain.c -O$OPT -o bin/emain.elf -le-lib
-#e-gcc src/emain.c -S -O$OPT -o bin/emain.O$OPT.s
+e-gcc -g -T ${ELDF} src/emain.c -O$OPT -o bin/emain.elf -le-lib
+#e-gcc -g src/emain.c -S -O$OPT -o bin/emain.O$OPT.s
 
 

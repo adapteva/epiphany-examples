@@ -27,8 +27,8 @@ fi
 ${CROSS_COMPILE}gcc src/math_test.c -o bin/math_test.elf ${EINCS} ${ELIBS} -le-hal -lm -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_math_test.c -o bin/e_math_test.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math
-e-gcc -O3 -T ${ELDF} src/e_math_test1.c -o bin/e_math_test1.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math
+e-gcc -g -O3 -T ${ELDF} src/e_math_test.c -o bin/e_math_test.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math
+e-gcc -g -O3 -T ${ELDF} src/e_math_test1.c -o bin/e_math_test1.elf -mfp-mode=round-nearest -le-lib -lm -ffast-math
 
 
 

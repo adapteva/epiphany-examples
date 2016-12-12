@@ -28,6 +28,6 @@ fi
 ${CROSS_COMPILE}gcc src/hello_world.c -o Debug/hello_world.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -T ${ELDF} src/e_hello_world.c -o Debug/e_hello_world.elf -le-lib
+e-gcc -g -T ${ELDF} src/e_hello_world.c -o Debug/e_hello_world.elf -le-lib
 
 

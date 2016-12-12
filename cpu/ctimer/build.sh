@@ -29,7 +29,7 @@ ${CROSS_COMPILE}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loa
 
 # Build DEVICE side program
 
-   e-gcc -Wall -O3 -std=c99 \
+   e-gcc -g -Wall -O3 -std=c99 \
          -mlong-calls \
          -mfp-mode=round-nearest \
          -ffp-contract=fast \

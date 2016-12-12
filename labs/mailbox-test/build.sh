@@ -28,6 +28,6 @@ ${CROSS_COMPILE}gcc src/main.c -g -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le
 
 # Build DEVICE side program
 OPT=3
-e-gcc -funroll-loops -g -T ${ELDF} -O${OPT} src/emain.c -o bin/emain.elf -le-lib
+e-gcc -g -funroll-loops -g -T ${ELDF} -O${OPT} src/emain.c -o bin/emain.elf -le-lib
 
 

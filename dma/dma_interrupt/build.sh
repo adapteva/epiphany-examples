@@ -27,4 +27,4 @@ fi
 ${CROSS_COMPILE}gcc src/dma_int_test.c -o bin/dma_int_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_dma_int_test.c -o bin/e_dma_int_test.elf -le-lib
+e-gcc -g -O3 -T ${ELDF} src/e_dma_int_test.c -o bin/e_dma_int_test.elf -le-lib

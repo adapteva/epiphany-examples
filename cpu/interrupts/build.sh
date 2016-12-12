@@ -27,7 +27,7 @@ fi
 ${CROSS_COMPILE}gcc src/interrupt_test.c -o bin/interrupt_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3 -T ${ELDF} src/e_interrupt_test.c -o bin/e_interrupt_test.elf -mfp-mode=round-nearest -le-lib 
+e-gcc -g -O3 -T ${ELDF} src/e_interrupt_test.c -o bin/e_interrupt_test.elf -mfp-mode=round-nearest -le-lib 
 
 
 

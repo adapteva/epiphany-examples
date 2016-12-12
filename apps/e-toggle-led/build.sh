@@ -32,7 +32,7 @@ fi
 ${CROSS_COMPILE}gcc src/e-toggle-led.c -o bin/e-toggle-led.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -T ${ELDF} src/device-e-toggle-led.c -o bin/device-e-toggle-led.elf -le-lib
+e-gcc -g -T ${ELDF} src/device-e-toggle-led.c -o bin/device-e-toggle-led.elf -le-lib
 
 
 

@@ -27,7 +27,7 @@ fi
 ${CROSS_COMPILE}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -T ${ELDF} src/emain.c -o bin/emain.elf -le-lib
+e-gcc -g -T ${ELDF} src/emain.c -o bin/emain.elf -le-lib
 
 
 

@@ -28,6 +28,6 @@ ${CROSS_COMPILE}gcc src/main.c -o bin/main.elf  ${EINCS} ${ELIBS} -le-hal -le-lo
 
 # Build DEVICE side program
 OPT=0
-e-gcc -T ${ELDF} -O${OPT} src/emain.c src/wand-isr.S -o bin/emain.elf -le-lib
+e-gcc -g -T ${ELDF} -O${OPT} src/emain.c src/wand-isr.S -o bin/emain.elf -le-lib
 
 

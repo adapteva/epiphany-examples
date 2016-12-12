@@ -31,5 +31,5 @@ fi
 ${CROSS_COMPILE}gcc src/main.c -o bin/main.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O3  -T ${ELDF} src/e_task.c -o bin/e_task.elf -le-lib -lm -ffast-math
+e-gcc -g -O3  -T ${ELDF} src/e_task.c -o bin/e_task.elf -le-lib -lm -ffast-math
 

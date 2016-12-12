@@ -24,7 +24,7 @@ fi
 ${CROSS_COMPILE}gcc int-test.c -o int-test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -O0 -T ${ELDF} e-int-test.master.c -o e-int-test.master.elf -le-lib
-e-gcc -O0 -T ${ELDF} e-int-test.slave.c  -o e-int-test.slave.elf  -le-lib
+e-gcc -g -O0 -T ${ELDF} e-int-test.master.c -o e-int-test.master.elf -le-lib
+e-gcc -g -O0 -T ${ELDF} e-int-test.slave.c  -o e-int-test.slave.elf  -le-lib
 
 

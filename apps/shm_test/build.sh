@@ -32,6 +32,6 @@ fi
 ${CROSS_COMPILE}gcc src/shm_test.c -g -O0 -o bin/shm_test.elf ${EINCS} ${ELIBS} -le-hal -le-loader -lpthread
 
 # Build DEVICE side program
-e-gcc -T ${ELDF} src/e_shm_test.c -o bin/e_shm_test.elf -le-lib
+e-gcc -g -T ${ELDF} src/e_shm_test.c -o bin/e_shm_test.elf -le-lib
 
 

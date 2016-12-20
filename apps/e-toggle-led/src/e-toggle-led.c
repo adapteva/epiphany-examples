@@ -85,7 +85,7 @@ void usage(){
   printf("Usage: e-toggle-led <state>\n\n");
   printf("<state>:\n");
   printf(" 1 = LED On\n");
-  printf(" 0 = LED Offf\n");
+  printf(" 0 = LED Off\n");
 }
 
  

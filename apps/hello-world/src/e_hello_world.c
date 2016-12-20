@@ -25,41 +25,25 @@
 // a message identifying itself to the shared external
 // memory buffer.
 
+// Last update: 2016 dec 19. (JLQ).
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "e_lib.h"
 
+#define buff_sz   (4096)
+
+char outbuf[buff_sz] SECTION("shared_dram");
+
 int main(void) {
-	const char		  ShmName[] = "hello_shm"; 
-	const char        Msg[] = "Hello World from core 0x%03x!";
-	char              buf[256] = { 0 };
-	e_coreid_t		  coreid;
-	e_memseg_t   	  emem;
-	unsigned          my_row;
-	unsigned          my_col;
+	e_coreid_t	coreid;
 
-
-	// Who am I? Query the CoreID from hardware.
 	coreid = e_get_coreid();
-	e_coords_from_coreid(coreid, &my_row, &my_col);
-
-	if ( E_OK != e_shm_attach(&emem, ShmName) ) {
-		return EXIT_FAILURE;
-	}
-
-	// Attach to the shm segment
-	snprintf(buf, sizeof(buf), Msg, coreid);
-
-	if ( emem.size >= strlen(buf) + 1 ) {
-		// Write the message (including the null terminating
-		// character) to shared memory
-		e_write((void*)&emem, buf, my_row, my_col, NULL, strlen(buf) + 1);
-	} else {
-		// Shared memory region is too small for the message
-		return EXIT_FAILURE;
-	}
-
+	
+	sprintf(outbuf, "Hello World from core 0x%03x! \n", coreid);
+	
 	return EXIT_SUCCESS;
 }
+

@@ -26,6 +26,8 @@
 // shared external memory buffer for the core's output
 // message.
 
+// Last update: 2016 dec 19. (JLQ).
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -34,19 +36,17 @@
 
 #include <e-hal.h>
 
-const unsigned ShmSize = 128;
-const char ShmName[] = "hello_shm"; 
-const unsigned SeqLen = 20;
+#define buff_sz   (4096)
+#define buff_offset (0x01000000)
 
 int main(int argc, char *argv[])
 {
 	unsigned row, col, coreid, i;
 	e_platform_t platform;
 	e_epiphany_t dev;
-	e_mem_t   mbuf;
+	e_mem_t emem;
+	char emsg[buff_sz];
 	int rc;
-
-	srand(1);
 
 	e_set_loader_verbosity(H_D0);
 	e_set_host_verbosity(H_D0);
@@ -60,53 +60,51 @@ int main(int argc, char *argv[])
 
 	// Allocate a buffer in shared external memory
 	// for message passing from eCore to host.
-	rc = e_shm_alloc(&mbuf, ShmName, ShmSize);
-	if (rc != E_OK)
-		rc = e_shm_attach(&mbuf, ShmName);
+	e_alloc(&emem, buff_offset, buff_sz);	
+	
+    	// Open a workgroup
+	e_open(&dev, 0, 0, platform.rows, platform.cols);
+	
+	// Reset the workgroup
+	e_reset_group(&dev);
 
-	if (rc != E_OK) {
-		fprintf(stderr, "Failed to allocate shared memory. Error is %s\n",
-				strerror(errno));
-		return EXIT_FAILURE;
-	}
+	// Load the device program onto all the eCores
+	e_load_group("e_hello_world.elf", &dev, 0, 0, platform.rows, platform.cols, E_FALSE);
 
-	for (i=0; i<SeqLen; i++)
+
+	for (row=0; row<platform.rows; row++)
 	{
-		char buf[ShmSize];
+		for (col=0; col<platform.cols; col++)
+		{
+		// clear shared buffer.
+		memset(emsg, 0, buff_sz);
+		e_write(&emem, 0, 0, 0x0000, emsg, buff_sz);
 
-		// Draw a random core
-		row = rand() % platform.rows;
-		col = rand() % platform.cols;
+		// Print working core 
 		coreid = (row + platform.row) * 64 + col + platform.col;
-		printf("%3d: Message from eCore 0x%03x (%2d,%2d): ", i, coreid, row, col);
+		printf("eCore 0x%03x (%2d,%2d): \n", coreid, row, col);
 
-		// Open the single-core workgroup and reset the core, in
-		// case a previous process is running. Note that we used
-		// core coordinates relative to the workgroup.
-		e_open(&dev, row, col, 1, 1);
-		e_reset_group(&dev);
-
-		// Load the device program onto the selected eCore
-		// and launch after loading.
-		if ( E_OK != e_load("e_hello_world.elf", &dev, 0, 0, E_TRUE) ) {
-			fprintf(stderr, "Failed to load e_hello_world.elf\n");
-			return EXIT_FAILURE;
-		}
-
-		// Wait for core program execution to finish, then
-		// read message from shared buffer.
+		// Start one core
+		e_start(&dev, row, col);
+		
+		// Wait for core program execution to finish.
 		usleep(10000);
 
-		e_read(&mbuf, 0, 0, 0, buf, ShmSize);
+		// Read message from shared buffer
+		e_read(&emem, 0, 0, 0x0, emsg, buff_sz);
 
 		// Print the message and close the workgroup.
-		printf("\"%s\"\n", buf);
-		e_close(&dev);
+		printf("%s\n", emsg);
+				
+		}
 	}
 
+	// Close the workgroup
+	e_close(&dev);
+	
 	// Release the allocated buffer and finalize the
 	// e-platform connection.
-	e_shm_release(ShmName);
+	e_free(&emem);
 	e_finalize();
 
 	return 0;

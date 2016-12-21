@@ -30,7 +30,7 @@ before_install:
       xzip
       lzip
       zip
-    - wget http://downloads.parallella.org/esdk/esdk.2015.1_linux_x86_64-devel.tar.gz
+    - wget https://github.com/adapteva/epiphany-sdk/releases/download/esdk-2016.11/esdk.2016.11.x86_64.tar.gz
     - tar xfz esdk.2015.1_linux_x86_64-devel.tar.gz
     - ln -s esdk.2015.1 esdk
     - sudo mkdir -p /opt/adapteva

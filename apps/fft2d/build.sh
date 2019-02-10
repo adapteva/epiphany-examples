@@ -43,6 +43,8 @@ case $(uname -p) in
 esac
 fi
 
+echo "#define CORE_ME_OFFSET `e-objdump -t ./device/Release/e_fft2d.elf | grep " g     O .core_data_section.*me" | cut -f1 -d " " | sed 's,^[0]*,0x,g'`" > ./host/src/core_me_offset.h
+
 # Build HOST side application
 ${CROSS_COMPILE}g++ \
 	-Ofast -Wall -g0 \

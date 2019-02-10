@@ -71,7 +71,7 @@
 #ifdef __Debug__
 typedef struct  /*__attribute__((packed))*/ {
 #else
-typedef struct {
+typedef struct __attribute__((packed)) __attribute__((aligned(8))) {
 #endif
 	int        corenum;
 	int        row;
@@ -79,37 +79,63 @@ typedef struct {
 
 	int        mystate;
 
-	int volatile     go_sync;           // The "go" signal from prev core
-	int volatile     sync[_Ncores];     // Sync with peer cores
-	int volatile    *tgt_go_sync;       // ptr to go_sync of next core
-	int volatile    *tgt_sync[_Ncores]; // ptr to sync of target neighbor
+	volatile int go_sync;           // The "go" signal from prev core
+	volatile int sync[_Ncores];     // Sync with peer cores
+	union {
+		uint64_t:64;
+		volatile int *tgt_go_sync;       // ptr to go_sync of next core
+	} __attribute__((packed)) __attribute__((aligned(8)));
+	union {
+		uint64_t _pad0[_Ncores];
+		volatile int *tgt_sync[_Ncores]; // ptr to sync of target neighbor
+	} __attribute__((packed)) __attribute__((aligned(8)));
 
-	cfloat volatile *bank[_Nbanks][2];            // Ping Pong Bank local space pointer
-	cfloat volatile *tgt_bk[_Ncores][_Nbanks][2]; // Target Bank for matrix rotate in global space
+	union {
+		uint64_t _pad1[_Nbanks][2];
+		volatile cfloat *bank[_Nbanks][2];            // Ping Pong Bank local space pointer
+	} __attribute__((packed)) __attribute__((aligned(8)));
+
+	union {
+		uint64_t _pad2[_Ncores][_Nbanks][2];
+		volatile cfloat *tgt_bk[_Ncores][_Nbanks][2]; // Target Bank for matrix rotate in global space
+	} __attribute__((packed)) __attribute__((aligned(8)));
 
 	uint32_t time_p[TIMERS]; // Timers
-} core_t;
+} __attribute__((packed)) __attribute__((aligned(8))) core_t;
 
 
-typedef struct {
+typedef struct __attribute__((packed)) __attribute__((aligned(8))) {
 	volatile int64_t  go;     // Call for FFT2D function
 	volatile int      ready;  // Core is ready after reset
-} mbox_t;
+} __attribute__((packed)) __attribute__((aligned(8))) mbox_t;
 
 
-typedef struct {
+typedef struct __attribute__((packed)) __attribute__((aligned(8))) {
 	volatile cfloat A[_Smtx]; // Global A matrix
 	volatile cfloat B[_Smtx]; // Global B matrix
 	volatile mbox_t core;
-} shared_buf_t;
+} __attribute__((packed)) __attribute__((aligned(8))) shared_buf_t;
 
 
-typedef struct {
-	void            *pBase; // ptr to base of shared buffers
-	volatile cfloat *pA;    // ptr to global A matrix
-	volatile cfloat *pB;    // ptr to global B matrix
-	mbox_t          *pCore; // ptr to cores mailbox
-} shared_buf_ptr_t;
+typedef struct __attribute__((packed)) __attribute__((aligned(8))) {
+	union {
+		uint64_t:64;
+		void            *pBase; // ptr to base of shared buffers
+	} __attribute__((packed)) __attribute__((aligned(8)));
+	union {
+		uint64_t:64;
+		volatile cfloat *pA;    // ptr to global A matrix
+	} __attribute__((packed)) __attribute__((aligned(8)));
+	union {
+		uint64_t:64;
+		volatile cfloat *pB;    // ptr to global B matrix
+	} __attribute__((packed)) __attribute__((aligned(8)));
+	union {
+		uint64_t:64;
+		mbox_t          *pCore; // ptr to cores mailbox
+	} __attribute__((packed)) __attribute__((aligned(8)));
+
+} __attribute__((packed)) __attribute__((aligned(8))) shared_buf_ptr_t;
 
 
 typedef enum {

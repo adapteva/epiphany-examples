@@ -24,7 +24,8 @@ int e_test_finish(int status){
   else{
     *pass = 0xDEADBEEF;
   }
-  while(1);
+
+  return status;
 }
 
 void e_write_ack(unsigned *addr){

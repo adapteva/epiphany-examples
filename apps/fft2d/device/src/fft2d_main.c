@@ -138,8 +138,8 @@ int main(int argc, char *argv[])
 //			me.time_p[2] = 102;
 //			me.time_p[9] = 109;
 
-			Mailbox.pCore->ready = 1;
-			Mailbox.pCore->go = 0;
+			Mailbox.pCore->ready = 5;
+			//Mailbox.pCore->go = 0;
 			dstate(10);
 		} else {
 	        // If next core ended calculation, signal own End-Of-Calculation to previous core.
@@ -150,6 +150,8 @@ int main(int argc, char *argv[])
 			dstate(13);
 		}
 	} while (0);
+
+	e_ctimer_stop(E_CTIMER_0);
 
 	return status;
 }

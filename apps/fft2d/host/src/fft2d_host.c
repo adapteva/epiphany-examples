@@ -43,6 +43,7 @@
 #include <string.h>
 #include <stddef.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <IL/il.h>
 #define ILU_ENABLED
@@ -66,6 +67,8 @@
 #include "fft2dlib.h"
 #include "fft2d.h"
 #include "dram_buffers.h"
+
+#include "core_me_offset.h"
 
 #define FALSE 0
 #define TRUE  1
@@ -160,14 +163,21 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	result = e_load_group(ar.elfFile, pEpiphany, 0, 0, platform.rows, platform.cols, E_FALSE);
+	if (result == E_ERR) {
+		printf("Error loading Epiphany program.\n");
+		exit(1);
+	}
+
 	// Initialize Epiphany "Ready" state
 	addr = offsetof(shared_buf_t, core.ready);
 	Mailbox.core.ready = 0;
 	e_write(pDRAM, 0, 0, addr, (void *) &(Mailbox.core.ready), sizeof(Mailbox.core.ready));
 
-	result = e_load_group(ar.elfFile, pEpiphany, 0, 0, platform.rows, platform.cols, (e_bool_t) (ar.run_target));
+	// Start program
+	result = e_start_group(pEpiphany);
 	if (result == E_ERR) {
-		printf("Error loading Epiphany program.\n");
+		printf("Error starting Epiphany program.\n");
 		exit(1);
 	}
 
@@ -276,7 +286,7 @@ int main(int argc, char *argv[])
 	// Read time counters
 //	 printf(       "Reading time count...\n");
 	fprintf(fo, "%% Reading time count...\n");
-	addr = 0x7128+0x4*2 + offsetof(core_t, time_p[0]);
+	addr = CORE_ME_OFFSET + offsetof(core_t, time_p[0]);
 	sz = TIMERS * sizeof(uint32_t);
 	e_read(pEpiphany, 0, 0, addr, (void *) (&time_p[0]), sz);
 
@@ -326,7 +336,7 @@ int main(int argc, char *argv[])
 			addr = BankA_addr;
 			fflush(stdout);
 			cnum = e_get_num_from_coords(pEpiphany, row, col);
-//			printf(        "Reading A[%uB] from address %08x...\n", sz, addr);
+			printf(        "Reading A[%uB] from address %08x...\n", sz, addr);
 			fprintf(fo, "%% Reading A[%uB] from address %08x...\n", sz, (coreID[cnum] << 20) | addr); fflush(fo);
 			e_read(pEpiphany, row, col, addr, (void *) &Mailbox.B[cnum * _Score * _Sfft], sz);
 		}
@@ -354,6 +364,7 @@ int main(int argc, char *argv[])
 //	while ((Error = ilGetError()))
 //		PRINT_ERROR_MACRO;
 
+
 	// Close connection to device
 	if (e_close(pEpiphany))
 	{
@@ -365,6 +376,8 @@ int main(int argc, char *argv[])
 		fprintf(fo, "\nERROR: Can't release Epiphany DRAM!\n\n");
 		exit(1);
 	}
+
+	e_finalize();
 
 	fflush(fo);
 	fclose(fo);
@@ -380,6 +393,7 @@ int main(int argc, char *argv[])
 	  printf( "TEST \"fft2d\" FAILED\n");
 	  return EXIT_FAILURE;
 	}
+
 }
 	
 // Call (invoke) the fft2d() function
@@ -388,20 +402,27 @@ int fft2d_go(e_mem_t *pDRAM)
 	unsigned int addr;
 	size_t sz;
 
+	usleep(1000000);
+
 	// Wait until Epiphany is ready
 	addr = offsetof(shared_buf_t, core.ready);
 	Mailbox.core.ready = 0;
+	printf("1\n");
 	while (Mailbox.core.ready == 0)
 		e_read(pDRAM, 0, 0, addr, (void *) &(Mailbox.core.ready), sizeof(Mailbox.core.ready));
+
+	usleep(1000000);
 
 
 	// Wait until cores finished previous calculation
 	addr = offsetof(shared_buf_t, core.go);
 	sz = sizeof(int64_t);
 	Mailbox.core.go = 1;
+	printf("2\n");
 	while (Mailbox.core.go != 0)
 		e_read(pDRAM, 0, 0, addr, (void *) (&Mailbox.core.go), sz);
 
+	usleep(1000000);
 	
 	// Signal cores to start crunching
 	Mailbox.core.go = 1;
@@ -409,13 +430,17 @@ int fft2d_go(e_mem_t *pDRAM)
 	sz = sizeof(int64_t);
 	e_write(pDRAM, 0, 0, addr, (void *) (&Mailbox.core.go), sz);
 
+	usleep(1000000);
 
 	// Wait until cores finished calculation
-	addr = offsetof(shared_buf_t, core.go);
-	sz = sizeof(int64_t);
-	Mailbox.core.go = 1;
-	while (Mailbox.core.go != 0)
-		e_read(pDRAM, 0, 0, addr, (void *) (&Mailbox.core.go), sz);
+	addr = offsetof(shared_buf_t, core.ready);
+	sz = sizeof(Mailbox.core.ready);
+	Mailbox.core.ready = 0;
+	printf("3\n");
+	while (Mailbox.core.ready != 5)
+		e_read(pDRAM, 0, 0, addr, (void *) (&Mailbox.core.ready), sz);
+
+	usleep(1000000);
 
 	return 0;
 }

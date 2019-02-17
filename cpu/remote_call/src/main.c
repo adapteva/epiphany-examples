@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <e-hal.h>
+#include <e-loader.h>
 
 
 #define host (0xdeadbeef)
@@ -44,6 +45,7 @@
 int main(int argc, char *argv[])
 {
 	unsigned rows, cols, coreid, i, j, k, fault;
+	int zero = 0, done;
 	unsigned result[16];
 	e_platform_t platform;
 	e_epiphany_t dev;
@@ -76,14 +78,20 @@ int main(int argc, char *argv[])
 			e_load_group("emain_slave.elf", &dev, 0, 0, rows, cols, E_FALSE);
 			e_load("emain_master.elf", &dev, i, j, E_FALSE);
 
+			// set done flag to zero
+			e_write(&dev, i, j, 0x5800, &zero, sizeof(zero));
+
 			coreid = (i + platform.row) * 64 + j + platform.col;
 			fprintf(stderr, "Message from eCore 0x%03x (%2d,%2d): \n", coreid, i, j);
-			usleep(300000);
+			usleep(10000);
 			e_start_group(&dev);
 
+			// Wait for completion
+			do {
+				usleep(10000);
+				e_read(&dev, i, j, 0x5800, &done, sizeof(done));
+			} while (!done);
 
-			usleep(300000);
-	
 			//check the result
 			fault = 0x0;
 			e_read(&dev, i, j, 0x5000, &result[0], 16*sizeof(int));

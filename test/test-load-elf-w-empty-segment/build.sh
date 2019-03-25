@@ -34,6 +34,6 @@ ${CROSS_COMPILE}gcc src/hello_world.c -o bin/hello_world.elf ${EINCS} ${ELIBS} -
 e-gcc -g -T ${ELDF} src/e_hello_world.c -o bin/e_hello_world.elf -le-lib
 
 # Remove .shared_dram section to create empty segment
-e-objcopy -R .shared_dram bin/e_hello_world.elf 2>&1 | grep -q "warning: Empty loadable segment detected" && exit 0
+e-objcopy -R .shared_dram bin/e_hello_world.elf 2>&1 | grep -q "warning: [eE]mpty loadable segment detected" && exit 0
 echo "ERROR, could not create empty segment"
 exit 1

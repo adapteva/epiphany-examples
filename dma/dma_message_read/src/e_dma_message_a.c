@@ -113,9 +113,9 @@ int main(void)
 		dma_busy = e_reg_read(E_REG_DMA0STATUS) & 0xf;
 	}
 	while (dma_busy);
-	
+
 	test_c2[0] = dst[tran-1];			
-	
+
 	return 0;
 }
 

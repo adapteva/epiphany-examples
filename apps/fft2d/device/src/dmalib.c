@@ -74,6 +74,8 @@ int dmacpye(void *src, void *dst)
 	count_i      = (_Score * _Sfft);
 	count_o      = 1;
 
+    memset(&tcb, 0, sizeof(tcb));
+
 	tcb.config       = config;
 	tcb.inner_stride = (stride_i_dst << 16) | (stride_i_src);
 	tcb.count        = (count_o << 16)      | (count_i);
@@ -104,6 +106,8 @@ int dmacpyi(void *src, void *dst)
 	stride_o_dst = (1 << 3) * (_Sfft - _Score * _Sfft + 1);
 	count_i      = _Score;
 	count_o      = _Score;
+
+    memset(&tcb, 0, sizeof(tcb));
 
 	tcb.config       = config;
 	tcb.inner_stride = (stride_i_dst << 16) | (stride_i_src);

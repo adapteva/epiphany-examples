@@ -35,7 +35,7 @@
 
 #define E_WAND_INT (0x8)
 
-#define NBARRIERS 0x7ff
+#define NBARRIERS 0x3ff
 
 /* wand isr is implemented in wand-isr.S */
 extern void wand_isr();

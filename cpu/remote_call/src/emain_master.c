@@ -36,9 +36,10 @@
 #define host                   (0xdeadbeef)
 #define mail_address           (0x00005000)
 #define resultbase             (0x00005200)
-#define delay                  (0x00500000)
+#define delay                  (0x00010000)
 #define expect_result          (0x0000452f)
 #define signalbase             (0x00005400)
+#define done_address           (0x00005800)
 #define finish                 (0x00000001)
 
 
@@ -58,7 +59,7 @@ int main(void)
 
 	//initialize mailbox
 	mailbox = (unsigned *)mail_address;
-	e_wait(E_CTIMER_0, 0x00040000);
+	e_wait(E_CTIMER_0, 0x00001000);
 	for (i=0;i<16;i++)
 	{
 		mailbox[i] = 0x0;
@@ -102,9 +103,10 @@ int main(void)
 		}
 	}
 
+	// Signal host done
+	volatile int *done = (volatile int *)done_address;
+	*done = 1;
 
-	while(1);
-	
 	return EXIT_SUCCESS;
 }
 

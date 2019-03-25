@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 	e_load("e_dma_message_a.elf", &dev, mas_row, mas_col, E_TRUE);
 
 	// Wait for core program execution to finish
-	usleep(1000000);
+	usleep(2000000);
 		
 	// Results from every slave core
 	row=mas_row;

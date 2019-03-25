@@ -50,6 +50,9 @@ int main(int argc, char *argv[]){
     else{
       e_load_group(elfFile, &dev, row0, col0, rows, cols, E_TRUE);
     }
+
+    usleep(100000);
+
     //Checking the test
     for (i=row0; i<(row0+rows); i++) {
       for (j=col0; j<(col0+cols); j++) {   

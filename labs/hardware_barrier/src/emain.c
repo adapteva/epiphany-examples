@@ -83,6 +83,7 @@ int main(void)
 			"gie\n\t"               /* spurious interrupts. */
 			"idle");
 	}
+	e_ctimer_stop(E_CTIMER_0);
 
 	return EXIT_SUCCESS;
 }

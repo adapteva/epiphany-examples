@@ -38,6 +38,7 @@
 #include <stdint.h>
 
 #include <e-hal.h>
+#include <e-loader.h>
 
 #include <stdbool.h>
 
@@ -47,7 +48,7 @@
 
 #define MAX_RETRIES 8
 
-#define NBARRIERS 0x7ff
+#define NBARRIERS 0x3ff
 
 int main(int argc, char *argv[])
 {
@@ -134,12 +135,15 @@ int main(int argc, char *argv[])
 
 		printf("\n");
 
-		if (highest >= NBARRIERS)
+		if (highest >= NBARRIERS) {
+			/* Resume */
+			e_write(&dev, 0, 0, 0x7000, &zero, sizeof(zero));
 			break;
+		}
 
 		/* Do a small wait so it is easy to see that the E cores are
 		 * running independently. */
-		usleep(50000);
+		usleep(10000);
 	}
 
 	//print the success/error message duel to the number of fault
@@ -150,7 +154,9 @@ int main(int argc, char *argv[])
 
 	e_close(&dev);
 	e_free(&emem);
+	usleep(100000);
 	e_finalize();
+
 
 	return fault != 0;
 }

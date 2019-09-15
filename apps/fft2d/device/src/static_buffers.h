@@ -37,5 +37,7 @@ extern float                 recipro[16];       // 1/n     LUT
 extern float                 recipro_2_by[16];  // 1/(2^n) LUT
 extern float                 Cw_lg[16];         // Cos(2 * Pi / 2^N)
 extern float                 Sw_lg[16];         // Sin(2 * Pi / 2^N)
+extern volatile e_barrier_t  barriers[16]; // barriers array
+extern          e_barrier_t *tgt_bars[16]; // barriers array
 
 #endif // __STATIC_BUFFERS_H__

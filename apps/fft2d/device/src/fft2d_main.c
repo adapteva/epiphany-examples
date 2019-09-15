@@ -139,7 +139,6 @@ int main(int argc, char *argv[])
 //			me.time_p[9] = 109;
 
 			Mailbox.pCore->ready = 5;
-			//Mailbox.pCore->go = 0;
 			dstate(10);
 		} else {
 	        // If next core ended calculation, signal own End-Of-Calculation to previous core.
@@ -350,8 +349,11 @@ void init()
 		me.sync[cnum] = 0;
 
 	// Init the host-accelerator sync signals
-	Mailbox.pCore->go = 0;
 	Mailbox.pCore->ready = 1;
+
+	// Sync all cores
+	e_barrier_init(barriers, tgt_bars);
+	e_barrier(barriers, tgt_bars);
 
 #if 0
 	// Initialize input image - TODO: to be removed

@@ -39,6 +39,8 @@ float recipro[16]                  ALIGN(8) SECTION("core_data_section"); // 1/n
 float recipro_2_by[16]             ALIGN(8) SECTION("core_data_section"); // 1/2^n LUT
 float Cw_lg[16]                    ALIGN(8) SECTION("core_data_section"); //  Cos(2 * Pi / 2^N)
 float Sw_lg[16]                    ALIGN(8) SECTION("core_data_section"); // -Sin(2 * Pi / 2^N)
+volatile e_barrier_t barriers[16]           SECTION("core_data_section"); // barriers array
+e_barrier_t *tgt_bars[16];                  SECTION("core_data_section"); // barriers array
 
 
 // Initialize reciprocals LUTs

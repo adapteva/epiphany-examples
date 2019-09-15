@@ -174,6 +174,11 @@ int main(int argc, char *argv[])
 	Mailbox.core.ready = 0;
 	e_write(pDRAM, 0, 0, addr, (void *) &(Mailbox.core.ready), sizeof(Mailbox.core.ready));
 
+	// Initialize Epiphany "go" state
+	addr = offsetof(shared_buf_t, core.go);
+	Mailbox.core.go = 0;
+	e_write(pDRAM, 0, 0, addr, (void *) &(Mailbox.core.go), sizeof(Mailbox.core.go));
+
 	// Start program
 	result = e_start_group(pEpiphany);
 	if (result == E_ERR) {
@@ -402,45 +407,31 @@ int fft2d_go(e_mem_t *pDRAM)
 	unsigned int addr;
 	size_t sz;
 
-	usleep(1000000);
-
 	// Wait until Epiphany is ready
 	addr = offsetof(shared_buf_t, core.ready);
 	Mailbox.core.ready = 0;
-	printf("1\n");
 	while (Mailbox.core.ready == 0)
 		e_read(pDRAM, 0, 0, addr, (void *) &(Mailbox.core.ready), sizeof(Mailbox.core.ready));
-
-	usleep(1000000);
-
 
 	// Wait until cores finished previous calculation
 	addr = offsetof(shared_buf_t, core.go);
 	sz = sizeof(int64_t);
 	Mailbox.core.go = 1;
-	printf("2\n");
 	while (Mailbox.core.go != 0)
 		e_read(pDRAM, 0, 0, addr, (void *) (&Mailbox.core.go), sz);
 
-	usleep(1000000);
-	
 	// Signal cores to start crunching
 	Mailbox.core.go = 1;
 	addr = offsetof(shared_buf_t, core.go);
 	sz = sizeof(int64_t);
 	e_write(pDRAM, 0, 0, addr, (void *) (&Mailbox.core.go), sz);
 
-	usleep(1000000);
-
 	// Wait until cores finished calculation
 	addr = offsetof(shared_buf_t, core.ready);
 	sz = sizeof(Mailbox.core.ready);
 	Mailbox.core.ready = 0;
-	printf("3\n");
 	while (Mailbox.core.ready != 5)
 		e_read(pDRAM, 0, 0, addr, (void *) (&Mailbox.core.ready), sz);
-
-	usleep(1000000);
 
 	return 0;
 }

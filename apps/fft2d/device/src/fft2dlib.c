@@ -49,10 +49,9 @@ void generateWn(volatile cfloat * restrict Wn, int lgNN)
 // Reorder a vector according to bit-reversed index order
 void bitrev(volatile cfloat * restrict a, int lgNN, int N)
 {
-	int i, j, k, n, NN;
+	int i, j, k, NN;
 	cfloat t;
 
-	n  = 32 - lgNN;
 	NN = 1 << lgNN;
 
 	// Do the bit reversal

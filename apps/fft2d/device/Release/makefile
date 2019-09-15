@@ -34,7 +34,7 @@ dependents:
 e_fft2d.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Epiphany Linker'
-	e-gcc -g -L"../../device/Release" \
+	e-gcc -Wall -Wextra -g -L"../../device/Release" \
 	      -T ../../device/src/$(LDF) \
 	      -Wl,--gc-sections \
 	      -o "e_fft2d.elf" \

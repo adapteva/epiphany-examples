@@ -47,6 +47,7 @@ echo "#define CORE_ME_OFFSET `e-objdump -t ./device/Release/e_fft2d.elf | grep "
 
 # Build HOST side application
 ${CROSS_COMPILE}gcc \
+	-Wall -Wextra \
 	-Ofast -Wall -g0 \
 	-D__HOST__ \
 	-Dasm=__asm__ \

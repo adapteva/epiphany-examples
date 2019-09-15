@@ -81,6 +81,7 @@ typedef struct __attribute__((packed)) __attribute__((aligned(8))) {
 
 	volatile int go_sync;           // The "go" signal from prev core
 	volatile int sync[_Ncores];     // Sync with peer cores
+	int:32;                         // Pad
 	union {
 		uint64_t:64;
 		volatile int *tgt_go_sync;       // ptr to go_sync of next core

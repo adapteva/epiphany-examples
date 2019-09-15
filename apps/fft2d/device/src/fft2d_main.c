@@ -67,7 +67,6 @@ int main(int argc, char *argv[])
 			e_ctimer_set(E_CTIMER_0, E_CTIMER_MAX);
 			me.time_p[0] = e_ctimer_start(E_CTIMER_0, E_CTIMER_CLK);
 
-
 			Mailbox.pCore->ready = 0;
 
 			me.go_sync = (e_group_config.group_rows * e_group_config.group_cols) + 1;
@@ -94,7 +93,7 @@ int main(int argc, char *argv[])
 #endif // _USE_DRAM_
 
 		dstate(5);
-		
+
 		// Calculate. During this time, the host polls the
 		// Core 0's mailbox, waiting for a falling
 		// edge indicating the end of the calculation.
@@ -133,10 +132,6 @@ int main(int argc, char *argv[])
 			dstate(9);
 
 			me.time_p[9] = e_ctimer_stop(E_CTIMER_0);
-//			me.time_p[0] = 100;
-//			me.time_p[1] = 101;
-//			me.time_p[2] = 102;
-//			me.time_p[9] = 109;
 
 			Mailbox.pCore->ready = 5;
 			dstate(10);
@@ -217,7 +212,6 @@ void FFT2D(fft_dir_t dir)
 		while (me.sync[cnum] < 2) {};
 
 	dstate(106);
-	return;
 }
 
 
@@ -233,9 +227,6 @@ void corner_turn(int pingpong)
 		dstate(200 + cnum);
 		dmacpyi((void *) (me.bank[_BankA][pingpong] + _Score * cnum), (void *) (me.tgt_bk[cnum][_BankA][pingpong] + _Score * me.corenum));
 	}
-
-
-
 
 #else
 #	warning "Using memcpy() instead of DMA_I"
@@ -295,8 +286,6 @@ void LPF(int lgNN)
 				me.bank[_BankA][_PING][k++] *= recipro_2_by[lgNN+lgNN];
 		}
 	}
-
-	return;
 }
 
 
@@ -304,7 +293,7 @@ void LPF(int lgNN)
 ///////////////////////////////////////////////////////
 void init()
 {
-	int row, col, cnum;
+	unsigned row, col, cnum;
 
 	// Initialize the mailbox shared buffer pointers
 	Mailbox.pBase = (void *) SHARED_DRAM;
@@ -365,6 +354,4 @@ void init()
 		rowcpy((me.bank[_BankA][_PING] + row * _Sfft), &(Mailbox.pA[(me.corenum * _Score + row) * _Sfft]), _Sfft);
 	}
 #endif
-
-	return;
 }

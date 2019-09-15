@@ -81,7 +81,7 @@ typedef struct {
   char elfFile[4096];
 } args_t;
 
-args_t ar = {TRUE, H_D0, ""};
+args_t ar = {TRUE, H_D0, "", "", ""};
 void get_args(int argc, char *argv[]);
 
 
@@ -102,6 +102,7 @@ unsigned int coreID[_Ncores];
 
 e_platform_t platform;
 
+void usage(int n);
 int main(int argc, char *argv[])
 {
 	e_epiphany_t Epiphany, *pEpiphany;
@@ -133,6 +134,9 @@ int main(int argc, char *argv[])
 	msize     = 0x00400000;
 
 	//get_args(argc, argv);
+	if (argc != 3) {
+		usage(1);
+	}
 	strcpy(ar.ifname,argv[1]);
 	strcpy(ar.elfFile,argv[2]);
 	strcpy(ar.ofname, ar.ifname);
@@ -270,7 +274,7 @@ int main(int argc, char *argv[])
 			fflush(stdout);
 			cnum = e_get_num_from_coords(pEpiphany, row, col);
 //			 printf(       "Writing A[%uB] to address %08x...\n", sz, addr);
-			fprintf(fo, "%% Writing A[%uB] to address %08x...\n", sz, (coreID[cnum] << 20) | addr); fflush(fo);
+			fprintf(fo, "%% Writing A[%luB] to address %08x...\n", (unsigned long)sz, (coreID[cnum] << 20) | addr); fflush(fo);
 			e_write(pEpiphany, row, col, addr, (void *) &Mailbox.A[cnum * _Score * _Sfft], sz);
 		}
 #endif
@@ -341,8 +345,8 @@ int main(int argc, char *argv[])
 			addr = BankA_addr;
 			fflush(stdout);
 			cnum = e_get_num_from_coords(pEpiphany, row, col);
-			printf(        "Reading A[%uB] from address %08x...\n", sz, addr);
-			fprintf(fo, "%% Reading A[%uB] from address %08x...\n", sz, (coreID[cnum] << 20) | addr); fflush(fo);
+			printf(        "Reading A[%luB] from address %08x...\n", (unsigned long)sz, addr);
+			fprintf(fo, "%% Reading A[%luB] from address %08x...\n", (unsigned long)sz, (coreID[cnum] << 20) | addr); fflush(fo);
 			e_read(pEpiphany, row, col, addr, (void *) &Mailbox.B[cnum * _Score * _Sfft], sz);
 		}
 #endif
@@ -447,7 +451,6 @@ void matrix_init(int seed)
 		for (j=0; j<_Sfft; j++)
 			Mailbox.B[p++] = 0x8dead;
 
-	return;
 }
 
 
@@ -462,14 +465,15 @@ void init_coreID(e_epiphany_t *pEpiphany, unsigned int *coreID, int rows, int co
 	base_col = base_core & 0x3f;
 
 	cnum = 0;
-	for (row=base_row; row<base_row+rows; row++)
+	for (row=base_row; row<base_row+rows; row++) {
 		for (col=base_col; col<base_col+cols; col++)
 		{
 			cnum = e_get_num_from_coords(pEpiphany, row, col);
 			coreID[cnum] = (row << 6) | (col << 0);
 		}
+	}
 
-		return;
+	return;
 }
 
 

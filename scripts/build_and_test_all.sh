@@ -19,9 +19,7 @@ cd $ROOT
 BUILD_SKIP_REGEX="/archive/|/test/e-test|/test/e-matmul-test"
 
 # Examples we don't want to cross compile (hard to get library dependencies)
-#CROSS_BUILD_SKIP_REGEX="/apps/fft2d"
-
-CROSS_BUILD_SKIP_REGEX=${CROSS_BUILD_SKIP_REGEX:-"\$a"} # HACK: valid regexp that matches nothing
+CROSS_BUILD_SKIP_REGEX="/test/test-elink-rx-remapping|/labs/mailbox-test|/labs/mem_protect"
 
 # Examples expected to fail on non native (e.g. timing) (assume simulator)
 CROSS_XFAIL_REGEX="/cpu/mutex|/test/test-elink-rx-remapping|/dma/dma_message_read|/dma/dma_slave"

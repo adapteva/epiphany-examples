@@ -5,7 +5,7 @@ set -e
 ESDK=${EPIPHANY_HOME}
 ELIBS="-L ${ESDK}/tools/host/lib"
 EINCS="-I ${ESDK}/tools/host/include"
-ELDF=${ESDK}/bsps/current/fast.ldf
+ELDF=${ESDK}/bsps/current/internal.ldf
 
 SCRIPT=$(readlink -f "$0")
 EXEPATH=$(dirname "$SCRIPT")
